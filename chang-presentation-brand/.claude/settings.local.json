@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python -c \"import pptx; print\\(pptx.__version__\\)\")",
+      "Bash(python -m pip install python-pptx)",
+      "Bash(python convert_to_v2.py)",
+      "Bash(PYTHONIOENCODING=utf-8 python convert_to_v2.py)",
+      "Bash(python -c ' *)",
+      "Bash(PYTHONIOENCODING=utf-8 python _verify.py)",
+      "Bash(PYTHONIOENCODING=utf-8 python _inspect.py)",
+      "Bash(rm template.pptx)",
+      "Bash(rm -f _inspect.py)",
+      "Bash(PYTHONIOENCODING=utf-8 python reconstruct_slides.py)",
+      "Bash(PYTHONIOENCODING=utf-8 python apply_changes.py)"
+    ]
+  }
+}
