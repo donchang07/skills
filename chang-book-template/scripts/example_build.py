@@ -8,11 +8,14 @@ Run this from the working directory after unpacking books.dotx:
     python /mnt/skills/public/docx/scripts/office/unpack.py \
         /home/claude/working/book.docx /home/claude/working/unpacked/
     python <skill-dir>/scripts/example_build.py
+    # *** 필수: pack 직전에 finalize 호출 (SKILL.md §7.7 참고) ***
+    python <skill-dir>/scripts/finalize_docx.py /home/claude/working/unpacked/
     python /mnt/skills/public/docx/scripts/office/pack.py \
         /home/claude/working/unpacked/ /home/claude/working/book_final.docx \
         --original /home/claude/working/book.docx
 
 The example produces a 3-page mini book to verify the template works.
+finalize_docx.py 단계를 빠뜨리면 Word가 손상으로 거부하거나 한글이 □로 표시됩니다.
 """
 import sys
 import os
@@ -84,6 +87,12 @@ def main():
     stats = write_document_xml(document_xml, body)
     print(f"Wrote document.xml ({stats['total_chars']} chars, "
           f"{stats['approx_paragraphs']} paragraphs)")
+
+    # docx 손상 방지 후처리 (SKILL.md §2 절대 규칙 #6, §7.7 참고)
+    from finalize_docx import finalize
+    unpacked_dir = os.path.dirname(os.path.dirname(document_xml))  # /unpacked
+    print()
+    finalize(unpacked_dir)
 
 
 if __name__ == "__main__":

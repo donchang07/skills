@@ -20,6 +20,7 @@ description: "KAIST AI대학원 장동인 교수의 책 집필·편집 전용 Wo
 3. **출력은 `.docx`** — `.dotx`는 템플릿 형식이므로 작업본은 항상 `.docx`로 저장합니다.
 4. **임의로 폰트, 색상, 크기를 바꾸지 말 것** — 모든 시각 속성은 템플릿의 styles.xml에 이미 정의되어 있으므로 `<w:pStyle>`로 스타일 ID만 지정합니다.
 5. **표지·목차·본문 모두 한 .docx 파일에 통합** — 사용자가 별도 요청하지 않는 한 분리하지 않습니다.
+6. **pack 직전에 반드시 `scripts/finalize_docx.py` 실행** — books.dotx 잔재(template content type, customizations.xml, 빈 한글 폰트 슬롯, standalone 누락)를 정리하지 않으면 Word가 손상으로 거부하거나 한글이 □로 표시됩니다. 자세한 내용은 §7.7과 [`references/troubleshooting.md`](references/troubleshooting.md) 참고.
 
 ---
 
@@ -127,6 +128,23 @@ builder.py가 자동으로 처리하는 것들:
 - **sectPr 보존** — 짝수/홀수 footer, 페이지 번호 유지
 - **표지·목차·챕터 표준 구조** — 사용자가 데이터만 주면 자동으로 책 구조 생성
 - **CEO 시사점 자동 InfoBox 처리** — 임원 독자 가독성 최적화
+
+**Step 3.5. (필수) finalize_docx.py로 books.dotx 잔재 정리**
+
+```bash
+python <skill-path>/scripts/finalize_docx.py /home/claude/working/unpacked/
+```
+
+이 단계는 §2의 절대 규칙 #6이며 다음 4가지를 자동 수행합니다.
+
+- `[Content_Types].xml`의 main을 `template.main+xml` → `document.main+xml`로 교체
+- `word/customizations.xml`과 관련 Relationship·Override 일괄 제거 (schema 비호환 파일)
+- 모든 XML/`.rels`에 `standalone="yes"` 선언 추가
+- `<w:rPrDefault>`의 `eastAsiaTheme="minorEastAsia"` → 명시적 `eastAsia="맑은 고딕"`
+- `theme1.xml`의 빈 `<a:ea typeface=""/>` 슬롯을 "맑은 고딕"으로 채움
+- 책 제목1(`11`) 스타일에 한글 폰트 명시 추가 (Book Antiqua 단독 사용 시 한글 □ 방지)
+
+이 단계를 건너뛰면 Word for Mac, Office 365 웹, 일부 Windows 환경에서 docx가 \"손상되었습니다\"로 거부됩니다. 자세한 4가지 손상 사례는 [`references/troubleshooting.md`](references/troubleshooting.md) 참고.
 
 **Step 4. 압축 다시 만들기**
 
@@ -256,6 +274,64 @@ heading 1, heading 2, TOC1 단락에는 다음 XML을 명시적으로 추가하�
 ### 7.6 Bullet과 NumberList numbering은 유지
 
 heading과 달리, Bullet(`numId=7`)과 NumberList(`numId=6`)는 **유지해야 합니다**. 이들은 검은 점 / 숫자 리스트의 시각 표시를 numbering으로 구현하므로, 끄면 그냥 들여쓰기된 단락이 되어버립니다.
+
+### 7.7 docx 손상 방지 (books.dotx 잔재 정리)
+
+books.dotx는 `.dotx` (Word 템플릿) 파일이므로, 파일명만 `.docx`로 바꿔서 사용하면 4가지 잠재 손상 패턴을 안고 있습니다. 모두 §4.2 Step 3.5의 `finalize_docx.py`로 일괄 해결되지만, 직접 수정해야 할 때를 위해 원인과 패턴을 정리합니다.
+
+#### 7.7.1 잠재 손상 패턴 4가지
+
+1. **`[Content_Types].xml`의 main이 `template.main+xml`** — Word가 "이건 템플릿"이라고 판단해 docx로 열 때 손상 모드 진입. → `document.main+xml`로 교체.
+
+2. **`word/customizations.xml`이 OOXML schema 비호환** — Microsoft 키 매핑 확장으로, validate.py가 \"No matching global declaration\" 에러를 보고. Word 본문 표시와 무관하므로 안전하게 제거 가능. → 파일 + Relationship + Content Type Override 3곳에서 함께 제거.
+
+3. **`<w:rPrDefault>`의 `eastAsiaTheme="minorEastAsia"`와 `theme1.xml`의 빈 `<a:ea typeface=""/>`** — 일부 환경에서 한글 폰트 폴백 실패로 모든 한글이 □ 표시. → docDefaults를 명시적 `eastAsia="맑은 고딕"`으로, theme의 빈 슬롯을 "맑은 고딕"으로 채움.
+
+4. **XML 선언에 `standalone="yes"` 누락** — Word for Mac, Office 365 웹에서 손상으로 판정. → 모든 XML과 .rels에 추가.
+
+#### 7.7.2 정상 참조 패턴
+
+장동인교수님이 직접 만든 정상 .docx의 핵심 패턴은 다음과 같습니다.
+
+```xml
+<!-- 첫 줄 -->
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+<!-- styles.xml docDefaults -->
+<w:rPrDefault>
+  <w:rPr>
+    <w:rFonts w:ascii="맑은 고딕" w:eastAsia="맑은 고딕"
+              w:hAnsi="맑은 고딕" w:cs="맑은 고딕"/>
+    <w:sz w:val="22"/><w:szCs w:val="22"/>
+    <w:lang w:val="en-US" w:eastAsia="ko-KR" w:bidi="ar-SA"/>
+  </w:rPr>
+</w:rPrDefault>
+
+<!-- [Content_Types].xml -->
+<!-- customizations.xml Override 없음 -->
+<!-- main document part는 document.main+xml -->
+```
+
+`finalize_docx.py`는 books.dotx에서 unpack된 결과를 이 정상 패턴으로 자동 변환합니다.
+
+#### 7.7.3 손상 진단 1줄 스크립트
+
+빌드된 docx가 정상인지 확인할 때:
+
+```python
+import zipfile
+with zipfile.ZipFile('your.docx', 'r') as z:
+    ct = z.read('[Content_Types].xml').decode('utf-8')
+    assert 'template.main+xml' not in ct, '❌ Content Type 손상'
+    assert 'word/customizations.xml' not in z.namelist(), '❌ customizations 잔재'
+    s = z.read('word/styles.xml').decode('utf-8')
+    assert 'eastAsiaTheme="minorEastAsia"' not in s, '❌ 한글 폰트 폴백 위험'
+    d = z.read('word/document.xml').decode('utf-8')
+    assert 'standalone="yes"' in d, '❌ standalone 누락'
+    print('✅ 4 항목 모두 통과')
+```
+
+전체 사례 분석은 [`references/troubleshooting.md`](references/troubleshooting.md) 참고.
 
 ---
 
@@ -443,8 +519,10 @@ chang-book-template/
 │   └── books.dotx                    # 장동인 교수의 책 템플릿 원본
 ├── scripts/
 │   ├── builder.py                    # 재사용 가능한 책 빌더 헬퍼 (필수)
+│   ├── finalize_docx.py              # pack 직전 books.dotx 잔재 정리 (필수, §7.7)
 │   └── example_build.py              # 사용 예제 (3페이지 미니 책)
 └── references/
     ├── style_map.md                  # 전체 스타일 매핑표 (마크다운 ↔ Word)
-    └── book_to_ppt_workflow.md       # 책 → PPT 변환 가이드
+    ├── book_to_ppt_workflow.md       # 책 → PPT 변환 가이드
+    └── troubleshooting.md            # docx 손상·한글 깨짐 사례 분석 (§7.7 부속)
 ```

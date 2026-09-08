@@ -23,7 +23,7 @@
 
 (4) Saturated 6색 feature card palette를 콘텐츠 슬라이드의 강조 블록·통계 카드·핵심 메시지에 사용합니다.
 
-(5) Pretendard Variable(한글) + Inter(영문/숫자)를 weight 500 + negative letter-spacing으로 통일합니다.
+(5) Pretendard(한글·영문·숫자 공통)를 weight 500 + negative letter-spacing으로 통일합니다.
 
 (6) **모든 콘텐츠 박스는 square box(border-radius 0)** 입니다. Frame이 직각이면 콘텐츠도 직각이라는 기하학적 문법을 따릅니다.
 
@@ -161,13 +161,13 @@
 
 | 용도 | 한글 | 영문/숫자 |
 |---|---|---|
-| Display | Pretendard Variable, weight 500–700 | Inter, weight 500 |
-| Body | Pretendard Variable, weight 400 | Inter, weight 400 |
+| Display | Pretendard Variable, weight 500–700 | Pretendard, weight 500 |
+| Body | Pretendard Variable, weight 400 | Pretendard, weight 400 |
 | Monospace | D2Coding | JetBrains Mono |
 
 Fallback 스택:
 - 한글: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, '맑은 고딕', sans-serif
-- 영문: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif
+- 영문: Pretendard, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif
 
 ### 4.2 Hierarchy
 
@@ -195,7 +195,7 @@ Fallback 스택:
 
 (3) Display는 weight 500을 절대값으로 고정 (단, 슬라이드 제목·부제목은 700 사용).
 
-(4) 한·영 혼용 시 Pretendard와 Inter 자동 fallback에 위임.
+(4) 한·영 혼용 시 Pretendard 단일 서체로 처리(별도 영문 서체 없음).
 
 ---
 
@@ -252,7 +252,7 @@ Fallback 스택:
 
 ### 7.1 통계 콜아웃 (Statistics Callout)
 
-3개의 saturated 카드를 grid로 배치하여 핵심 통계를 시각화합니다. Inter 84pt 큰 숫자가 voltage 핵심입니다.
+3개의 saturated 카드를 grid로 배치하여 핵심 통계를 시각화합니다. Pretendard 84pt 큰 숫자가 voltage 핵심입니다.
 
 구성 요소: 3 stat-cards (pink/teal/ochre 권장 조합) → 각 카드는 [상단 라벨 + 큰 숫자 + 단위 + 하단 설명] 4 layer
 
@@ -314,7 +314,7 @@ Fallback 스택:
 
 (1) footer 형식: "장동인 | KAIST 김재철AI대학원 · AIBB LAB"
 
-(2) 페이지 번호: 우상단 13px Inter, muted 색상
+(2) 페이지 번호: 우상단 13px Pretendard, muted 색상
 
 ---
 
@@ -336,7 +336,7 @@ Fallback 스택:
 
 (7) Footer는 "장동인 | KAIST 김재철AI대학원 · AIBB LAB" 형식.
 
-(8) 페이지 번호는 우상단 Inter 13px.
+(8) 페이지 번호는 우상단 Pretendard 13px.
 
 ### 9.2 Don't
 
@@ -407,8 +407,8 @@ Fallback 스택:
   --space-xxl: 48px; --space-section: 96px;
 
   /* Font */
-  --font-display: 'Pretendard Variable', Inter, -apple-system, sans-serif;
-  --font-body: 'Pretendard Variable', Inter, -apple-system, sans-serif;
+  --font-display: 'Pretendard Variable', Pretendard, -apple-system, sans-serif;
+  --font-body: 'Pretendard Variable', Pretendard, -apple-system, sans-serif;
   --font-mono: 'D2Coding', 'JetBrains Mono', monospace;
 }
 ```
@@ -521,7 +521,7 @@ COLORS = {
 
 (1) 한글: Pretendard Variable (1순위), 맑은 고딕 (fallback)
 
-(2) 영문/숫자: Inter (1순위), Segoe UI (fallback)
+(2) 영문/숫자: Pretendard (1순위), Segoe UI (fallback)
 
 (3) 슬라이드 제목: black 20pt, weight 700 (Bold), 중앙 정렬, 상단 가로 실선 위 배치
 
@@ -531,11 +531,11 @@ COLORS = {
 
 (6) Footer: muted(#6a6a6a) 12pt, weight 500, 좌측 정렬, "장동인 | KAIST 김재철AI대학원 · AIBB LAB"
 
-(7) 페이지 번호: muted 13pt, weight 500, Inter, 우상단 (right:22px, top:18px)
+(7) 페이지 번호: muted 13pt, weight 500, Pretendard, 우상단 (right:22px, top:18px)
 
 ## 6종 슬라이드 패턴
 
-(1) 통계 콜아웃 — 3개 stat-card (pink/teal/ochre), Inter 84pt 큰 숫자
+(1) 통계 콜아웃 — 3개 stat-card (pink/teal/ochre), Pretendard 84pt 큰 숫자
 
 (2) 비교 표 — 2칼럼 (white + teal featured), pink "Featured" 배지
 
@@ -770,7 +770,7 @@ def add_page_number(slide, num):
     p.alignment = PP_ALIGN.RIGHT
     run = p.add_run()
     run.text = f'{num:02d}'
-    run.font.name = 'Inter'
+    run.font.name = 'Pretendard'
     run.font.size = Pt(11)
     run.font.color.rgb = MUTED
     return tb
