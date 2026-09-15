@@ -1,0 +1,37 @@
+name: Chang presentation validation
+on:
+  push:
+    branches: [chang-presentation-v3-20260915]
+    paths:
+      - chang-presentation-brand/**
+      - .github/workflows/chang-presentation.yml
+permissions:
+  contents: read
+jobs:
+  inspect-template:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Inspect existing template
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          from zipfile import ZipFile
+          import hashlib,json
+          p=Path('chang-presentation-brand/template.pptx')
+          data=p.read_bytes()
+          result={'sha256':hashlib.sha256(data).hexdigest(),'size':len(data),'parts':{}}
+          with ZipFile(p) as z:
+              for i in z.infolist():
+                  b=z.read(i.filename)
+                  result['parts'][i.filename]={'sha256':hashlib.sha256(b).hexdigest(),'size':len(b),'compression':i.compress_type}
+          Path('template-manifest.json').write_text(json.dumps(result,indent=2))
+          print(json.dumps(result,indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: current-presentation-template
+          path: |
+            chang-presentation-brand/template.pptx
+            template-manifest.json
+          retention-days: 3
