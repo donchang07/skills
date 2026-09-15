@@ -1,0 +1,24 @@
+name: Chang brand migration snapshot
+on:
+  push:
+    branches: [chang-brand-v3-20260915]
+    paths: [.github/workflows/chang-brand-bootstrap.yml]
+permissions:
+  contents: read
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/upload-artifact@v4
+        with:
+          name: chang-brand-original
+          path: |
+            chang-presentation-brand/template.pptx
+            chang-presentation-brand/SKILL.md
+            chang-presentation-brand/DESIGN.md
+            chang-presentation-brand/brand_tables.py
+            chang-presentation-brand/chang-design-md-v1.md
+          retention-days: 1
+          if-no-files-found: error
