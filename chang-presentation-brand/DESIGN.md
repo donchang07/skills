@@ -1,469 +1,102 @@
-# DESIGN.md
-## chang-presentation-brand v2.1 통합 디자인 시스템
+# Chang Presentation Design · v3.0.0
 
-장동인교수 (KAIST 김재철AI대학원 · AIBB LAB) 발표 자료, CAIO 강의 슬라이드, CAIO 웹포털, AI 워크북, LLM 진단도구 등 모든 디지털 자산에 적용되는 통합 비주얼 시스템입니다.
+적용일은 2026-09-15입니다. 이 문서는 승인된 AX_CAIO_v7의 표현 방식을 일반적인 PPT 제작 규칙으로 정리한 것입니다. AX의 특정 주장이나 장수를 다른 주제에 강제하지 않습니다. 웹·앱 디자인은 적용 대상이 아닙니다.
 
-본 문서는 2026년 5월 3일 자로 v2.0(cream canvas)에서 v2.1로 개정된 사양을 정의합니다. v2.1의 핵심 변경은 (1) canvas를 cream(#fffaf0)에서 pure white(#ffffff)로 전환하여 인쇄·빔프로젝터 환경에서의 콘트라스트를 극대화하고, (2) 우상단 대각선 삼각형의 회전을 90°→180°로 조정하여 직각이 우상단 코너에 정확히 위치하도록 하는 것입니다. 헤리티지 frame(좌측 navy stripe, 안쪽 가는 수직선, 상단 가로 실선, 우상단 대각선, 하단 그라디언트)은 유지됩니다.
+## 기준의 구성
 
----
+`template.pptx`는 고정 프레임·표지·프로필·마무리·번호의 원본입니다. `brand.json`은 새 콘텐츠의 글꼴·색상·간격입니다. 실제 값은 이 두 원본에서 읽습니다. 이전 문서의 근사 cm/px 값을 가져오지 않습니다.
 
-## 1. 브랜드 보이스
+원본의 실제 크기는 12192000 × 6858000 EMU, 16:9입니다. 길이는 인치 또는 pt, 내부 저장은 EMU를 사용합니다. 웹의 96px 여백이나 200px 본문 시작을 PPT에 그대로 적용하지 않습니다.
 
-### 1.1 정의
+## 고정 프레임
 
-기본 분위기는 pure white canvas 위에 dark navy ink 타이포그래피와 saturated single-color 카드가 리듬감 있게 놓이는 구조입니다. KAIST/AIBB LAB의 학문적 권위감(navy)과 AI 시대의 명료함(white + saturated 카드)을 결합합니다.
+원본 마스터에서 왼쪽 굵은 선·가로 구분선·짧은 세로선·하단 장식선·우상단 도형을 복사합니다. 이들은 콘텐츠가 아니며 정렬·크기 조정 대상에서 제외합니다. 생성 시 마스터 도형을 숨기고 슬라이드에 복사하는 경우 이중 표시가 생기지 않게 합니다.
 
-### 1.2 핵심 특성
+번호는 원본 번호 도형의 위치, 테마 색상, 내부 여백과 정렬을 복사합니다. 글자는 원본 3페이지에서 사용한 8pt Pretendard이며 일반 도형의 slidenum 필드입니다. 숫자 캐시도 순서대로 채웁니다. 상단·우측 10pt라는 옛 근사 규칙을 적용하지 않습니다.
 
-(1) Pure white canvas (#ffffff)를 모든 슬라이드와 페이지의 기본 floor로 사용하여 인쇄·빔프로젝터 환경에서의 콘트라스트를 극대화합니다.
+반복 푸터 문구는 없습니다. 장식선은 푸터 문구가 아닙니다. 표지·프로필·마지막 장은 원래 구성과 크기를 보존하며, 표지 제목만 교체하고 전체 장수에 맞춰 번호만 갱신합니다.
 
-(2) Heritage Navy (#1B2A4A)는 좌측 stripe·상단 가로 실선·헤드라인·primary CTA에 사용하는 시그니처 색상입니다.
+## 타이포그래피
 
-(3) Heritage Blue (#3A86FF)는 부제목·accent·하단 그라디언트·timeline 진행 바에 사용합니다.
-
-(4) Saturated 6색 feature card palette를 콘텐츠 슬라이드의 강조 블록·통계 카드·핵심 메시지에 사용합니다.
-
-(5) Pretendard(한글·영문·숫자 공통)를 weight 500 + negative letter-spacing으로 통일합니다.
-
-(6) **모든 콘텐츠 박스는 square box(border-radius 0)** 입니다. Frame이 직각이면 콘텐츠도 직각이라는 기하학적 문법을 따릅니다.
-
-(7) 96px section spacing으로 여백 리듬을 확보합니다.
-
-(8) Footer와 마지막 슬라이드도 white로 마감하여 dark footer가 끊어내는 일반 SaaS 톤과 차별화합니다.
-
----
-
-## 2. Heritage Frame (정확한 사양)
-
-장동인교수님의 직접 측정으로 확정된 cm 수치입니다. PPTX 16:9 슬라이드 33.867cm × 19.05cm, HTML 1280px × 720px 기준 환산 비율은 1cm ≈ 37.795px, 1cm = 360,000 EMU입니다.
-
-### 2.1 좌측 굵은 navy stripe
-
-| 항목 | cm | HTML px | PPTX EMU | 색상 |
-|---|---|---|---|---|
-| 가로 위치 | 0 | 0 | 0 | — |
-| 세로 위치 | 0 | 0 | 0 | — |
-| 너비 | 약 1.0 | 38 | 360000 | #1B2A4A |
-| 높이 | 19.05 (전체) | 720 | 6858000 | #1B2A4A |
-
-### 2.2 좌측 안쪽 가는 수직선
-
-| 항목 | cm | HTML px | PPTX EMU | 색상 |
-|---|---|---|---|---|
-| 가로 위치 | 1.35 | 51 | 486000 | — |
-| 세로 위치 | 0 | 0 | 0 | — |
-| 너비 | 0.13 | 5 | 46800 | #1B2A4A |
-| 높이 | 2.92 | 110 | 1051200 | #1B2A4A |
-
-### 2.3 상단 가로 실선
-
-| 항목 | cm | HTML px | PPTX EMU | 색상 |
-|---|---|---|---|---|
-| 가로 위치 | 1.0 | 38 | 360000 | — |
-| 세로 위치 | 2.1 | 79 | 756000 | — |
-| 너비 | 34.0 | 1288 | 12240000 | #1B2A4A |
-| 높이 | 0.13 | 5 | 46800 | #1B2A4A |
-
-핵심 디자인 결정: 가로 실선은 좌측 굵은 stripe(0~38px)의 우측 끝과 정확히 맞닿아 시작합니다(left:38px). 이로써 좌측 stripe과 가로 실선이 빈틈없이 L자 frame을 이루며, 게슈탈트 폐쇄성(Closure) 원리에 따라 청중 무의식에 "공식 문서"의 시각 코드가 안정적으로 전달됩니다.
-
-### 2.4 우상단 옅은 대각선 도형
-
-| 항목 | cm | HTML px | 색상 |
-|---|---|---|---|
-| 위치 | 우상단 코너 | top:0, right:0 | — |
-| 크기 | 약 1.85 × 1.85 | 70 × 70 | #d8e2f0 (옅은 navy gray) |
-| 형태 | RIGHT_TRIANGLE, **rotation 180°** | CSS clip-path 또는 border 기법 | — |
-
-핵심: PowerPoint(python-pptx)에서는 RIGHT_TRIANGLE을 180° 회전시켜 직각이 우상단 코너에 정확히 위치하도록 합니다. 빗변은 좌상단↘우하단 방향으로 흐르며, 페이지 번호(우상단)와 시각적으로 정합합니다.
-
-### 2.5 하단 그라디언트 라인
-
-| 항목 | cm | HTML px | 색상 |
-|---|---|---|---|
-| 가로 위치 | 1.0 (좌측 stripe 우측) | 38 | — |
-| 세로 위치 | 19.05 - 0.08 (하단) | bottom:0 | — |
-| 너비 | 32.87 | 1242 | — |
-| 높이 | 0.08 | 3 | linear-gradient(90deg, #3A86FF 0%, #ffffff 100%) |
-
----
-
-## 3. 색상 시스템
-
-### 3.1 Heritage (chang-presentation-brand 시그니처)
-
-| Token | HEX | 용도 |
+| 역할 | 기본 규격 | 배치 |
 |---|---|---|
-| heritage-navy | #1B2A4A | 좌측 stripe, 상단 가로 실선, 헤드라인 본문, primary CTA |
-| heritage-blue | #3A86FF | 부제목, 하단 그라디언트, timeline 진행 바, accent |
-| heritage-blue-soft | #2C3E5A | 본문 강조, sub-headline |
+| 콘텐츠 제목 | Pretendard 24pt Bold | 가운데 정렬 |
+| 박스 중제목 | Pretendard 16pt Bold | 한 줄, 위쪽 또는 짧은 라벨의 중앙 |
+| 일반 본문 | Pretendard 14pt Regular | 설명문은 좌측, 짧은 라벨은 가운데 |
+| 표 헤더 | Pretendard 16pt Bold | 한 줄, 가운데 |
+| 표 본문 | Pretendard 14pt Regular | 설명은 좌측, 수치는 우측 |
+| 보조 캡션 | Pretendard 11pt Regular | 출처·짧은 주석에만 사용 |
+| 페이지 번호 | 원본 위치의 Pretendard 8pt | 원본 우측 정렬 |
 
-### 3.2 Surface (Clay 차용)
+표지 제목은 원본 36pt를 유지합니다. 고정 프로필의 기존 작은 글꼴을 본문 14pt로 덮어쓰지 않습니다. 폰트 이름뿐 아니라 한글·영문·복합 문자 매핑을 함께 지정합니다. Bold인 문장을 중제목으로 추측하지 않고 생성 시 역할을 표시합니다.
 
-| Token | HEX | 용도 |
-|---|---|---|
-| canvas | #ffffff | 모든 슬라이드와 페이지의 기본 배경 |
-| surface-soft | #faf5e8 | Footer, CTA 밴드, illust-card 배경 |
-| surface-card | #f5f0e0 | cream 카드 (보조 정보) |
-| surface-strong | #ebe6d6 | 강조 밴드 |
-| hairline | #e5e5e5 | 카드/입력 필드 1px 테두리 |
+폰트가 없으면 다른 글꼴로 몰래 측정하지 않습니다. Regular/Bold의 실제 파일로 폭을 측정합니다. 측정에는 4% 여유를 두고 실제 렌더링에서 검증합니다. 한글·영문 혼합어가 글자 하나씩 부자연스럽게 끊기거나 문장부호만 다음 줄에 남지 않도록 확인합니다.
 
-### 3.3 Brand & Accent (Clay 차용)
+## 색상
 
-| Token | HEX | 권장 용도 |
-|---|---|---|
-| brand-pink | #ff4d8b | 핵심 통계, 큰 CTA, 매수 시그널 |
-| brand-teal | #1a3a3a | Featured 솔루션, 추천 가격티어, 핵심 결론 |
-| brand-lavender | #b8a4ed | AI 에이전트, LLM 관련 카드 |
-| brand-peach | #ffb084 | 일반 기업 사례, 따뜻한 메시지 |
-| brand-ochre | #e8b94a | 강사진, 커뮤니티, 전문가 카드 |
-| brand-mint | #a4d4c5 | 일러스트 보조, 작은 배지 |
-| brand-coral | #ff6b5a | 하이라이트 강조 |
+| 역할 | HEX |
+|---|---|
+| 콘텐츠 제목·표 헤더 | #1D3750 |
+| 주요 선·아이콘·관계 | #247894 |
+| 보조 강조 | #318DA5 |
+| 본문 | #273541 |
+| 보조 설명 | #617580 |
+| 연한 배경 | #EAF2F5 |
+| 아주 연한 배경 | #F4F7F9 |
+| 경계선 | #C6D5DE |
+| 바탕·짙은 배경 위 글자 | #FFFFFF |
 
-### 3.4 Text
+템플릿 장식은 원본 테마 색상을 유지하므로 새 콘텐츠 토큰으로 재색칠하지 않습니다. 의미가 같으면 같은 색상을 반복합니다. 색이 연속되면 안 된다는 옛 카드 규칙은 사용하지 않습니다. 분홍·보라·오렌지·크림색의 웹용 카드 팔레트를 이 PPT에 자동 적용하지 않습니다. 새로운 경고색이 반드시 필요하면 해당 과업에서 명시하고 글자/기호를 함께 사용합니다.
 
-| Token | HEX | 용도 |
-|---|---|---|
-| ink | #0a0a0a | 헤드라인, 본문 주요 텍스트 |
-| body-strong | #1a1a1a | 강조 본문, lead paragraph |
-| body | #3a3a3a | 일반 본문 |
-| muted | #6a6a6a | sub-heading, breadcrumb, footer 본문 |
-| muted-soft | #9a9a9a | 캡션, 작은 글씨 |
-| on-primary | #ffffff | navy/teal/dark 배경 위 텍스트 |
+## 영역과 정렬
 
-### 3.5 Semantic
+새 콘텐츠의 기본 영역은 다음과 같습니다. 실제 값의 단일 원본은 `brand.json`입니다.
 
-| Token | HEX | 용도 |
-|---|---|---|
-| success | #22c55e | 매수 가격대 진입, 진단 통과 |
-| warning | #f59e0b | 고평가 구간, 진단 주의 |
-| error | #ef4444 | 검증 오류, 손절 영역 |
-| timeline-track | #4a4a4a | 미진행 구간 dark gray 라인 |
+| 영역 | x | y | 너비 | 높이 |
+|---|---:|---:|---:|---:|
+| 제목 | 0.60 | 0.20 | 12.133333 | 0.57 |
+| 정의·보조 설명 | 0.65 | 1.04 | 12.03 | 0.53 |
+| 주 콘텐츠 | 0.65 | 1.72 | 12.03 | 4.54 |
+| 선택적 결론 문장 | 0.65 | 6.55 | 12.03 | 0.53 |
 
-### 3.6 색 조합 원칙
+단위는 인치입니다. 모든 영역을 반드시 채우지는 않습니다. 보조 설명과 하단 결론이 필요 없으면 생략할 수 있습니다. 내용이 충분하고 충돌하지 않으면 주 콘텐츠 영역을 의도적으로 넓힐 수 있습니다. 제목과 프레임은 이동하지 않습니다.
 
-(1) 헤드라인은 항상 black(#000000) 또는 heritage-navy 사용. 본문은 body(#3a3a3a) 기본.
+슬라이드 중앙에 정렬할 것인지 두 열로 나눌 것인지는 시각 형식이 결정합니다. 표·이미지·관계도를 개별적으로 전부 중앙으로 이동하지 않습니다. 두 표는 각각 배정된 영역의 중앙에 둡니다. 같은 행의 중제목 기준선과 설명 시작 높이를 맞춥니다.
 
-(2) 부제목은 heritage-blue + bold(weight 700)로 통일.
+## 내용 맞춤 박스
 
-(3) 한 페이지 내 saturated 색은 최대 3종까지만 사용.
+박스의 폭은 한 줄 중제목, 읽을 수 있는 본문 폭, 좌우 여백으로 정합니다. 높이는 중제목 높이, 제목/본문 간격, 실제 본문 줄 수, 상하 여백으로 정합니다. 기본 좌우 여백은 0.16인치, 상하 여백은 0.12인치, 중제목/본문 간격은 0.12인치입니다. 같은 행에서는 가장 긴 설명에 맞춰 높이를 맞춥니다. 다른 행까지 무조건 같은 높이로 만들지는 않습니다.
 
-(4) 같은 saturated 색 카드를 연속 두 번 배치 금지.
+박스가 많으면 4개+4개, 3개+3개처럼 두 줄로 놓습니다. 8개를 한 줄에 넣기 위해 16pt 제목을 줄이거나 두 줄로 만들지 않습니다. 한 줄 이름만 있는 박스는 가로·세로 가운데 정렬합니다. 설명이 있으면 위쪽 중제목과 아래 본문으로 구분합니다.
 
-(5) 각 saturated 카드의 텍스트 색상 규칙:
-- pink, teal, dark 배경 → on-primary (white)
-- lavender, peach, ochre, mint, white 배경 → ink (dark)
+직각 사각형은 새 텍스트 컨테이너의 규칙입니다. 관계도에서 원통은 저장소, 마름모는 분기처럼 의미가 있을 때 쓸 수 있습니다. 아이콘·연결선·막대그래프까지 사각형으로 바꾸지 않습니다. 원본 고정 페이지의 장식 형태도 수정하지 않습니다.
 
-(6) 좌측 stripe과 상단 가로 실선은 항상 heritage-navy(#1B2A4A)로 고정.
+## 표
 
----
+열 폭은 한 줄 헤더와 식별자가 들어가는 최소 폭을 지킵니다. 설명 열은 공백과 자연스러운 의미 단위로 줄바꿈합니다. 전체 표가 크면 설명 열부터 재분배하고 헤더/숫자 열을 무조건 함께 줄이지 않습니다. 그래도 안 되면 문장을 다듬거나 표를 분리합니다. 글꼴 축소로 해결하지 않습니다.
 
-## 4. 타이포그래피
+행 높이는 실제 줄 수와 위아래 여백에 따라 계산합니다. 표가 이미 나란히 배치되어 있다면 각 표의 기존 경계를 기본 허용 영역으로 사용합니다. 전폭 표도 내용이 충분하면 허용하며, 내용이 짧은 표를 전폭으로 늘리지 않는 것이 원칙입니다.
 
-### 4.1 폰트 스택
+헤더는 #1D3750와 흰 글자, 본문은 흰색/아주 연한 배경의 교차입니다. 전체 셀 경계는 #C6D5DE 0.5pt 실선입니다. 셀 여백은 좌우 0.10인치, 상하 0.08인치, 세로 가운데입니다. 숫자는 단위와 자릿수를 일관되게 정렬합니다. 자동 프로그램은 병합 셀을 임의로 풀지 않고 명시적으로 중지합니다.
 
-| 용도 | 한글 | 영문/숫자 |
-|---|---|---|
-| Display | Pretendard Variable, weight 500–700 | Pretendard, weight 500 |
-| Body | Pretendard Variable, weight 400 | Pretendard, weight 400 |
-| Monospace | D2Coding | JetBrains Mono |
+## 다이어그램·차트·아이콘
 
-Fallback 스택:
-- 한글: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, '맑은 고딕', sans-serif
-- 영문: Pretendard, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif
+다이어그램의 화살표는 의미와 방향이 있어야 합니다. 연결선은 글자를 지나가지 않게 먼저 배치하고 그 위에 노드를 놓습니다. 관계에는 체결·공급·승인·참조 같은 이름을 붙입니다. 실행 순서와 시스템 의존 관계를 같은 화살표로 혼동하지 않습니다.
 
-### 4.2 Hierarchy
+아이콘은 단색 선형 또는 단순 플랫 스타일이며 크기·선 두께·기준선을 통일합니다. 아이콘 뒤에는 중제목과 설명이 있어야 합니다. 이모지나 플랫폼별 아이콘 폰트에 의존하지 않습니다. 제공 프로그램의 아이콘은 수정 가능한 PowerPoint 선 도형입니다.
 
-| Token | Web (px) | PPTX (pt) | Weight | Line Height | Letter Spacing | 용도 |
-|---|---|---|---|---|---|---|
-| display-xl | 72 | 60 | 500 | 1.0 | -2.5px | 표지 메인 타이틀 |
-| display-lg | 56 | 44 | 500 | 1.05 | -2px | Section divider |
-| display-md | 40 | 32 | 500 | 1.1 | -1px | CTA 밴드 |
-| display-sm | 32 | 24 | 600 | 1.15 | -0.5px | feature card 타이틀 |
-| **slide-title** | **27** | **20** | **700** | **1.2** | **-0.5px** | **콘텐츠 슬라이드 제목 (black)** |
-| **slide-subtitle** | **21** | **16** | **700** | **1.45** | **0** | **콘텐츠 슬라이드 부제목 (heritage-blue)** |
-| title-lg | 24 | 20 | 600 | 1.3 | -0.3px | 큰 카드 타이틀 |
-| title-md | 18 | 16 | 600 | 1.4 | 0 | 카드 타이틀 |
-| title-sm | 16 | 14 | 600 | 1.4 | 0 | 작은 카드 타이틀 |
-| body-md | 16 | 14 | 400 | 1.55 | 0 | 일반 본문 |
-| body-sm | 14 | 12 | 400 | 1.55 | 0 | footer, 작은 본문 |
-| caption | 13 | 11 | 500 | 1.4 | 0 | 캡션, 배지 |
-| caption-uppercase | 12 | 10 | 600 | 1.4 | 1.5px | 섹션 라벨 |
+차트에는 측정값/가정값 구분, 기준시점, 단위, 출처를 표시합니다. 없는 수치로 성과를 만들어내지 않습니다. 편집 가능한 PowerPoint 차트를 기본으로 하며 데이터와 눈금의 서체도 Pretendard로 지정합니다. 의미 없는 3D 효과나 여러 색의 장식은 사용하지 않습니다.
 
-### 4.3 원칙
+아키텍처에는 실제 구성요소, 연결 경로, 데이터 저장소, 공통 권한/통제, 사용자 접점이 있어야 합니다. 이를 단순 왼쪽→오른쪽의 단계 박스로 대체하지 않습니다. 역할·원칙 슬라이드는 불릿만으로도 충분할 수 있습니다.
 
-(1) 콘텐츠 슬라이드 제목은 black 20pt, weight 700, 중앙 정렬, 상단 가로 실선 위에 배치.
+## 문서톤
 
-(2) 부제목은 heritage-blue 16pt, weight 700, 중앙 정렬, 상단 가로 실선 아래 배치.
+제목에서 할 말을 바로 전달합니다. 본문은 부드러운 서술형으로 쓰고, 명령조·과장·반복 구호를 피합니다. 처음 등장하는 용어를 바로 정의하며, 정의가 추상적이면 실제 사례·저장 항목·작동 방법을 함께 보여줍니다.
 
-(3) Display는 weight 500을 절대값으로 고정 (단, 슬라이드 제목·부제목은 700 사용).
+한 장에서 하나의 주제를 직접 설명합니다. 질문과 답을 불필요한 두 장으로 늘리지 않습니다. 사용자가 확정한 주요 내용은 시각적 단순화를 이유로 누락하지 않습니다. 모든 주제에 자동화·AX·의사결정 같은 특정 교안의 결론을 강제하지 않습니다.
 
-(4) 한·영 혼용 시 Pretendard 단일 서체로 처리(별도 영문 서체 없음).
+## 검증과 예외
 
----
+새 콘텐츠는 이름에 역할을 기록하여 자동 검사합니다. 원본에서 복사한 고정 페이지는 별도 보호 대상으로 취급하고 정적 좌표 검사로 임의 교정하지 않습니다. 생성물에는 placeholder가 없어야 하지만 기준 원본은 해시가 바뀌지 않도록 보존합니다.
 
-## 5. 레이아웃 & 여백
-
-### 5.1 Spacing 토큰
-
-| Token | Value | 용도 |
-|---|---|---|
-| xxs | 4px | 아이콘-라벨 간격 |
-| xs | 8px | 인라인 요소 간격 |
-| sm | 12px | 작은 카드 내부 |
-| md | 16px | 표준 카드 내부 padding |
-| lg | 24px | 카드 간격 |
-| xl | 32px | feature card 내부 padding |
-| xxl | 48px | 섹션 내 그룹 간 |
-| section | 96px | 주요 editorial 섹션 간 |
-
-### 5.2 콘텐츠 영역
-
-(1) 콘텐츠 영역 좌우 여백: left:96px, right:96px (PPTX 기준 약 2.54cm)
-
-(2) 콘텐츠 영역 상단: top:200px (PPTX 기준 약 5.29cm) — 가로 실선 79px + 부제목 영역 + 여백
-
-(3) 콘텐츠 영역 하단: bottom:60px (footer 영역 위)
-
-(4) 16:9 PPTX 표준: 13.333" × 7.5", 콘텐츠 영역 내부 약 28.78cm × 14.41cm
-
----
-
-## 6. 형태 (Shape)
-
-### 6.1 핵심 원칙: Square Box
-
-**Frame이 직각이면 콘텐츠도 직각**입니다. chang-presentation-brand의 navy 직각 frame이 시그니처이므로, 콘텐츠 박스(stat-card, compare-card, chart-card, insight-card, pyramid-layer, illust-card 등)는 모두 border-radius 0의 square box로 통일합니다.
-
-이는 Clay.com의 24px 둥근 모서리 시스템과 가장 큰 차이점입니다. Clay는 frame이 없으므로 카드를 둥글게 처리해도 충돌하지 않지만, chang-presentation-brand는 직각 frame과 통합되려면 모든 박스가 직각이어야 합니다.
-
-### 6.2 예외 (원형 유지)
-
-(1) timeline-node — 번호를 담는 원형 (border-radius:50%)
-
-(2) bullet point dot — 작은 원형 마커 (8×8px brand-pink)
-
-(3) 인물 사진 마스킹 — 원형(아바타) 사용 가능
-
-이 외 모든 사각형 콘텐츠는 직각 모서리를 유지합니다.
-
----
-
-## 7. 슬라이드 패턴 6종
-
-각 패턴은 모두 동일한 헤리티지 frame을 공유하며, 콘텐츠 영역(top:200px, left/right:96px)만 다양화됩니다.
-
-### 7.1 통계 콜아웃 (Statistics Callout)
-
-3개의 saturated 카드를 grid로 배치하여 핵심 통계를 시각화합니다. Pretendard 84pt 큰 숫자가 voltage 핵심입니다.
-
-구성 요소: 3 stat-cards (pink/teal/ochre 권장 조합) → 각 카드는 [상단 라벨 + 큰 숫자 + 단위 + 하단 설명] 4 layer
-
-### 7.2 비교 표 (Comparison Table)
-
-좌우 2칼럼 카드로 두 옵션을 비교합니다. 우측 카드를 brand-teal로 featured 처리하고 우상단 pink "Featured" 배지를 배치합니다.
-
-### 7.3 차트 + 인사이트 (Chart + Insight)
-
-좌측 1.4 비율 chart-card(white 배경 + hairline 테두리)에 막대 그래프, 우측 1.0 비율 lavender insight-card에 핵심 메시지 + 본문을 배치합니다.
-
-### 7.4 다이어그램 (Diagram)
-
-5계층 메모리 등 계층 구조를 가로형 계단으로 시각화합니다. 위에서 아래로 60% → 70% → 82% → 92% → 100% 너비로 점증, 각 계층마다 [이름 + 설명 + 스펙] 3 column grid.
-
-### 7.5 이미지 + 텍스트 (Image + Text)
-
-좌측 1.15 비율 illust-card(surface-soft 배경)에 SVG 일러스트 또는 3D claymation, 우측 1.0 비율 텍스트 영역 [eyebrow + 헤드라인 + 본문 + bullet 4개].
-
-### 7.6 타임라인 (Timeline)
-
-4개 노드를 가로축에 배치하고 진행률을 heritage-blue + dark gray(#4a4a4a)로 시각화합니다. 라벨은 위·아래 교차 배치로 시각 리듬을 확보합니다.
-
----
-
-## 8. 컴포넌트
-
-### 8.1 Buttons
-
-(1) button-primary — heritage-navy 배경, white 텍스트, padding 12×20, 직각 모서리
-
-(2) button-secondary — canvas 배경, ink 텍스트, 1px hairline
-
-(3) button-on-color — saturated 카드 위에 white 배경 반전 사용
-
-### 8.2 Cards
-
-(1) stat-card-{pink|teal|ochre|lavender|peach|mint|coral} — saturated 색 배경, padding 32×30, square
-
-(2) compare-card / compare-card.featured — white 또는 teal 배경, padding 28×30
-
-(3) chart-card — white 배경, 1px hairline, padding 24×28
-
-(4) insight-card — lavender 배경, padding 28
-
-(5) pyramid-layer — saturated 색 layer, padding 10×22, height 56
-
-(6) illust-card — surface-soft 배경, SVG 또는 이미지 100% 채움
-
-### 8.3 Inputs
-
-(1) text-input — canvas 배경, 1px hairline, padding 12×16, height 44, square
-
-### 8.4 Badges
-
-(1) compare-badge — pink 배경, white 텍스트, padding 6×14, square
-
-### 8.5 Footer
-
-(1) footer 형식: "장동인 | KAIST 김재철AI대학원 · AIBB LAB"
-
-(2) 페이지 번호: 우상단 13px Pretendard, muted 색상
-
----
-
-## 9. Do's and Don'ts
-
-### 9.1 Do
-
-(1) 모든 페이지를 white canvas(#ffffff)에 anchor.
-
-(2) 좌측 굵은 navy stripe + 안쪽 가는 짧은 수직선 + 상단 가로 실선의 정확한 cm 사양 준수.
-
-(3) 좌측 stripe과 상단 가로 실선이 38px 지점에서 정확히 맞닿도록 배치(L자 폐쇄).
-
-(4) 콘텐츠 슬라이드 제목은 black 20pt 700, 부제목은 heritage-blue 16pt 700, 모두 중앙 정렬.
-
-(5) saturated 카드 6색을 페이지 내 최대 3종, 동일 색 연속 배치 금지.
-
-(6) 모든 콘텐츠 박스를 square box(border-radius 0)로 통일.
-
-(7) Footer는 "장동인 | KAIST 김재철AI대학원 · AIBB LAB" 형식.
-
-(8) 페이지 번호는 우상단 Pretendard 13px.
-
-### 9.2 Don't
-
-(1) cool gray·cream·기타 톤 canvas 사용 금지. 배경은 항상 white(#ffffff)로 고정.
-
-(2) 가로 실선을 좌측 stripe과 떨어뜨려 배치 금지 (L자 폐쇄 깨짐).
-
-(3) saturated 카드를 6색 외 추가 금지.
-
-(4) 콘텐츠 박스에 둥근 모서리 사용 금지.
-
-(5) 같은 brand 색 카드 연속 두 번 배치 금지.
-
-(6) 슬라이드 제목 아래 강조선 그리기 금지 (이미 가로 실선이 있음).
-
-(7) 본문 텍스트 가운데 정렬 금지 (좌측 정렬 원칙).
-
-(8) Footer/Thank You 슬라이드에 dark navy 배경 금지.
-
-(9) 헤드라인-본문 간 폰트 family 혼용 금지.
-
----
-
-## 10. 구현 토큰
-
-### 10.1 CSS Variables (CAIO 웹포털용)
-
-```css
-:root {
-  /* Heritage */
-  --color-heritage-navy: #1B2A4A;
-  --color-heritage-blue: #3A86FF;
-  --color-heritage-blue-soft: #2C3E5A;
-
-  /* Surface */
-  --color-canvas: #ffffff;
-  --color-surface-soft: #faf5e8;
-  --color-surface-card: #f5f0e0;
-  --color-surface-strong: #ebe6d6;
-  --color-hairline: #e5e5e5;
-
-  /* Brand */
-  --color-brand-pink: #ff4d8b;
-  --color-brand-teal: #1a3a3a;
-  --color-brand-lavender: #b8a4ed;
-  --color-brand-peach: #ffb084;
-  --color-brand-ochre: #e8b94a;
-  --color-brand-mint: #a4d4c5;
-  --color-brand-coral: #ff6b5a;
-
-  /* Text */
-  --color-ink: #0a0a0a;
-  --color-body-strong: #1a1a1a;
-  --color-body: #3a3a3a;
-  --color-muted: #6a6a6a;
-  --color-muted-soft: #9a9a9a;
-  --color-on-primary: #ffffff;
-
-  /* Semantic */
-  --color-success: #22c55e;
-  --color-warning: #f59e0b;
-  --color-error: #ef4444;
-  --color-timeline-track: #4a4a4a;
-
-  /* Spacing */
-  --space-xxs: 4px; --space-xs: 8px; --space-sm: 12px;
-  --space-md: 16px; --space-lg: 24px; --space-xl: 32px;
-  --space-xxl: 48px; --space-section: 96px;
-
-  /* Font */
-  --font-display: 'Pretendard Variable', Pretendard, -apple-system, sans-serif;
-  --font-body: 'Pretendard Variable', Pretendard, -apple-system, sans-serif;
-  --font-mono: 'D2Coding', 'JetBrains Mono', monospace;
-}
-```
-
-### 10.2 PPTX EMU 정수표
-
-PPTX OOXML XML 작성 시 사용. 1cm = 360,000 EMU.
-
-| 요소 | x (EMU) | y (EMU) | width (EMU) | height (EMU) |
-|---|---|---|---|---|
-| 슬라이드 자체 | 0 | 0 | 12192000 | 6858000 |
-| 좌측 굵은 stripe | 0 | 0 | 360000 | 6858000 |
-| 좌측 안쪽 수직선 | 486000 | 0 | 46800 | 1051200 |
-| 상단 가로 실선 | 360000 | 756000 | 12240000 | 46800 |
-| 우상단 대각선 (rotation 180°) | 11530000 | 0 | 660000 | 660000 |
-| 하단 그라디언트 | 360000 | 6829800 | 11832000 | 28200 |
-
----
-
-## 11. 버전 이력
-
-### v2.1 (2026-05-03) — 본 문서
-
-(1) Canvas 색상을 cream(#fffaf0)에서 pure white(#ffffff)로 전환. 인쇄·빔프로젝터 환경에서의 콘트라스트 극대화가 목적이며, 모든 슬라이드/페이지의 기본 background는 white로 고정.
-
-(2) 우상단 옅은 대각선 도형의 회전 사양을 90°→180°로 조정. RIGHT_TRIANGLE의 직각이 우상단 코너에 정확히 위치하여 페이지 번호와 시각적으로 정합.
-
-(3) 하단 그라디언트 라인의 종점 색상을 #fffaf0→#ffffff로 동기화.
-
-(4) "v2.0의 cream-tinted 따뜻함"을 "v2.1의 pure white 명료함"으로 브랜드 보이스 재정의.
-
-### v2.0 (2026-05-03)
-
-(1) v1.0 cool-gray canvas → cream canvas (#fffaf0) 전면 전환
-
-(2) Clay.com의 saturated 6색 카드 시스템 차용
-
-(3) 한글 폰트 맑은 고딕 → Pretendard Variable 1순위 변경
-
-(4) 콘텐츠 박스를 square box로 통일 (둥근 모서리 제거)
-
-(5) 부제목 색상을 black → heritage-blue bold로 변경
-
-(6) 헤리티지 frame의 정확한 cm 사양 확정 (좌측 stripe 1.0cm, 안쪽 수직선 0.13×2.92cm at 1.35cm, 가로 실선 0.13×34cm at y=2.1cm)
-
-(7) Timeline 미진행 구간 색상을 surface-strong → dark gray(#4a4a4a)로 변경
-
-(8) 6종 슬라이드 패턴 표준화 (Statistics, Comparison, Chart+Insight, Diagram, Image+Text, Timeline)
-
-### v1.0 (이전)
-
-cool-gray canvas + heritage navy 단일톤. 둥근 모서리 사용. 한글 맑은 고딕 + 영문 Segoe UI.
-
----
-
-본 문서는 v2.1로, 2026년 5월 3일 자 chang-presentation-brand 디자인 시스템 공식 사양입니다. 향후 발견되는 시각적 충돌, 한글 가독성 이슈, PPTX 렌더링 차이를 반영하여 v2.x로 점진 개선됩니다.
+문서만 읽고 맞게 만들었다고 판단하지 않습니다. 실제 글꼴 측정, 구조 검사, 전체 렌더링, 전 장 육안 검토를 함께 수행합니다. 필요하면 PowerPoint와 모바일을 추가 검증하며, 수행하지 않은 앱 검증을 완료로 기록하지 않습니다.
