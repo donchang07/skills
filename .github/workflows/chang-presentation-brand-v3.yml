@@ -1,0 +1,122 @@
+name: Chang presentation brand v3 validation
+
+on:
+  push:
+    branches:
+      - chang-presentation-brand-v3-final
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Expand validated v3 source bundle
+        run: |
+          tar -xzf .github/chang-presentation-brand-v3-src.tar.gz -C .
+          rm -f chang-presentation-brand/chang-design-md-v1.md
+          rm -f chang-presentation-brand/.claude/settings.local.json
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install LibreOffice and font tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends libreoffice-impress fontconfig
+
+      - name: Install Pretendard for validation
+        run: |
+          mkdir -p "$HOME/.local/share/fonts/Pretendard"
+          curl -fL --retry 3 --retry-delay 2 \
+            https://raw.githubusercontent.com/orioncactus/pretendard/main/packages/pretendard/dist/public/static/Pretendard-Regular.otf \
+            -o "$HOME/.local/share/fonts/Pretendard/Pretendard-Regular.otf"
+          curl -fL --retry 3 --retry-delay 2 \
+            https://raw.githubusercontent.com/orioncactus/pretendard/main/packages/pretendard/dist/public/static/Pretendard-Bold.otf \
+            -o "$HOME/.local/share/fonts/Pretendard/Pretendard-Bold.otf"
+          fc-cache -f
+          fc-match Pretendard
+          test -s "$HOME/.local/share/fonts/Pretendard/Pretendard-Regular.otf"
+          test -s "$HOME/.local/share/fonts/Pretendard/Pretendard-Bold.otf"
+          echo "CHANG_FONT_DIR=$HOME/.local/share/fonts/Pretendard" >> "$GITHUB_ENV"
+
+      - name: Install Python dependencies
+        working-directory: chang-presentation-brand
+        run: python -m pip install --upgrade pip && python -m pip install -r requirements.txt
+
+      - name: Rebuild authoritative template from verified patch
+        working-directory: chang-presentation-brand
+        run: |
+          python rebuild_template.py template.pptx references/template_patch.json template.rebuilt.pptx
+          mv template.rebuilt.pptx template.pptx
+          mkdir -p build
+          python inspect_template.py template.pptx --output build/template-inspection.json
+
+      - name: Run all regression tests with Pretendard
+        working-directory: chang-presentation-brand
+        run: python -m unittest discover -s tests -v
+
+      - name: Build editable reference deck
+        working-directory: chang-presentation-brand
+        run: python build_examples.py build/reference_patterns.pptx
+
+      - name: Strict static validation
+        working-directory: chang-presentation-brand
+        run: python validate_presentation.py build/reference_patterns.pptx --strict-fonts --report build/static-report.json
+
+      - name: Full LibreOffice render validation
+        working-directory: chang-presentation-brand
+        run: python render_preview.py build/reference_patterns.pptx build/preview
+
+      - name: Verify rendered slide count and evidence
+        working-directory: chang-presentation-brand
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from pptx import Presentation
+          ppt=Path('build/reference_patterns.pptx')
+          report=json.loads(Path('build/preview/render-report.json').read_text())
+          expected=len(Presentation(ppt).slides)
+          assert report['renderer']=='LibreOffice', report
+          assert report['rendered_slides']==expected, (report['rendered_slides'], expected)
+          assert report['font_substitution_allowed'] is False, report
+          assert len(list(Path('build/preview').glob('slide-*.png')))==expected
+          assert Path('build/preview/contact-sheet.jpg').exists()
+          print(f'validated {expected} slides')
+          PY
+
+      - name: Commit validated v3 skill and authoritative template
+        run: |
+          rm -f .github/chang-presentation-brand-v3-src.tar.gz
+          git config user.name "Chang Presentation CI"
+          git config user.email "donchang0725@gmail.com"
+          git add -A chang-presentation-brand .github/workflows/chang-presentation-brand-v3.yml .github/chang-presentation-brand-v3-src.tar.gz
+          if ! git diff --cached --quiet; then
+            git commit -m "feat(presentation): publish validated chang brand v3"
+            git push origin HEAD:chang-presentation-brand-v3-final
+          fi
+
+      - name: Upload validation evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chang-presentation-brand-v3-validation
+          path: |
+            chang-presentation-brand/build/reference_patterns.pptx
+            chang-presentation-brand/build/template-inspection.json
+            chang-presentation-brand/build/static-report.json
+            chang-presentation-brand/build/preview/*.png
+            chang-presentation-brand/build/preview/contact-sheet.jpg
+            chang-presentation-brand/build/preview/render-report.json
+          retention-days: 7
