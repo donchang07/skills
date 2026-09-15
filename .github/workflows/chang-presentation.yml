@@ -4,34 +4,74 @@ on:
     branches: [chang-presentation-v3-20260915]
     paths:
       - chang-presentation-brand/**
+      - .github/chang-migration/**
       - .github/workflows/chang-presentation.yml
+  workflow_dispatch:
 permissions:
   contents: read
 jobs:
-  inspect-template:
+  validate:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
-      - name: Inspect existing template
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Restore staged source package
         run: |
           python - <<'PY'
+          import base64,hashlib,json,lzma
           from pathlib import Path
-          from zipfile import ZipFile
-          import hashlib,json
-          p=Path('chang-presentation-brand/template.pptx')
-          data=p.read_bytes()
-          result={'sha256':hashlib.sha256(data).hexdigest(),'size':len(data),'parts':{}}
-          with ZipFile(p) as z:
-              for i in z.infolist():
-                  b=z.read(i.filename)
-                  result['parts'][i.filename]={'sha256':hashlib.sha256(b).hexdigest(),'size':len(b),'compression':i.compress_type}
-          Path('template-manifest.json').write_text(json.dumps(result,indent=2))
-          print(json.dumps(result,indent=2))
+          chunks=sorted(Path('.github/chang-migration').glob('sources.json.xz.b64.*'))
+          assert len(chunks)==6, len(chunks)
+          payload=base64.b64decode(''.join(p.read_text().strip() for p in chunks),validate=True)
+          assert hashlib.sha256(payload).hexdigest()=='b40e88df09fdd1218f0f9124b603eba8110f906b5ecb6222c5ca8c2810e2294c'
+          files=json.loads(lzma.decompress(payload))
+          for name,text in files.items():
+              p=Path(name)
+              assert p.parts[0]=='chang-presentation-brand' and '..' not in p.parts
+              p.parent.mkdir(parents=True,exist_ok=True)
+              p.write_text(text,encoding='utf-8')
+          print('Restored',len(files),'source files')
           PY
+      - name: Install runtime dependencies and actual Pretendard
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq libreoffice-impress fontconfig
+          python -m pip install -r chang-presentation-brand/requirements.txt
+          cd chang-presentation-brand
+          python install_fonts.py --report build/font-report.json
+          fc-match Pretendard
+      - name: Run all regression tests without font skips
+        id: tests
+        continue-on-error: true
+        run: |
+          cd chang-presentation-brand
+          python run_tests.py --report build/test-report.json
+      - name: Generate and validate reference slides
+        id: slides
+        continue-on-error: true
+        run: |
+          cd chang-presentation-brand
+          python build_examples.py
+      - name: Render every reference slide
+        id: render
+        continue-on-error: true
+        run: |
+          cd chang-presentation-brand
+          python render_preview.py build/chang_brand_examples.pptx --out build/rendered
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
-          name: current-presentation-template
+          name: chang-brand-real-font-validation
           path: |
-            chang-presentation-brand/template.pptx
-            template-manifest.json
-          retention-days: 3
+            chang-presentation-brand/build/
+          if-no-files-found: warn
+          retention-days: 7
+      - name: Require passing tests and rendering
+        if: always()
+        run: |
+          test '${{ steps.tests.outcome }}' = success
+          test '${{ steps.slides.outcome }}' = success
+          test '${{ steps.render.outcome }}' = success
