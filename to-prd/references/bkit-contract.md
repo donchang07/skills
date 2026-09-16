@@ -95,7 +95,9 @@ bkit의 `/pdca pm <feature>`는 자체 PM 팀을 실행해 `docs/00-pm/<feature>
 ### Design
 
 - 데이터 계약
-- Page UI Checklist와 화면 상태
+- Screen Contract: 역할·화면 인벤토리·메뉴·인증·일반/관리자 차이
+- 화면별 Route·레이아웃·UI 요소·상호작용·전이·8개 상태·반응형·접근성
+- UI 요소와 `DATA-*`·`FR-*`의 추적 연결
 - 오류·경계 처리
 - 레벨·스택·권한·배포 가정
 
@@ -103,7 +105,7 @@ bkit의 `/pdca pm <feature>`는 자체 PM 팀을 실행해 `docs/00-pm/<feature>
 
 - FR과 SC의 검증 방법
 - 오류 처리의 기대 동작
-- 로딩·빈·오류·성공 상태
+- 초기·로딩·빈·성공·검증 오류·시스템 오류·권한 없음·오프라인 상태
 - match rate 기준과 반복 한도
 
 ## 업데이트 조건

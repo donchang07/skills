@@ -1,6 +1,6 @@
 # to-prd
 
-bkit(PDCA)가 `/pdca plan`부터 바로 소비할 수 있는 **실행 계약형 PRD**를 만드는 Claude Code 스킬입니다.
+bkit(PDCA)가 `/pdca plan`부터 바로 소비할 수 있는 **화면 중심 실행 계약형 PRD**를 만드는 Claude Code 스킬입니다. 역할·화면·메뉴·로그인·UI 요소를 먼저 정의하고, 화면의 행동과 데이터에서 Functional Requirements와 데이터 계약을 도출합니다.
 
 기획 문서 또는 브리프를 다음 구조로 변환합니다.
 
@@ -57,6 +57,8 @@ docs/PRD.md                         제품 통합 정본
 
 feature PRD를 직접 수정하지 않습니다. 업데이트는 정본을 먼저 바꾸고 영향받는 파생본을 다시 만듭니다. 파생본에만 존재하는 사람의 편집은 덮어쓰기 전에 정본으로 옮깁니다.
 
+기존 PRD에 `PRD 스키마: screen-first-v1`이 없으면 FR/SC ID를 보존한 채 화면 계약으로 마이그레이션합니다. 역할·화면·메뉴·인증·요소·데이터 연결이 완성되기 전에는 기존 최종본을 덮어쓰지 않습니다.
+
 ## Blocker가 있을 때
 
 기존 최종본을 덮어쓰지 않습니다.
@@ -76,6 +78,8 @@ Blocker가 해소된 뒤 최종본을 생성해도 draft를 자동 삭제하지 
 기획 산출물·브리프
         ↓
 to-prd
+        ├─ 역할 + 화면 인벤토리 + 메뉴/인증
+        ├─ 화면별 UI 요소 + 행동 + 데이터
         ├─ docs/PRD.md
         ├─ docs/00-pm/{feature}.prd.md
         └─ gate + decisions
@@ -98,10 +102,15 @@ to-prd
 2.  배경 & 근거
 3.  목표 + 비목표
 4.  User Scenarios
-5.  Functional Requirements + NFR
-6.  Success Criteria
-7.  Edge Cases
-8.  Page UI Checklist + 화면 4상태
+5.  Screen Contract
+    - 역할·접근 매트릭스
+    - 화면 인벤토리
+    - 데스크톱/모바일 메뉴
+    - 로그인·권한·세션 흐름
+    - 화면별 레이아웃·UI 요소·행동·데이터·8개 상태
+6.  Functional Requirements + NFR
+7.  Success Criteria
+8.  Edge Cases
 9.  브랜드 & 디자인
 10. 범위 / 비범위 / 우선순위 / 납기
 11. 레벨·스택 + 시스템 가정 10칸
@@ -113,7 +122,23 @@ to-prd
 부록 B. 외부 사실 확인
 ```
 
-FR은 시나리오·화면·SC·데이터·feature와 연결됩니다. 이 연결이 끊기면 gate가 결함으로 판정합니다.
+화면은 `SCR-*`, 화면 요소는 `SCR-*-EL-*`, 데이터 엔티티는 `DATA-*` ID를 사용합니다. FR은 화면의 사용자 행동과 시스템 반응에서 도출되며 시나리오·화면 요소·SC·데이터·feature와 연결됩니다. 이 연결이 끊기면 gate가 결함으로 판정합니다.
+
+## 화면 계약
+
+화면 정의는 UI 목록이 아니라 구현 계약입니다.
+
+- `비로그인 / 일반 사용자 / 관리자`의 열람·행동 차이
+- 모든 화면의 Route·진입 조건·종료·뒤로 가기
+- 메뉴 위치·순서·라벨·노출 역할·대상 화면
+- 데스크톱·모바일 내비게이션 차이
+- 관리자 기능이 있을 때 독립된 로그인/인증 화면
+- 화면 안의 영역과 실제 UI 요소
+- 요소별 표시값·입력 규칙·권한·조건·데이터·행동 결과
+- 초기·로딩·빈·성공·검증 오류·시스템 오류·권한 없음·오프라인 상태
+- 반응형·접근성 기준
+
+관리자 기능이나 보호 데이터가 있는데 로그인 화면이 없거나, 화면 요소가 `DATA-*`와 `FR-*`에 연결되지 않으면 착수 Blocker입니다.
 
 ## 시스템 가정
 
@@ -147,12 +172,15 @@ node scripts/validate_prd.mjs docs/PRD.md docs/00-pm/example.prd.md
 검사 항목:
 
 - 필수 장
-- FR/SC 정의와 중복
-- feature 분해표의 FR 누락
+- `SCR/화면 요소/DATA/FR/SC` 정의·중복·참조 무결성
+- 역할·화면 인벤토리·메뉴·인증 계약
+- 화면별 메타·레이아웃·UI 요소·전이·8개 상태·반응형·접근성
+- 관리자 기능과 로그인/인증 화면의 일치
+- UI 요소의 데이터 바인딩과 FR의 화면·데이터 연결
+- feature 분해표의 화면·FR·SC·데이터 누락
 - unresolved placeholder
 - 계약 섹션의 미결 표현
 - 시스템 가정 10개와 상태 라벨
-- 화면 4상태
 - bkit gate 설정
 
 ## bkit 검증 기준
@@ -180,7 +208,8 @@ to-prd/
 │   └── prd-template.md
 ├── references/
 │   ├── bkit-contract.md
-│   └── gate-checklist.md
+│   ├── gate-checklist.md
+│   └── screen-definition-contract.md
 └── scripts/
     └── validate_prd.mjs
 ```
@@ -193,7 +222,7 @@ to-prd/
 | `docs/PRD.md` 하나 | 정본 + feature projection + decisions + gate |
 | 기획 문서 4개 중심 | 일부 문서 또는 브리프도 가능 |
 | roadmap에 구현 분해 위임 | feature를 bkit PDCA 단위로 분해 |
-| 단순 화면 표 | 요소 체크리스트 + 로딩·빈·오류·성공 |
+| 단순 화면 표 | 역할·화면·메뉴·인증·레이아웃·요소·행동·데이터·8개 상태 계약 |
 | 서술형 Edge Cases | 문구·동작·로그 계약 |
 | 정성 검토 | Hard Gate + 점수 + Node 검사 |
 | 미결 항목 한 종류 | 구현자 이슈와 작성자 결정 분리 |
@@ -203,8 +232,10 @@ to-prd/
 
 - bkit 전용 범위를 유지합니다.
 - 정본은 하나이며 파생본은 정본에서 재생성합니다.
-- FR/SC ID와 개정 이력을 보존합니다.
+- 화면 계약을 먼저 작성하고 FR과 데이터를 화면에서 도출합니다.
+- `SCR/화면 요소/DATA/FR/SC` ID와 개정 이력을 보존합니다.
 - 기본값·추정·가설·출처를 구분합니다.
-- 데이터 없는 P0 FR과 측정할 수 없는 SC를 통과시키지 않습니다.
+- 메뉴·일반/관리자 차이·로그인·화면 요소가 필요한데 빠진 PRD를 통과시키지 않습니다.
+- 화면·요소·데이터 연결이 없는 P0 UI FR과 측정할 수 없는 SC를 통과시키지 않습니다.
 - 일반 단어를 금지어로 검색하지 않고 실제 미결 의미를 검사합니다.
 - Hard Gate가 점수보다 우선합니다.
