@@ -371,6 +371,7 @@ function inspect(file) {
       if (!scIds.includes(scId)) errors.push(frId + "가 정의되지 않은 SC를 참조: " + scId);
     }
     frDataRefs.push(...references(dataCell, /DATA-\d{3,}/g));
+    if (cells[7] && !/^\[(?:E2E|통합|단위|수동)\]/.test(cells[7])) warnings.push(frId + " 검증 방법이 [E2E]·[통합]·[단위]·[수동] 라벨로 시작하지 않음");
   }
 
   const success = section(text, "## 7. Success Criteria", "## 8. Edge Cases");
@@ -385,6 +386,8 @@ function inspect(file) {
       continue;
     }
     const scId = cells[0];
+    if (!/^\[(?:E2E|통합|단위|수동)\]/.test(cells[4])) errors.push(scId + " 측정 방법이 [E2E]·[통합]·[단위]·[수동] 라벨로 시작하지 않음");
+    if (/^\[수동\]/.test(cells[4]) && !/(?:이유|불가|production|실제)/.test(cells[4])) warnings.push(scId + " [수동]인데 자동화할 수 없는 이유가 보이지 않음");
     for (const frId of references(cells[2], /FR-\d{3,}/g)) {
       if (!frIds.includes(frId)) errors.push(scId + "가 정의되지 않은 FR을 참조: " + frId);
     }
@@ -448,6 +451,11 @@ function inspect(file) {
   for (const dataId of dataIds) {
     if (!featureMap.includes(dataId)) errors.push("14장 feature 분해표에 없는 데이터: " + dataId);
   }
+
+  const stackSection = section(text, "### 11.1 레벨·스택", "### 11.2 시스템 가정 10칸");
+  if (!stackSection.includes("**테스트:**")) errors.push("11.1에 '**테스트:**' 줄(단위·E2E 러너·실행 명령)이 없음");
+  const bkitSpec = section(text, "## 15. bkit 실행 명세", "## 부록 A. 데이터 계약");
+  if (bkitSpec && !/11\.1 테스트/.test(bkitSpec)) errors.push("15장 완료 조건에 11.1 테스트 명령 실행 통과가 없음");
 
   const assumptions = section(text, "### 11.2 시스템 가정 10칸", "### 11.3 제품 가정");
   for (let index = 1; index <= 10; index += 1) {
