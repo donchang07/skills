@@ -173,6 +173,10 @@ function inspect(file) {
     errors.push("상단 메타에 'PRD 스키마: screen-first-v2'가 없음 (v1이면 v2 보강 필요)");
   }
 
+  if (!/^> 정본: docs\/PRD\.md · 정본 개정: v\d+\.\d+,/m.test(text)) {
+    errors.push("상단 메타의 정본 개정이 'vX.Y, 날짜' 형식이 아님");
+  }
+
   for (const heading of requiredHeadings) {
     if (!text.includes(heading)) errors.push("필수 장 누락: " + heading);
   }

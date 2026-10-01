@@ -17,9 +17,9 @@
 > PRD 스키마: screen-first-v2
 > 문서 역할: {제품 통합 정본 | feature projection}
 > feature: {product | 영문 feature 슬러그}
-> 정본: docs/PRD.md · 정본 개정: {vN, YYYY-MM-DD}
+> 정본: docs/PRD.md · 정본 개정: {vX.Y, YYYY-MM-DD}
 > 작성일: {YYYY-MM-DD} · 최종 수정일: {YYYY-MM-DD}
-> 개정 이력: {v1 최초 작성 날짜 · 이후 변경 요약}
+> 개정 이력: {v1.0 최초 작성 날짜 · 이후 개정 번호별 변경 요약}
 > 입력: {사용한 기획 파일·브리프·기존 PRD}
 > bkit 계약: {확인한 버전 또는 검증 기준과 날짜}
 > 게이트: {점수}점 · {착수 가능 | 조건부 착수 | 착수 불가} · Blocker {n} · Major {n} · Minor {n} → {정확한 gate 파일 경로}
