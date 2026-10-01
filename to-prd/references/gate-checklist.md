@@ -137,7 +137,7 @@ P0 FR 또는 핵심 SC의 판정 불가는 Major이며, 무엇을 만들지 달�
 - `[해당 없음]`: 적용되지 않는 이유가 있다.
 - `[결정 필요]`: 13장 ID와 fallback 또는 중단 조건이 연결된다.
 
-빈 행은 Major다. P0 설계가 달라지는 행에 fallback이 없으면 HG-03 Blocker다.
+빈 행은 Major다. P0 설계가 달라지는 행에 fallback이 없으면 HG-06 Blocker다.
 
 ## 9. bkit 소비 가능성
 
