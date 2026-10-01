@@ -51,6 +51,7 @@ description: 화면·메뉴·권한·로그인·UI 요소와 디자인 기준을
 | `docs/00-pm/{feature}.prd.md` | bkit이 읽는 feature별 파생본 |
 | `docs/DESIGN.md` | 프로젝트에 없을 때만 `assets/apple-DESIGN.md`에서 복사. 기존 파일은 덮어쓰지 않음 |
 | `docs/00-pm/_decisions.md` | 정본 13장의 미결 결정 projection. 미결이 없어도 상태를 기록 |
+| `CLAUDE.md` 의 to-prd 블록 | 정본에서 생성하는 bkit 실행 규칙(DESIGN.md·Pretendard·data-testid·Check 단계 테스트 실행·두 관문). 마커 밖은 수정하지 않음 |
 | `docs/00-pm/_product.gate.md` | 통합 정본의 gate 결과 |
 | `docs/00-pm/{feature}.gate.md` | feature별 gate 결과 |
 | `docs/PRD.draft.md`, `docs/00-pm/{feature}.prd.draft.md` | Blocker가 있을 때만 만드는 draft |
@@ -229,6 +230,21 @@ FR을 확정하기 전에 11장을 먼저 채운다.
 2. feature마다 `docs/00-pm/{feature}.prd.md`를 정본에서 생성한다.
 3. `docs/00-pm/_product.gate.md`와 `docs/00-pm/{feature}.gate.md`를 저장한다.
 4. `docs/00-pm/_decisions.md`를 정본 13장과 동기화한다.
+5. 프로젝트 루트 `CLAUDE.md`의 to-prd 블록을 정본에서 다시 생성한다. 파일이 없으면 만든다. 마커 사이만 교체하고 마커 밖의 내용은 건드리지 않는다. bkit은 매 세션 이 규칙을 읽으므로 PRD와 구현·검증이 같은 기준을 쓴다.
+
+```markdown
+<!-- to-prd:begin — docs/PRD.md에서 생성됨. 직접 고치지 말고 PRD를 갱신한 뒤 to-prd를 다시 실행할 것 -->
+## to-prd 실행 규칙
+
+- 요구사항 정본은 `docs/PRD.md`(정본 개정 {vN})다. feature 기준은 `docs/00-pm/{feature}.prd.md`다.
+- UI는 `docs/DESIGN.md`를 따른다. 폰트는 Pretendard만 사용한다. 컴포넌트는 PRD 9장 컴포넌트 목록의 이름만 사용한다.
+- 모든 UI 요소에 PRD 요소 ID를 `data-testid` 값으로 붙인다. E2E 셀렉터는 `data-testid`만 사용한다.
+- `/pdca analyze`(Check) 단계에서 다음 명령을 실제로 실행하고 결과를 analysis 문서에 기록한다: `{11.1 단위 테스트 명령}` · `{11.1 E2E 명령}`
+- 완료는 두 관문이다. match rate {matchRateThreshold}% 이상, 그리고 위 테스트 전체 통과. 하나라도 실패하면 `/pdca report`로 넘어가지 않는다.
+<!-- to-prd:end -->
+```
+
+블록의 값(개정, 테스트 명령, match rate 기준)은 정본 11.1·15장과 같아야 한다. 정본이 바뀌면 이 블록도 함께 다시 생성한다.
 
 ### 착수 불가
 
@@ -236,6 +252,7 @@ FR을 확정하기 전에 11장을 먼저 채운다.
 - 통합 draft는 `docs/PRD.draft.md`에 저장한다.
 - feature draft는 `docs/00-pm/{feature}.prd.draft.md`에 저장한다.
 - gate는 `docs/00-pm/_product.gate.draft.md`와 `docs/00-pm/{feature}.gate.draft.md`에 저장한다.
+- `CLAUDE.md`의 to-prd 블록은 갱신하지 않는다. 블록은 최종 정본만 가리킨다.
 - 결정이 해소되어 최종본을 만든 뒤에도 기존 draft를 자동 삭제하지 않는다. 첫 줄에 `상태: superseded`와 대체 파일을 기록한다.
 
 저장은 결과물의 일부다. “파일로 저장할까요?”라고 묻지 않는다.
@@ -244,7 +261,7 @@ FR을 확정하기 전에 11장을 먼저 채운다.
 
 다음 순서로 짧게 보고한다.
 
-1. 저장한 정본 또는 draft 경로. Apple 기본 DESIGN.md를 복사했다면 그 사실
+1. 저장한 정본 또는 draft 경로. Apple 기본 DESIGN.md를 복사했다면 그 사실. `CLAUDE.md` to-prd 블록을 만들거나 갱신했다면 그 사실
 2. 게이트 판정과 Blocker/Major/Minor 수
 3. 작성자 결정 요청 번호·선택지·추천
 4. feature 분해와 첫 실행 명령 `/pdca plan {feature}`

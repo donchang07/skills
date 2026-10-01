@@ -64,7 +64,8 @@ docs/PRD.md                         제품 통합 정본
     ├─ docs/00-pm/{feature}.prd.md  bkit feature projection
     ├─ docs/00-pm/_decisions.md     미결 결정 projection
     ├─ docs/00-pm/_product.gate.md  제품 gate
-    └─ docs/00-pm/{feature}.gate.md feature gate
+    ├─ docs/00-pm/{feature}.gate.md feature gate
+    └─ CLAUDE.md의 to-prd 블록       bkit 실행 규칙
 ```
 
 feature PRD를 직접 수정하지 않습니다. 업데이트는 정본을 먼저 바꾸고 영향받는 파생본을 다시 만듭니다. 파생본에만 존재하는 사람의 편집은 덮어쓰기 전에 정본으로 옮깁니다.
@@ -168,6 +169,17 @@ to-prd
 - 반응형은 NFR 뷰포트로, 접근성은 자동 접근성 검사로 판정합니다.
 - 요소 ID를 `data-testid`로 쓰고, 역할별 테스트 계정·시드와 상태 유도 방법을 PRD에 둡니다.
 - 스크린샷 비교 테스트는 완료 조건에 넣지 않습니다.
+
+## CLAUDE.md 동기화
+
+게이트를 통과하면 프로젝트 루트 `CLAUDE.md`에 `<!-- to-prd:begin -->`~`<!-- to-prd:end -->` 블록을 만들거나 다시 생성합니다. bkit이 매 세션 읽는 규칙이어서 PRD와 구현·검증이 같은 기준을 씁니다.
+
+- UI는 `docs/DESIGN.md`, 폰트는 Pretendard, 컴포넌트는 PRD 9장 목록
+- 모든 UI 요소에 PRD 요소 ID를 `data-testid`로 부여
+- `/pdca analyze` 단계에서 PRD 11.1의 단위 테스트·Playwright 명령을 실제로 실행
+- 완료는 match rate 기준과 테스트 전체 통과의 두 관문
+
+마커 밖의 내용은 수정하지 않으며, 착수 불가(draft)일 때는 블록을 갱신하지 않습니다.
 
 ## 시스템 가정
 
