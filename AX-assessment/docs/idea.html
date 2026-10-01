@@ -1,0 +1,680 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AX Assessment 아이디어</title>
+<meta name="description" content="컨설턴트용 AX 진단 앱의 아이디어와 진행 계획">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+  :root {
+    --primary: #0066cc;
+    --primary-on-dark: #2997ff;
+    --ink: #1d1d1f;
+    --ink-80: #333333;
+    --ink-48: #7a7a7a;
+    --hairline: #e0e0e0;
+    --divider: #f0f0f0;
+    --canvas: #ffffff;
+    --parchment: #f5f5f7;
+    --pearl: #fafafc;
+    --tile: #272729;
+    --tile-2: #2a2a2c;
+    --black: #000000;
+    --on-dark: #ffffff;
+    --on-dark-muted: #a1a1a6;
+    --font: Pretendard, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--canvas);
+    color: var(--ink);
+    font-family: var(--font);
+    font-size: 17px;
+    font-weight: 400;
+    line-height: 1.47;
+    letter-spacing: -0.374px;
+  }
+  a { color: var(--primary); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* Global nav */
+  .gnav {
+    position: sticky; top: 0; z-index: 10;
+    background: var(--black); color: var(--on-dark);
+    height: 44px; display: flex; align-items: center;
+  }
+  .gnav .in {
+    width: 100%; max-width: 1024px; margin: 0 auto; padding: 0 16px;
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  }
+  .gnav .brand { font-weight: 600; font-size: 15px; letter-spacing: -0.2px; }
+  .gnav nav { display: flex; gap: 20px; overflow-x: auto; scrollbar-width: none; }
+  .gnav nav::-webkit-scrollbar { display: none; }
+  .gnav nav a { color: #d2d2d7; font-size: 12px; white-space: nowrap; letter-spacing: -0.12px; }
+  .gnav nav a:hover { color: var(--on-dark); text-decoration: none; }
+
+  /* Tiles */
+  section.tile { padding: 80px 16px; }
+  .light { background: var(--canvas); }
+  .parch { background: var(--parchment); }
+  .dark { background: var(--tile); color: var(--on-dark); }
+  .black { background: var(--black); color: var(--on-dark); }
+  .wrap { max-width: 980px; margin: 0 auto; }
+  .wide { max-width: 1100px; margin: 0 auto; }
+  .center { text-align: center; }
+
+  .eyebrow {
+    font-size: 17px; font-weight: 600; color: var(--ink-48);
+    margin: 0 0 8px; letter-spacing: -0.374px;
+  }
+  .dark .eyebrow, .black .eyebrow { color: var(--on-dark-muted); }
+  h1 {
+    font-size: 56px; font-weight: 600; line-height: 1.07; letter-spacing: -0.28px;
+    margin: 0 0 16px;
+  }
+  h2 {
+    font-size: 40px; font-weight: 600; line-height: 1.1; letter-spacing: -0.2px;
+    margin: 0 0 16px;
+  }
+  h3 { font-size: 21px; font-weight: 600; line-height: 1.24; letter-spacing: 0.1px; margin: 0 0 8px; }
+  .lead { font-size: 24px; font-weight: 300; line-height: 1.5; letter-spacing: 0; margin: 0 auto 0; max-width: 760px; }
+  .dark .lead, .black .lead { color: #e8e8ed; }
+  .sub { color: var(--ink-48); }
+  .dark .sub, .black .sub { color: var(--on-dark-muted); }
+  p { margin: 0 0 12px; }
+  .mt-48 { margin-top: 48px; }
+  .mt-24 { margin-top: 24px; }
+
+  .pill {
+    display: inline-block; background: var(--primary); color: #fff;
+    border-radius: 980px; padding: 8px 18px; font-size: 14px; letter-spacing: -0.2px;
+  }
+  .tag {
+    display: inline-block; font-size: 12px; font-weight: 600; letter-spacing: -0.1px;
+    padding: 3px 10px; border-radius: 980px; background: var(--divider); color: var(--ink-80);
+    vertical-align: middle;
+  }
+  .dark .tag, .black .tag { background: var(--tile-2); color: #d2d2d7; border: 1px solid rgba(255,255,255,0.12); }
+  .tag.blue { background: rgba(0,102,204,0.1); color: var(--primary); }
+  .dark .tag.blue { background: rgba(41,151,255,0.14); color: var(--primary-on-dark); border-color: transparent; }
+
+  /* Cards */
+  .grid { display: grid; gap: 20px; }
+  .g2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .g3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .g4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .card {
+    background: var(--canvas); border: 1px solid rgba(0,0,0,0.08);
+    border-radius: 18px; padding: 24px;
+  }
+  .parch .card { background: var(--canvas); }
+  .light .card { background: var(--pearl); }
+  .dark .card { background: var(--tile-2); border-color: rgba(255,255,255,0.1); }
+  .card .num { font-size: 13px; font-weight: 600; color: var(--primary); margin-bottom: 6px; letter-spacing: -0.1px; }
+  .dark .card .num { color: var(--primary-on-dark); }
+  .card p { font-size: 15px; line-height: 1.47; letter-spacing: -0.2px; color: var(--ink-80); margin: 0; }
+  .dark .card p { color: #d2d2d7; }
+  .card .src { margin-top: 10px; font-size: 12px; color: var(--ink-48); letter-spacing: -0.1px; }
+  .dark .card .src { color: var(--on-dark-muted); }
+
+  /* Big statement */
+  .stat { font-size: 64px; font-weight: 600; letter-spacing: -1px; line-height: 1; }
+  .stat-label { font-size: 15px; color: var(--ink-48); margin-top: 8px; letter-spacing: -0.2px; }
+  .dark .stat-label { color: var(--on-dark-muted); }
+
+  /* Axis groups */
+  .axis-group { margin-top: 40px; }
+  .axis-head { display: flex; align-items: baseline; gap: 12px; margin-bottom: 14px; flex-wrap: wrap; }
+  .axis-head h3 { margin: 0; }
+
+  /* Tables */
+  .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; margin-top: 24px; }
+  table { width: 100%; border-collapse: collapse; font-size: 15px; letter-spacing: -0.2px; min-width: 560px; }
+  th, td { text-align: left; vertical-align: top; padding: 14px 12px; border-bottom: 1px solid var(--hairline); }
+  th { font-weight: 600; color: var(--ink-48); font-size: 13px; letter-spacing: -0.1px; }
+  td strong { font-weight: 600; }
+
+  /* Lists */
+  ul.clean { list-style: none; padding: 0; margin: 0; }
+  ul.clean li { padding: 14px 0; border-bottom: 1px solid var(--hairline); }
+  .dark ul.clean li { border-color: rgba(255,255,255,0.12); }
+  ul.clean li:last-child { border-bottom: 0; }
+
+  /* Pipeline */
+  .steps { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 12px; margin-top: 40px; }
+  .step { border-radius: 18px; padding: 18px 16px; background: var(--tile-2); border: 1px solid rgba(255,255,255,0.1); }
+  .step .n { font-size: 12px; color: var(--on-dark-muted); font-weight: 600; }
+  .step .t { font-size: 17px; font-weight: 600; margin: 4px 0 6px; }
+  .step .d { font-size: 13px; color: #d2d2d7; line-height: 1.4; letter-spacing: -0.1px; }
+  .step.done { background: transparent; border-color: rgba(255,255,255,0.18); }
+  .step.now { border: 1px solid var(--primary-on-dark); }
+  .step .s { display: inline-block; margin-top: 10px; font-size: 11px; font-weight: 600; color: var(--primary-on-dark); }
+  .step.done .s { color: var(--on-dark-muted); }
+
+  /* Quadrant figure */
+  .quad { max-width: 560px; margin: 48px auto 0; }
+  .quad svg { width: 100%; height: auto; display: block; }
+
+  .note {
+    margin-top: 24px; font-size: 13px; color: var(--ink-48); letter-spacing: -0.1px; line-height: 1.5;
+  }
+  .dark .note, .black .note { color: var(--on-dark-muted); }
+
+  section.tile > p.note { max-width: 1100px; margin-left: auto; margin-right: auto; }
+  footer { background: var(--parchment); padding: 32px 16px; font-size: 12px; color: var(--ink-48); letter-spacing: -0.1px; }
+  footer .wrap { border-top: 1px solid var(--hairline); padding-top: 16px; }
+
+  @media (max-width: 900px) {
+    .g4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (max-width: 734px) {
+    section.tile { padding: 56px 16px; }
+    h1 { font-size: 40px; line-height: 1.1; }
+    h2 { font-size: 30px; }
+    .lead { font-size: 19px; }
+    .g2, .g3, .g4 { grid-template-columns: 1fr; }
+    .stat { font-size: 48px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="gnav">
+  <div class="in">
+    <span class="brand">AX Assessment</span>
+    <nav aria-label="문서 목차">
+      <a href="#problem">문제</a>
+      <a href="#users">사용자</a>
+      <a href="#flow">흐름</a>
+      <a href="#model">진단 모델</a>
+      <a href="#scoring">채점</a>
+      <a href="#evaluation">평가 기준</a>
+      <a href="#validation">검증</a>
+      <a href="#features">기능</a>
+      <a href="#plan">플랜</a>
+    </nav>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="tile light center">
+  <div class="wrap">
+    <p class="eyebrow">AX Assessment · 아이디어 정리 v1.0 · 2026-10-01</p>
+    <h1>AX의 위치를<br>두 개의 축 위에 찍는다.</h1>
+    <p class="lead">컨설턴트가 고객사 임직원 여럿에게 설문을 돌려, 그 회사의 AX 추진 수준을 <strong style="font-weight:600">가능성 × 준비</strong> 두 축 위에 표시하고, 직급 간 인식 차이와 30·90·365일 과제를 제시하는 진단 도구입니다.</p>
+    <p class="mt-24"><span class="pill">AX Assessment</span></p>
+    <p class="note">기반: 장동인 『CEO와 경영진을 위한 AI Native 바이브 코딩』(v16, 2026-09-29) · 「기업의 AX 추진방법론 v1.1」 강의자료 · 기존 진단모델 비교 보고서(<a href="../reports/AX%20%EC%84%B1%EC%88%99%EB%8F%84%20%EC%A7%84%EB%8B%A8%EB%AA%A8%EB%8D%B8%20%EB%B9%84%EA%B5%90.md">reports/AX 성숙도 진단모델 비교.md</a>)</p>
+  </div>
+</section>
+
+<!-- PROBLEM -->
+<section class="tile dark" id="problem">
+  <div class="wrap center">
+    <p class="eyebrow">문제</p>
+    <h2>AX는 추상적이고,<br>지금의 진단은 한 사람의 목소리만 듣습니다.</h2>
+    <p class="lead">기존 진단모델 30여 개를 비교한 결과, 이 앱이 꼭 필요로 하는 세 가지를 제공하는 모델은 찾지 못했습니다.</p>
+  </div>
+  <div class="wide grid g3 mt-48">
+    <div class="card">
+      <div class="num">빈자리 1</div>
+      <h3>임원 1명이 답합니다</h3>
+      <p>Gartner, MIT CISR, BCG, Accenture 등 대부분의 모델은 회사당 고위 임원 한 명의 응답으로 진단합니다. 여러 임직원의 답을 합쳐 조직 단위로 보는 설계는 드뭅니다.</p>
+    </div>
+    <div class="card">
+      <div class="num">빈자리 2</div>
+      <h3>인식 차이가 보이지 않습니다</h3>
+      <p>경영진과 현업의 인식 차이를 결과로 보여주는 도구는 찾지 못했습니다. 교수님 강의는 AI 프로젝트 실패 원인으로 <strong style="font-weight:600;color:#fff">"구성원 간 AI에 대한 생각이 모두 다르다"</strong>를 꼽습니다.</p>
+      <p class="src">근거: AX 추진방법론 v1.1 강의자료 · 외부 조사에서도 리더와 현업의 AI 사용·인식 격차가 반복 보고됨(BCG 2025·2026, Microsoft 2025, Gallup 등)</p>
+    </div>
+    <div class="card">
+      <div class="num">빈자리 3</div>
+      <h3>문항과 검증이 비공개입니다</h3>
+      <p>문항과 채점 방식을 공개한 모델은 MIT CISR 정도이고, 문항 타당성 검증 절차를 공개한 모델은 없었습니다. 컨설턴트는 HR 설문 도구와 자가진단을 짜깁기해 씁니다.</p>
+    </div>
+  </div>
+</section>
+
+<!-- USERS -->
+<section class="tile parch" id="users">
+  <div class="wrap center">
+    <p class="eyebrow">누가 쓰는가</p>
+    <h2>주인공은 컨설턴트입니다.</h2>
+    <p class="lead">기업이 직접 가입하는 셀프서비스가 아니라, 컨설턴트가 고객사마다 진단 프로젝트를 열어 운영하는 도구입니다.</p>
+  </div>
+  <div class="wide grid g3 mt-48">
+    <div class="card">
+      <div class="num">주 사용자 · Admin</div>
+      <h3>컨설턴트</h3>
+      <p>진단할 <strong style="font-weight:600">기업 명단을 미리 등록</strong>하고, 기업별로 설문을 열고 닫습니다. 응답 진행률을 보고, 결과를 해석해 보고서와 로드맵을 확정합니다. AI가 쓴 해석 초안을 검토·수정·승인하는 사람입니다.</p>
+    </div>
+    <div class="card">
+      <div class="num">협업 사용자</div>
+      <h3>고객사 담당자</h3>
+      <p>CAIO, AX 추진 담당, 기획 부서. 자기 회사 임직원에게 설문 참여를 안내하고 카테고리별 응답 수를 확인합니다. 개별 응답은 볼 수 없습니다.</p>
+    </div>
+    <div class="card">
+      <div class="num">응답자</div>
+      <h3>임직원 다수</h3>
+      <p>로그인 없이 들어와 <strong style="font-weight:600">기업을 고르고, 카테고리를 고른 뒤</strong> 그 카테고리에 맞는 설문에 답합니다.</p>
+      <div class="mt-24">
+        <span class="tag">경영진</span>
+        <span class="tag">AX/IT</span>
+        <span class="tag">직원</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FLOW -->
+<section class="tile light" id="flow">
+  <div class="wrap center">
+    <p class="eyebrow">설문 진행 흐름</p>
+    <h2>기업을 먼저, 그다음 카테고리.</h2>
+    <p class="lead">Admin이 기업 명단을 정해 두면, 응답자는 그 명단에서 자기 회사를 골라 들어갑니다. 결과는 기업 → 카테고리 순서로 묶여 쌓입니다.</p>
+  </div>
+  <div class="wide grid g4 mt-48">
+    <div class="card"><div class="num">Admin · 준비</div><h3>기업 등록</h3><p>기업명, 업종, 규모를 등록하고 설문 기간을 엽니다. 설문이 열린 기업만 응답자 목록에 나타납니다.</p></div>
+    <div class="card"><div class="num">응답자 · 1</div><h3>기업 선택</h3><p>공통 설문 주소로 들어와 목록에서 자기 회사를 고릅니다. 검색해서 찾을 수 있습니다.</p></div>
+    <div class="card"><div class="num">응답자 · 2</div><h3>카테고리 선택</h3><p>경영진 / AX/IT / 직원 중 하나를 고릅니다. 선택에 따라 다른 설문지가 열립니다.</p></div>
+    <div class="card"><div class="num">응답자 · 3</div><h3>설문 응답·제출</h3><p>공통 문항과 카테고리 전용 문항에 답하고 제출합니다. 응답자에게는 감사 화면만 보이고 결과는 보이지 않습니다.</p></div>
+  </div>
+  <div class="wide table-wrap">
+    <table>
+      <thead><tr><th style="width:16%">카테고리</th><th style="width:22%">누가</th><th>주로 답하는 영역</th><th style="width:16%">분량</th></tr></thead>
+      <tbody>
+        <tr><td><strong>경영진</strong></td><td>CEO, 임원, 본부장</td><td>01 전략·리더십 · 02 추진 조직·협업 · 05 AX 가치 단계 · 06 메가 프로세스 · 12 성과 측정</td><td>약 15분</td></tr>
+        <tr><td><strong>AX/IT</strong></td><td>CAIO·AX 조직, IT·데이터·보안 부서</td><td>07 Vibe Coding 방법론 · 08 플랫폼·거버넌스 · 09 데이터·지식 · 10 기술 검증 · 11 환각 대응·책임</td><td>약 20분</td></tr>
+        <tr><td><strong>직원</strong></td><td>현업 리더와 실무자</td><td>03 인재·문화·변화관리 · 04 문제정의 역량 · 05 AX 가치 단계(내 업무 기준) · 11 환각 대응·책임(체감)</td><td>약 12분</td></tr>
+        <tr><td><strong>공통</strong></td><td>세 카테고리 모두</td><td>12개 영역 전체에서 고른 <strong>공통 문항 약 12개</strong>. 같은 질문을 세 카테고리가 모두 답해야 인식 격차를 계산할 수 있습니다.</td><td>위 분량에 포함</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="wide grid g2 mt-24">
+    <div class="card"><div class="num">권장 보완 1</div><h3>기업별 참여 코드</h3><p>목록에서 아무 회사나 고를 수 있으면 다른 회사 사람이 잘못 들어오거나 장난 응답이 섞일 수 있습니다. 기업을 고른 뒤 고객사 담당자가 공지한 <strong style="font-weight:600">짧은 참여 코드</strong>를 한 번 입력하게 하면 막을 수 있습니다.</p></div>
+    <div class="card"><div class="num">권장 보완 2</div><h3>기업 명단 노출</h3><p>공통 주소의 기업 목록은 누구나 볼 수 있어, 어떤 회사가 진단을 받는지 다른 고객사에 드러납니다. <strong style="font-weight:600">목록 대신 기업명을 검색해야만 나타나게</strong> 하거나, 기업별 주소로 들어오면 기업이 미리 선택되게 하는 방법이 있습니다.</p></div>
+  </div>
+</section>
+
+<!-- MODEL -->
+<section class="tile parch" id="model">
+  <div class="wrap center">
+    <p class="eyebrow">진단 모델</p>
+    <h2>12개 영역, 두 개의 축.</h2>
+    <p class="lead">교수님 책의 "가능성"과 "준비" 두 축을 뼈대로, 원고의 9개 영역에 강의자료에서 나온 3개 영역을 독립 영역으로 더했습니다.</p>
+  </div>
+
+  <div class="wide">
+    <div class="axis-group">
+      <div class="axis-head"><h3>리더십·조직</h3><span class="tag">두 축을 받치는 바탕</span></div>
+      <div class="grid g3">
+        <div class="card"><div class="num">01</div><h3>전략·리더십</h3><p>CEO의 결단, CEO·임원의 AI 이해 수준, CAIO 지정, IT 조직 재편, AX를 비즈니스 모델 재편으로 보는가.</p><p class="src">원고 프롤로그 · 강의 "AI 활용 수준은 CEO/임원의 수준"</p></div>
+        <div class="card"><div class="num">02</div><h3>AI 추진 조직·협업 구조 <span class="tag blue">신규</span></h3><p>과제 오너가 현업인가, 현업·AI팀·IT의 공동 KPI가 있는가, 9단계 업무 프로세스에서 현업이 어디까지 참여하는가. 고립된 AI 조직인가.</p><p class="src">강의 "고립된 AI 조직", AI 9단계 업무 프로세스</p></div>
+        <div class="card"><div class="num">03</div><h3>인재·문화·변화관리</h3><p>전 직원 AI 교육, AI 활성화 KPI 3종, 인센티브·포상, 내부 육성, Vibe Coding TF, 대체 불안 해소. 측정 척도는 외부 도구로 보완합니다.</p><p class="src">강의 해결 방안 · 외부: Culture Amp, Workera, AI 리터러시 척도</p></div>
+      </div>
+    </div>
+
+    <div class="axis-group">
+      <div class="axis-head"><h3>가능성 축</h3><span class="tag blue">무엇을 만들고 어떤 가치를 내는가</span></div>
+      <div class="grid g3">
+        <div class="card"><div class="num">04</div><h3>문제정의 역량 <span class="tag blue">신규</span></h3><p>AI 과제가 "좁고 예리하게" 정의되어 필요한 데이터가 저절로 정해지는가. 디자인 싱킹, 5 Why, JTBD, 제1원리 같은 사고 틀을 쓰는가.</p><p class="src">강의 "돈 되는 AI 2·3" · 외부 모델에는 없는 영역</p></div>
+        <div class="card"><div class="num">05</div><h3>AX 가치 단계</h3><p>자동화 → 예측 → 시뮬레이션 → 최적화. 부서·대표 과제별로 어디까지 왔는가. 온톨로지와 닫힌 고리(실적 피드백)가 있는가.</p><p class="src">원고 2부 · 강의 "돈 되는 AI 4~6"</p></div>
+        <div class="card"><div class="num">06</div><h3>메가 프로세스·확장</h3><p>부서 PoC에서 메가 프로세스로 넘어갔는가. 1개월 PoC → 횡적·종적 확장, 위임의 사다리 7단계, 그림자 모드, 의사결정 기억.</p><p class="src">원고 7부 · 강의 종적 확장 3단계·7단계</p></div>
+      </div>
+    </div>
+
+    <div class="axis-group">
+      <div class="axis-head"><h3>준비 축</h3><span class="tag">안전하게, 같은 품질로 돌아가는가</span></div>
+      <div class="grid g3">
+        <div class="card"><div class="num">07</div><h3>Vibe Coding 방법론</h3><p>회사가 정한 표준 vibe coding 방법론(표준 하네스)이 있고, 부서들이 같은 절차로 AI에게 일을 시키는가. 작업 규칙·검증 규칙·스킬 파일이 사내 저장소에 쌓이는가. AI Native 4대 이정표 중 어디인가.</p><p class="src">원고 3·4부</p></div>
+        <div class="card"><div class="num">08</div><h3>플랫폼·거버넌스</h3><p>전사적 AI 플랫폼 8대 구성요소 가동, 미관리 AI(Shadow AI) 통제, 데이터 4단계 분류, IT·현업 역할 분담, 무절제한 바이브 코딩의 6대 문제 대응.</p><p class="src">원고 8부 · 강의 "IT 부서의 역할"</p></div>
+        <div class="card"><div class="num">09</div><h3>데이터·지식 자산</h3><p>데이터 통합 허브, 지식 그래프·온톨로지, 의사결정 기억이 사내 자산으로 쌓이는가.</p><p class="src">원고 7·9부 · 강의 "데이터 통합이 전제"</p></div>
+        <div class="card"><div class="num">10</div><h3>기술 검증</h3><p>매치율(Match Rate) 관리, 다중 LLM 교차 검증, 명세 기반 개발·TDD, 이해 부채 비율. 기술적으로 결과를 확인하는 장치.</p><p class="src">원고 9부</p></div>
+        <div class="card"><div class="num">11</div><h3>환각 대응·책임 체계 <span class="tag blue">신규</span></h3><p>AI 결과물의 오류를 누가 발견하고, 누가 고치고, 누가 책임지는가. 기술이 아니라 조직의 규칙과 역할을 묻습니다.</p><p class="src">강의 한줄 요약 "발견·교정·책임지는 조직적 수단"</p></div>
+      </div>
+    </div>
+
+    <div class="axis-group">
+      <div class="axis-head"><h3>성과</h3><span class="tag">두 축이 만든 결과</span></div>
+      <div class="grid g3">
+        <div class="card"><div class="num">12</div><h3>성과 측정</h3><p>부서별 ROI 측정, 새 KPI(자동화 비율, 사이클 단축률), 매출·이익·비용·고객만족에 실제로 연결되는가.</p><p class="src">원고 부록 템플릿 3 · 강의 "AX의 목표는 보고서 자동화가 아니다"</p></div>
+      </div>
+    </div>
+
+    <p class="note">10번(기술 검증)과 11번(환각 대응·책임 체계)은 겹치지 않게 나눴습니다. 10번은 "도구와 기술로 확인하는가", 11번은 "사람과 조직이 책임지는가"를 묻습니다. CEO 자가 진단표와 원고의 단계 정의는 문항을 쓸 때 참고만 하고 그대로 쓰지 않습니다.</p>
+    <div class="card mt-48">
+      <div class="num">07번 영역 설명</div>
+      <h3>표준 하네스 = 회사의 표준 Vibe Coding 방법론</h3>
+      <p>같은 AI에게 같은 일을 시켜도 사람마다, 날마다 결과가 다릅니다. 하네스(harness, 말을 잡아매는 마구)는 AI 모델을 바꾸지 않고 <strong style="font-weight:600">AI 바깥에서 일하는 방식을 정해 주어</strong>, 누가 시켜도 같은 품질이 나오게 하는 운영 골격입니다. 회사가 하나를 골라 모든 부서가 쓰게 하면 그것이 표준 하네스입니다.</p>
+      <div class="grid g4 mt-24">
+        <div><p><strong style="font-weight:600">작업 지휘</strong><br>큰 일을 단계로 나누고 단계마다 맡길 AI를 정합니다.</p></div>
+        <div><p><strong style="font-weight:600">단계별 수행</strong><br>각 단계는 자기 일만 봅니다. 정보가 섞이지 않게 칸막이를 둡니다.</p></div>
+        <div><p><strong style="font-weight:600">검증</strong><br>다음 단계로 넘기기 전에 결과를 점검합니다.</p></div>
+        <div><p><strong style="font-weight:600">스타일·스킬</strong><br>회사의 문서 형식, 코드 규칙, 반복 업무 절차를 글 파일로 쌓아 둡니다.</p></div>
+      </div>
+      <p class="src">프롬프트를 잘 쓰는 것은 "이번 한 번"의 기술이고, 하네스는 "매일 같은 품질"을 만드는 운영입니다. 규칙이 사내 저장소에 기록되므로 사람이 떠나도 일하는 방식이 남습니다. 출처: 원고 3부 「Harness란 무엇인가」.</p>
+    </div>
+  </div>
+</section>
+
+<!-- QUADRANT -->
+<section class="tile light">
+  <div class="wrap center">
+    <p class="eyebrow">결과의 첫 화면</p>
+    <h2>회사는 지금 어느 칸에 있는가.</h2>
+    <p class="lead">가능성 축과 준비 축 점수로 회사의 위치를 한 점으로 보여줍니다. 응답 카테고리별 점도 함께 찍어, 같은 회사 안에서 경영진과 직원이 보는 위치가 얼마나 다른지 바로 드러납니다.</p>
+  </div>
+  <div class="quad" role="img" aria-label="가능성 축과 준비 축으로 나눈 네 칸 그림. 경영진의 점은 오른쪽 위, 직원의 점은 왼쪽 아래에 있어 인식 차이를 보여주는 예시.">
+    <svg viewBox="0 0 560 520" xmlns="http://www.w3.org/2000/svg" font-family="Pretendard, -apple-system, system-ui, sans-serif">
+      <rect x="60" y="20" width="230" height="220" fill="#f5f5f7"/>
+      <rect x="300" y="20" width="230" height="220" fill="#f5f5f7"/>
+      <rect x="60" y="250" width="230" height="220" fill="#f5f5f7"/>
+      <rect x="300" y="250" width="230" height="220" fill="#f5f5f7"/>
+      <text x="175" y="52" text-anchor="middle" font-size="15" font-weight="600" fill="#1d1d1f">혼돈의 확산</text>
+      <text x="175" y="74" text-anchor="middle" font-size="12" fill="#7a7a7a">만들기는 하는데 통제가 없음</text>
+      <text x="415" y="52" text-anchor="middle" font-size="15" font-weight="600" fill="#1d1d1f">AI Native 궤도</text>
+      <text x="415" y="74" text-anchor="middle" font-size="12" fill="#7a7a7a">가치와 통제가 함께 감</text>
+      <text x="175" y="448" text-anchor="middle" font-size="15" font-weight="600" fill="#1d1d1f">탐색</text>
+      <text x="175" y="428" text-anchor="middle" font-size="12" fill="#7a7a7a">외부 도구를 띄엄띄엄 사용</text>
+      <text x="415" y="448" text-anchor="middle" font-size="15" font-weight="600" fill="#1d1d1f">통제만 있는 정체</text>
+      <text x="415" y="428" text-anchor="middle" font-size="12" fill="#7a7a7a">규칙은 있는데 가치가 안 남</text>
+      <line x1="295" y1="20" x2="295" y2="470" stroke="#d2d2d7" stroke-width="1"/>
+      <line x1="60" y1="245" x2="530" y2="245" stroke="#d2d2d7" stroke-width="1"/>
+      <text x="295" y="505" text-anchor="middle" font-size="13" font-weight="600" fill="#1d1d1f">준비 축 →</text>
+      <text x="22" y="245" text-anchor="middle" font-size="13" font-weight="600" fill="#1d1d1f" transform="rotate(-90 22 245)">가능성 축 →</text>
+      <line x1="372" y1="168" x2="196" y2="352" stroke="#7a7a7a" stroke-width="1.5" stroke-dasharray="4 4"/>
+      <circle cx="372" cy="168" r="9" fill="#0066cc"/>
+      <text x="386" y="164" font-size="13" font-weight="600" fill="#0066cc">경영진</text>
+      <circle cx="270" cy="270" r="9" fill="#1d1d1f"/>
+      <text x="246" y="294" text-anchor="end" font-size="13" font-weight="600" fill="#1d1d1f">회사 전체</text>
+      <circle cx="196" cy="352" r="9" fill="#ffffff" stroke="#1d1d1f" stroke-width="2"/>
+      <text x="182" y="376" text-anchor="end" font-size="13" font-weight="600" fill="#1d1d1f">직원</text>
+      <text x="318" y="236" font-size="12" fill="#7a7a7a">인식 격차</text>
+    </svg>
+  </div>
+  <p class="note center">예시 그림입니다. 네 칸의 이름과 경계값은 PRD 단계에서 확정합니다.</p>
+</section>
+
+<!-- SCORING -->
+<section class="tile parch" id="scoring">
+  <div class="wrap">
+    <div class="center">
+      <p class="eyebrow">채점 · 추천안</p>
+      <h2>점수는 단순하게,<br>해석은 정직하게.</h2>
+      <p class="lead">교수님께서 맡겨 주신 채점 방식의 추천안입니다.</p>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th style="width:24%">항목</th><th>추천</th><th style="width:28%">이유</th></tr></thead>
+        <tbody>
+          <tr><td><strong>문항 형식</strong></td><td><strong>두 종류.</strong> ① 수준 문항: 0~4점의 "단계별 행동" 5지선다 ② 인식 문항: "매우 그렇다~전혀 아니다" 5점 동의 척도. 모든 문항에 <strong>"모름"</strong> 선택지를 둡니다.</td><td>조직의 사실은 행동으로 묻는 편이 응답자마다 해석이 덜 갈립니다. 인식은 동의 척도가 맞습니다. 직원이 전사적 AI 플랫폼을 모르는 것 자체가 진단 결과입니다.</td></tr>
+          <tr><td><strong>영역 점수</strong></td><td>0~100점 = 문항 평균 ÷ 4 × 100. "모름"은 점수에서 빼고, 모름 비율은 따로 보여줍니다.</td><td>계산을 컨설턴트가 고객에게 한 문장으로 설명할 수 있어야 합니다.</td></tr>
+          <tr><td><strong>카테고리 가중</strong></td><td>공통 문항 점수는 <strong>카테고리(경영진·AX/IT·직원)별 평균을 먼저 낸 뒤 카테고리끼리 같은 무게로</strong> 합칩니다. 응답자 수로 가중하지 않습니다.</td><td>직원이 200명, 경영진이 5명이면 단순 평균은 직원 목소리로 덮입니다.</td></tr>
+          <tr><td><strong>종합 위치</strong></td><td>가능성 축 = 04·05·06 평균, 준비 축 = 07~11 평균. 두 점수로 네 칸 중 위치를 정합니다. 01~03은 바탕 점수, 12는 성과 점수로 따로 보여줍니다.</td><td>책의 "두 개의 축"을 그대로 화면에 옮깁니다.</td></tr>
+          <tr><td><strong>영역 가중치</strong></td><td>처음에는 모두 같게 시작합니다. 컨설턴트가 프로젝트마다 조정할 수 있고, 조정 내역은 보고서에 표시합니다.</td><td>근거 없는 가중치는 쓰지 않습니다. 외부 벤더의 가중치(예: 인프라 비중이 큰 Cisco)는 판매사의 이해관계가 섞여 있을 수 있습니다.</td></tr>
+          <tr><td><strong>의견 일치도</strong></td><td>영역마다 응답이 얼마나 모이는지(rwg)를 계산해, 크게 갈리면 "평균"이 아니라 <strong>"의견 분산"</strong>으로 표시합니다.</td><td>의견이 갈린 평균 3점과 모두가 3점이라고 답한 3점은 전혀 다른 진단입니다.</td></tr>
+          <tr><td><strong>익명성 기준</strong></td><td>그룹당 최소 응답 수 <strong>기본값 5명</strong>. 그보다 적은 그룹은 결과를 숨기고 상위 그룹으로 합칩니다. 컨설턴트가 조정할 수 있지만 3명 아래로는 내릴 수 없습니다.</td><td>권위 있는 최소 기준은 찾지 못했습니다. 그래서 기본값으로 두고 PRD에서 확정합니다.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note">개인 점수는 만들지 않습니다. 진단 결과가 인사 평가에 쓰이면 응답이 솔직하지 않게 되고, 익명성 약속도 깨집니다.</p>
+  </div>
+</section>
+
+<!-- EVALUATION -->
+<section class="tile light" id="evaluation">
+  <div class="wrap center">
+    <p class="eyebrow">평가 기준 · 추천안</p>
+    <h2>다섯 개의 렌즈로 평가합니다.</h2>
+    <p class="lead">점수 하나로 줄이지 않습니다. 수준, 병목, 격차, 합의, 인지를 각각 보고, 그 결과로 과제의 우선순위를 정합니다.</p>
+  </div>
+
+  <div class="wide grid g3 mt-48">
+    <div class="card">
+      <div class="num">렌즈 1 · 수준</div>
+      <h3>절대 기준 5단계</h3>
+      <p>영역 점수(0~100)를 미리 정한 단계 정의에 맞춰 판정합니다. 비교할 기업 데이터가 아직 없으므로, 처음에는 남과 비교하지 않고 정의에 비춰 평가합니다.</p>
+    </div>
+    <div class="card">
+      <div class="num">렌즈 2 · 병목</div>
+      <h3>가장 약한 기반이 상한</h3>
+      <p>종합 단계는 평균이 아니라 <strong style="font-weight:600">선행 조건</strong>으로 정합니다. 기반 영역이 낮으면 다른 영역이 높아도 종합 단계가 올라가지 않습니다.</p>
+    </div>
+    <div class="card">
+      <div class="num">렌즈 3 · 격차</div>
+      <h3>카테고리 간 인식 차이</h3>
+      <p>공통 문항에서 경영진·AX/IT·직원의 평균 차이를 봅니다. 0~4점 척도에서 <strong style="font-weight:600">1.0점 이상이면 큰 격차</strong>, 0.5~1.0점이면 주의로 표시합니다.</p>
+    </div>
+    <div class="card">
+      <div class="num">렌즈 4 · 합의</div>
+      <h3>같은 카테고리 안의 일치도</h3>
+      <p>같은 카테고리 안에서 답이 크게 갈리면(rwg 0.5 미만) 평균을 믿지 않고 <strong style="font-weight:600">"의견 분산"</strong>으로 표시합니다. 컨설턴트 인터뷰 대상입니다.</p>
+    </div>
+    <div class="card">
+      <div class="num">렌즈 5 · 인지</div>
+      <h3>"모름" 비율</h3>
+      <p>한 영역에서 "모름"이 30% 이상이면 <strong style="font-weight:600">"인지 부족"</strong>으로 표시합니다. 회사에 있는 제도와 도구를 직원이 모른다는 것 자체가 과제입니다.</p>
+    </div>
+    <div class="card">
+      <div class="num">결과 · 우선순위</div>
+      <h3>무엇부터 할 것인가</h3>
+      <p>우선순위 = (목표 단계 − 현재 단계) × 병목 가중. 목표 단계는 경영진 설문의 "1년 후 목표" 문항으로 받고 컨설턴트가 조정합니다.</p>
+    </div>
+  </div>
+
+  <div class="wide table-wrap">
+    <table>
+      <thead><tr><th style="width:12%">단계</th><th style="width:12%">점수</th><th style="width:16%">이름</th><th>공통 판정 기준</th></tr></thead>
+      <tbody>
+        <tr><td><strong>L0</strong></td><td>0~19</td><td>탐색</td><td>개인이 외부 AI 도구를 띄엄띄엄 씁니다. 회사 차원의 방향·규칙·담당자가 없습니다.</td></tr>
+        <tr><td><strong>L1</strong></td><td>20~39</td><td>시도</td><td>일부 부서가 PoC를 합니다. 담당자와 예산은 있지만 성과 측정과 표준이 없습니다.</td></tr>
+        <tr><td><strong>L2</strong></td><td>40~59</td><td>정착</td><td>사내 표준 도구·방법론·규칙이 정해졌고, 여러 부서가 같은 방식으로 자동화합니다.</td></tr>
+        <tr><td><strong>L3</strong></td><td>60~79</td><td>확산</td><td>부서를 넘는 메가 프로세스에 AI가 들어갔고, 예측·시뮬레이션을 의사결정에 씁니다. 성과를 정량으로 봅니다.</td></tr>
+        <tr><td><strong>L4</strong></td><td>80~100</td><td>내재화 · AI Native</td><td>판단과 실행에 AI가 참여하고, 실적이 모델로 되돌아가는 닫힌 고리가 돕니다. 회사 고유의 지식과 에이전트가 쌓입니다.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note">0~4점 문항의 평균은 그대로 단계가 됩니다(평균 2.3 → L2). 12개 영역마다 위 공통 기준을 그 영역의 말로 풀어 쓴 단계 정의를 PRD에서 만듭니다. 교수님의 가치 4단계, 위임의 사다리, 이정표는 이 정의를 쓸 때 참고합니다.</p>
+
+  <div class="wide grid g2 mt-48">
+    <div class="card">
+      <div class="num">병목 규칙 · 제안</div>
+      <h3>종합 단계의 상한</h3>
+      <ul class="clean" style="font-size:15px;letter-spacing:-0.2px;color:#333">
+        <li><strong style="font-weight:600">데이터·지식(09)</strong>이 L2 미만이면 종합은 L2를 넘지 못합니다. 강의의 "바이브 코딩을 위해서는 데이터 통합이 전제"를 규칙으로 옮긴 것입니다.</li>
+        <li><strong style="font-weight:600">전략·리더십(01)</strong>이 L1 미만이면 종합은 L1이 상한입니다. "기업의 AI 활용 수준은 CEO/임원의 수준"입니다.</li>
+        <li><strong style="font-weight:600">AX 가치 단계(05)</strong>를 최적화(L4)로 판정하려면 온톨로지와 닫힌 고리 문항을 충족해야 합니다.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="num">경고 규칙 · 제안</div>
+      <h3>자동으로 띄우는 신호</h3>
+      <ul class="clean" style="font-size:15px;letter-spacing:-0.2px;color:#333">
+        <li><strong style="font-weight:600">혼돈의 확산</strong> — 가능성 축은 L3 이상인데 플랫폼·거버넌스(08)가 L2 미만. 무절제한 바이브 코딩의 6대 문제가 생길 위험입니다.</li>
+        <li><strong style="font-weight:600">위에서만 보이는 AX</strong> — 경영진 점수가 직원보다 1.0점 이상 높음. 현장이 변화를 체감하지 못합니다.</li>
+        <li><strong style="font-weight:600">미관리 AI 사용 의심</strong> — 직원의 AI 사용 응답은 높은데 AX/IT가 답한 승인 도구 보급은 낮음.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="wide grid g3 mt-24">
+    <div class="card"><div class="num">30일 과제</div><h3>병목과 인지 부족</h3><p>상한을 만드는 병목 영역의 즉시 조치, "인지 부족" 영역의 안내·교육, 빠르게 성과가 나는 PoC 1건.</p></div>
+    <div class="card"><div class="num">90일 과제</div><h3>가장 큰 격차</h3><p>우선순위 점수가 가장 높은 영역 1~2개. 큰 인식 격차가 난 영역의 소통과 제도 정비.</p></div>
+    <div class="card"><div class="num">365일 과제</div><h3>한 단계 위로</h3><p>종합 단계를 한 단계 올리는 과제. 첫 메가 프로세스 재설계와 횡적·종적 확장.</p></div>
+  </div>
+  <p class="note center">경계값(1.0점, 0.5, 30%, 병목 규칙)은 근거 문헌이 있는 rwg를 빼면 모두 출발점으로 정한 값입니다. 파일럿 결과를 보고 조정합니다. 진단한 기업이 30곳 이상 쌓이면 업종 안에서의 상대 위치(백분위)를 함께 보여줍니다.</p>
+</section>
+
+<!-- VALIDATION -->
+<section class="tile dark" id="validation">
+  <div class="wrap center">
+    <p class="eyebrow">문항 검증</p>
+    <h2>교수님 강의 수강생 패널은 만들지 않습니다.</h2>
+    <p class="lead">교수님 말씀대로 수강생은 같은 강의를 들어 프레임워크에 익숙하므로, 문항을 실제보다 명확하고 타당하게 평가할 수 있습니다. 검증은 교수님의 방법론을 모르는 사람들로 합니다.</p>
+  </div>
+  <div class="wide grid g4 mt-48">
+    <div class="card"><div class="num">1단계</div><h3>독립 전문가 검토</h3><p>교수님 강의와 관계없는 전문가 5~7명. AX 실무자, 조직진단·HR 전문가, 설문 통계 전문가를 섞습니다. 문항마다 "이 영역을 재는 데 적절한가"를 평가합니다(문항 타당도 0.78 이상 통과).</p></div>
+    <div class="card"><div class="num">2단계</div><h3>인지 인터뷰</h3><p>고객사 실무자 5~8명이 문항을 소리 내어 읽으며 답하게 해서, 용어가 어렵거나 뜻이 갈리는 문항을 고칩니다.</p></div>
+    <div class="card"><div class="num">3단계</div><h3>파일럿</h3><p>수강생과 관계없는 고객사 1~2곳에서 실제로 진단합니다. 응답 시간, 모름 비율, 문항별 변별력을 봅니다.</p></div>
+    <div class="card"><div class="num">4단계</div><h3>통계 검증</h3><p>응답이 약 300명 이상 쌓이면 신뢰도와 영역 구조를 통계로 확인합니다. 그 전까지 결과 화면에 "검증 진행 중"을 표시합니다.</p></div>
+  </div>
+  <p class="note center">수강생 기업은 검증 단계에서 빼고, 정식 서비스 이후에는 일반 고객으로만 참여합니다.</p>
+</section>
+
+<!-- FEATURES -->
+<section class="tile parch" id="features">
+  <div class="wrap center">
+    <p class="eyebrow">핵심 기능</p>
+    <h2>첫 버전에 넣을 것과 뺄 것.</h2>
+  </div>
+  <div class="wide grid g3 mt-48">
+    <div class="card">
+      <div class="num">컨설턴트</div>
+      <h3>진단 운영</h3>
+      <ul class="clean" style="font-size:15px;letter-spacing:-0.2px;color:#333">
+        <li>진단 프로젝트 만들기, 응답자 그룹·익명 링크 발급</li>
+        <li>역할별 응답 진행률 확인, 독려 알림</li>
+        <li>문항 세트 선택(단기 15분 / 심층 30분)</li>
+        <li>영역 가중치·익명성 기준 조정</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="num">응답자</div>
+      <h3>15분 설문</h3>
+      <ul class="clean" style="font-size:15px;letter-spacing:-0.2px;color:#333">
+        <li>로그인 없는 익명 링크, 모바일 우선</li>
+        <li>역할 선택 → 역할에 맞는 문항만 표시</li>
+        <li>기술 용어는 업무 행동으로 풀어 쓴 문항으로</li>
+        <li>중간 저장 후 이어서 응답</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="num">결과</div>
+      <h3>진단 보고서</h3>
+      <ul class="clean" style="font-size:15px;letter-spacing:-0.2px;color:#333">
+        <li>두 축 위치 그림, 12개 영역 레이더</li>
+        <li>직급 간 인식 격차 히트맵, 의견 분산 표시</li>
+        <li>강점·약점 상위 3개, 30·90·365일 과제</li>
+        <li>AI 해석 초안 → 컨설턴트 검토·승인 → PDF</li>
+      </ul>
+    </div>
+  </div>
+  <div class="wide grid g2 mt-24">
+    <div class="card">
+      <div class="num">다음 버전</div>
+      <h3>쌓일수록 강해지는 기능</h3>
+      <p>같은 회사 재진단과 변화 추적 · 업종별 비교(익명 집계, 출처·연도·표본 표시) · 문항 라이브러리 관리 · 영어 지원</p>
+    </div>
+    <div class="card">
+      <div class="num">하지 않는 것</div>
+      <h3>범위 밖</h3>
+      <p>기업의 셀프 가입·결제 · 개인별 역량 점수와 순위 · 인사 시스템 연동 · 컨설턴트 검토 없이 AI 보고서 자동 발송</p>
+    </div>
+  </div>
+</section>
+
+<!-- DIFFERENTIATION -->
+<section class="tile light">
+  <div class="wrap center">
+    <p class="eyebrow">차별점</p>
+    <h2>문항보다 측정 방식이 다릅니다.</h2>
+  </div>
+  <div class="wide grid g3 mt-48">
+    <div class="card center">
+      <div class="stat">여러 명</div>
+      <div class="stat-label">임원 1명이 아니라 직급별 다수 응답을 합쳐 조직을 봅니다</div>
+    </div>
+    <div class="card center">
+      <div class="stat">격차</div>
+      <div class="stat-label">경영진·AX/IT·직원의 인식 차이 자체를 진단 결과로 보여줍니다</div>
+    </div>
+    <div class="card center">
+      <div class="stat">처방</div>
+      <div class="stat-label">점수에서 교수님의 30·90·365일 템플릿 과제로 바로 이어집니다</div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTEXT & RISKS -->
+<section class="tile parch">
+  <div class="wide grid g2">
+    <div>
+      <p class="eyebrow">한국 맥락</p>
+      <h2 style="font-size:32px">한국 기업에 맞춘 질문</h2>
+      <ul class="clean">
+        <li><strong style="font-weight:600">AI 기본법</strong> — 2026-01-22 시행. 투명성 표시, 고영향 AI 조치 같은 의무를 거버넌스 문항에 반영합니다.</li>
+        <li><strong style="font-weight:600">CAIO 지정</strong> — 정부 48개 부처·기관의 CAIO 지정(2025-09) 흐름을 리더십 문항에 반영합니다.</li>
+        <li><strong style="font-weight:600">망분리 완화</strong> — 데이터 등급제와 금융권 완화 조치에 따른 사내 AI 사용 여건을 묻습니다.</li>
+        <li><strong style="font-weight:600">개인정보</strong> — 직급·부서 정도만 받고, 이름·연락처는 수집하지 않습니다.</li>
+      </ul>
+    </div>
+    <div>
+      <p class="eyebrow">위험 요소</p>
+      <h2 style="font-size:32px">미리 대비할 것</h2>
+      <ul class="clean">
+        <li><strong style="font-weight:600">문항 품질</strong> — 앱 개발보다 문항 작성과 검증에 더 많은 시간이 들 수 있습니다.</li>
+        <li><strong style="font-weight:600">익명성 신뢰</strong> — 소규모 부서에서 응답자가 드러나면 진단 전체가 무너집니다.</li>
+        <li><strong style="font-weight:600">AI 해석의 환각</strong> — AI가 쓴 해석은 반드시 컨설턴트가 검토합니다. 교수님 방법론의 원칙과 같습니다.</li>
+        <li><strong style="font-weight:600">벤치마크 오해</strong> — 한국 AI 도입률도 조사마다 6.4%~58%로 다릅니다. 비교 수치에는 출처·연도·표본을 항상 붙입니다.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- PLAN -->
+<section class="tile black" id="plan">
+  <div class="wide">
+    <div class="center">
+      <p class="eyebrow">진행 플랜</p>
+      <h2>아이디어에서 배포까지 일곱 단계.</h2>
+      <p class="lead">이 저장소의 스킬 순서를 따릅니다. 다음 단계는 PRD입니다.</p>
+    </div>
+    <div class="steps">
+      <div class="step done"><div class="n">00</div><div class="t">조사</div><div class="d">기존 진단모델 30여 개 비교 보고서</div><span class="s">완료</span></div>
+      <div class="step now"><div class="n">01</div><div class="t">아이디어</div><div class="d">이 문서. 영역·채점·검증 방향 확정</div><span class="s">지금</span></div>
+      <div class="step"><div class="n">02</div><div class="t">사용자 흐름</div><div class="d">컨설턴트·응답자·고객사 흐름 <br>(userflow-generator)</div><span class="s">다음</span></div>
+      <div class="step"><div class="n">03</div><div class="t">PRD</div><div class="d">화면·권한·데이터·테스트 계약 <br>(to-prd)</div><span class="s">예정</span></div>
+      <div class="step"><div class="n">04</div><div class="t">로드맵</div><div class="d">마일스톤 나누기 <br>(roadmap)</div><span class="s">예정</span></div>
+      <div class="step"><div class="n">05</div><div class="t">구현</div><div class="d">Vibe coding 방법론으로 마일스톤별 개발 <br>(plan · build)</div><span class="s">예정</span></div>
+      <div class="step"><div class="n">06</div><div class="t">문항 검증</div><div class="d">독립 전문가 → 인지 인터뷰 → 파일럿</div><span class="s">구현과 병행</span></div>
+    </div>
+    <div class="grid g2 mt-48">
+      <div class="card" style="background:#1c1c1e;border-color:rgba(255,255,255,0.1)">
+        <div class="num" style="color:#2997ff">오늘 확정된 결정</div>
+        <ul class="clean" style="font-size:15px;color:#d2d2d7">
+          <li>주 사용자는 컨설턴트</li>
+          <li>교수님 AX 프레임워크가 진단 모델의 기준</li>
+          <li>새 영역 3개(문제정의, 추진 조직·협업, 환각 대응·책임)를 독립 영역으로 추가 → 12개 영역</li>
+          <li>CEO 자가 진단표와 단계별 답변 보기는 참고용</li>
+          <li>교수님 강의 수강생 패널은 만들지 않음(편향 우려)</li>
+          <li>특정 도구 이름 대신 "Vibe Coding 방법론"으로 부름</li>
+          <li>채점 방식은 위 추천안으로 진행</li>
+          <li>Admin이 기업 명단을 등록 → 응답자는 기업 선택 → 카테고리(경영진·AX/IT·직원) 선택 후 응답</li>
+          <li>"EVCP"는 쓰지 않고 "전사적 AI 플랫폼"으로 부름</li>
+          <li>서비스 이름은 AX Assessment</li>
+        </ul>
+      </div>
+      <div class="card" style="background:#1c1c1e;border-color:rgba(255,255,255,0.1)">
+        <div class="num" style="color:#2997ff">PRD에서 정할 기술 가정</div>
+        <ul class="clean" style="font-size:15px;color:#d2d2d7">
+          <li>Next.js + Supabase + Vercel, 리포트 문장은 Claude API</li>
+          <li>응답자 익명 링크, 컨설턴트·관리자만 로그인</li>
+          <li>네 칸의 이름과 경계값, 단기·심층 문항 수</li>
+          <li>화면 문구와 보고서 표현</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    AX-assessment / docs / idea.html · 작성 2026-10-01 · 사실과 수치는 reports/AX 성숙도 진단모델 비교.md의 출처를 따릅니다. 네 칸 이름, 채점 경계값은 제안이며 확정되지 않았습니다.
+  </div>
+</footer>
+
+</body>
+</html>
