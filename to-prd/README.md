@@ -60,6 +60,7 @@ cp -r skills/to-prd ~/.codex/skills/to-prd
 ```text
 docs/PRD.md                         제품 통합 정본
     │
+    ├─ docs/PRD.html                읽기용 HTML (Apple 스타일)
     ├─ docs/DESIGN.md               없을 때만 Apple 기본값 복사
     ├─ docs/00-pm/{feature}.prd.md  bkit feature projection
     ├─ docs/00-pm/_decisions.md     미결 결정 projection
@@ -170,6 +171,22 @@ to-prd
 - 요소 ID를 `data-testid`로 쓰고, 역할별 테스트 계정·시드와 상태 유도 방법을 PRD에 둡니다.
 - 스크린샷 비교 테스트는 완료 조건에 넣지 않습니다.
 
+## 읽기용 PRD.html
+
+`docs/PRD.md`를 저장할 때마다 `scripts/render_prd_html.mjs`로 `docs/PRD.html`을 다시 만듭니다. 외부 의존성 없이 Node만 사용합니다.
+
+- Apple 디자인 토큰과 Pretendard, 상단 요약(게이트 판정, 화면·FR·SC·데이터·feature 수)
+- 고정 목차와 화면별 카드, 표 가로 스크롤
+- `SCR`·`FR`·`SC`·`DATA`·`NAV`·`REF`·`D` ID를 정의 위치로 연결하는 링크
+- `[E2E]`·`[통합]`·`[단위]`·`[수동]`, 상태 라벨, P0~P2를 색 배지로 표시
+- 모바일·인쇄 레이아웃
+
+```bash
+node scripts/render_prd_html.mjs docs/PRD.md docs/PRD.html
+```
+
+HTML은 읽기용입니다. 수정은 항상 `docs/PRD.md`에서 합니다. 착수 불가일 때는 `docs/PRD.draft.html`을 만들고 기존 `docs/PRD.html`은 덮어쓰지 않습니다.
+
 ## CLAUDE.md 동기화
 
 게이트를 통과하면 프로젝트 루트 `CLAUDE.md`에 `<!-- to-prd:begin -->`~`<!-- to-prd:end -->` 블록을 만들거나 다시 생성합니다. bkit이 매 세션 읽는 규칙이어서 PRD와 구현·검증이 같은 기준을 씁니다.
@@ -256,6 +273,7 @@ to-prd/
 │   ├── gate-checklist.md
 │   └── screen-definition-contract.md
 └── scripts/
+    ├── render_prd_html.mjs
     └── validate_prd.mjs
 ```
 

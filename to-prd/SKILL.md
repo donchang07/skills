@@ -29,6 +29,7 @@ description: 화면·메뉴·권한·로그인·UI 요소와 디자인 기준을
 - Step 5: `assets/prd-template.md` — 정본과 feature 파생본의 문서 구조
 - Step 6: `references/gate-checklist.md` — Hard Gate, 결함 분류, 채점, 파일명 규칙
 - Step 6: `scripts/validate_prd.mjs` — 제목·ID·placeholder·가정 표를 기계적으로 검사
+- Step 7: `scripts/render_prd_html.mjs` — 정본을 Apple 스타일의 읽기용 `PRD.html`로 변환
 
 필요한 단계에서 해당 파일을 읽는다. README는 실행 지침이 아니므로 읽을 필요가 없다.
 
@@ -49,6 +50,7 @@ description: 화면·메뉴·권한·로그인·UI 요소와 디자인 기준을
 | 산출물 | 역할 |
 |---|---|
 | `docs/PRD.md` | 게이트를 통과한 제품 통합 정본 |
+| `docs/PRD.html` | 정본에서 생성하는 읽기용 HTML(Apple 스타일·Pretendard·목차·ID 링크). 직접 편집하지 않음 |
 | `docs/00-pm/{feature}.prd.md` | bkit이 읽는 feature별 파생본 |
 | `docs/DESIGN.md` | 프로젝트에 없을 때만 `assets/apple-DESIGN.md`에서 복사. 기존 파일은 덮어쓰지 않음 |
 | `docs/00-pm/_decisions.md` | 정본 13장의 미결 결정 projection. 미결이 없어도 상태를 기록 |
@@ -228,6 +230,7 @@ FR을 확정하기 전에 11장을 먼저 채운다.
 ### 게이트 통과 또는 조건부 착수
 
 1. `docs/PRD.md`를 정본으로 저장한다.
+   이어서 `node scripts/render_prd_html.mjs docs/PRD.md docs/PRD.html`로 읽기용 HTML을 생성한다. 정본이 바뀔 때마다 다시 생성한다.
 2. feature마다 `docs/00-pm/{feature}.prd.md`를 정본에서 생성한다.
 3. `docs/00-pm/_product.gate.md`와 `docs/00-pm/{feature}.gate.md`를 저장한다.
 4. `docs/00-pm/_decisions.md`를 정본 13장과 동기화한다.
@@ -250,7 +253,7 @@ FR을 확정하기 전에 11장을 먼저 채운다.
 ### 착수 불가
 
 - 기존 최종 파일을 덮어쓰지 않는다.
-- 통합 draft는 `docs/PRD.draft.md`에 저장한다.
+- 통합 draft는 `docs/PRD.draft.md`에 저장하고, 같은 스크립트로 `docs/PRD.draft.html`을 생성한다. 기존 `docs/PRD.html`은 덮어쓰지 않는다.
 - feature draft는 `docs/00-pm/{feature}.prd.draft.md`에 저장한다.
 - gate는 `docs/00-pm/_product.gate.draft.md`와 `docs/00-pm/{feature}.gate.draft.md`에 저장한다.
 - `CLAUDE.md`의 to-prd 블록은 갱신하지 않는다. 블록은 최종 정본만 가리킨다.
@@ -262,7 +265,7 @@ FR을 확정하기 전에 11장을 먼저 채운다.
 
 다음 순서로 짧게 보고한다.
 
-1. 저장한 정본 또는 draft 경로. Apple 기본 DESIGN.md를 복사했다면 그 사실. `CLAUDE.md` to-prd 블록을 만들거나 갱신했다면 그 사실
+1. 저장한 정본 또는 draft 경로와 읽기용 HTML 경로. Apple 기본 DESIGN.md를 복사했다면 그 사실. `CLAUDE.md` to-prd 블록을 만들거나 갱신했다면 그 사실
 2. 게이트 판정과 Blocker/Major/Minor 수
 3. 작성자 결정 요청 번호·선택지·추천
 4. feature 분해와 첫 실행 명령 `/pdca plan {feature}`
