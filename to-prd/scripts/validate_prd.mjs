@@ -51,7 +51,8 @@ const screenMetadata = [
   "종료·전이",
   "관련 시나리오",
   "관련 FR·SC",
-  "관련 데이터"
+  "관련 데이터",
+  "디자인 참고"
 ];
 
 const screenDetailHeadings = [
@@ -168,8 +169,8 @@ function inspect(file) {
     errors.push("상단 메타의 상태가 final, draft, superseded 중 하나가 아님");
   }
 
-  if (!/^> PRD 스키마: screen-first-v1\s*$/m.test(text)) {
-    errors.push("상단 메타에 'PRD 스키마: screen-first-v1'이 없음");
+  if (!/^> PRD 스키마: screen-first-v2\s*$/m.test(text)) {
+    errors.push("상단 메타에 'PRD 스키마: screen-first-v2'가 없음 (v1이면 v2 보강 필요)");
   }
 
   for (const heading of requiredHeadings) {
@@ -203,6 +204,9 @@ function inspect(file) {
     if (!inventory.includes(column)) errors.push("5.2 화면 인벤토리 열 누락: " + column);
   }
   const inventoryIds = tableIds(inventory, "SCR");
+  const p0Screens = inventory.split(/\r?\n/).map(markdownCells).filter(function (cells) {
+    return /^SCR-\d{3,}$/.test(cells[0] || "") && /P0/.test(cells[8] || "");
+  }).map(function (cells) { return cells[0]; });
   if (inventoryIds.length === 0) errors.push("5.2 화면 인벤토리에 SCR 행이 없음");
   const duplicateInventory = duplicates(inventoryIds);
   if (duplicateInventory.length > 0) errors.push("화면 인벤토리 중복 ID: " + duplicateInventory.join(", "));
@@ -240,6 +244,18 @@ function inspect(file) {
     if (!detailIds.includes(screenId)) errors.push("메뉴·인증 흐름이 정의되지 않은 화면을 참조: " + screenId);
   }
 
+  const design = section(text, "## 9. 브랜드 & 디자인", "## 10. 범위 / 비범위 & 우선순위 · 납기");
+  if (!/\*\*시각 시스템:\*\*[^\n]*docs\/DESIGN\.md/.test(design)) errors.push("9장 시각 시스템이 docs/DESIGN.md를 가리키지 않음");
+  if (!/\*\*폰트:\*\*[^\n]*Pretendard/.test(design)) errors.push("9장 폰트가 Pretendard로 지정되지 않음");
+  if (!design.includes("**디자인 토큰 요약:**")) errors.push("9장에 디자인 토큰 요약이 없음");
+  const componentLine = (design.match(/\*\*컴포넌트 목록:\*\*([^\n]*)/) || [])[1] || "";
+  if (!componentLine.trim()) errors.push("9장에 컴포넌트 목록이 없음");
+  if (!design.includes("**참고 레퍼런스:**")) errors.push("9장에 참고 레퍼런스가 없음");
+  const refIds = tableIds(design, "REF");
+  if (refIds.length === 0 && !/없음\s*—/.test(design)) errors.push("9장 참고 레퍼런스에 REF 행 또는 '없음 — 이유'가 없음");
+  const duplicateRefs = duplicates(refIds);
+  if (duplicateRefs.length > 0) errors.push("중복 REF 정의: " + duplicateRefs.join(", "));
+
   const allElementIds = [];
   const elementDataRefs = [];
   let hasAdminCapability = false;
@@ -267,7 +283,7 @@ function inspect(file) {
     if (!hasTableDataRow(layout, "순서·영역")) errors.push(block.id + " 레이아웃·영역 정의 행이 없음");
 
     const elements = section(block.body, "##### UI 요소 계약", "##### 상호작용·전이");
-    for (const column of ["요소 ID", "종류", "표시 내용·라벨", "사용자·권한", "표시·활성 조건", "데이터 바인딩", "입력·검증", "행동·결과"]) {
+    for (const column of ["요소 ID", "종류", "컴포넌트", "표시 내용·라벨", "사용자·권한", "표시·활성 조건", "데이터 바인딩", "입력·검증", "행동·결과"]) {
       if (!elements.includes(column)) errors.push(block.id + " UI 요소 표 열 누락: " + column);
     }
 
@@ -280,14 +296,20 @@ function inspect(file) {
       if (!elementId.startsWith(block.id + "-EL-")) {
         errors.push(block.id + " 블록에 다른 화면의 요소 ID가 있음: " + elementId);
       }
-      if (cells.length < 8) {
+      if (cells.length < 9) {
         errors.push(elementId + " UI 요소 행의 열이 부족함");
         continue;
       }
-      const permission = cells[3];
-      const dataBinding = cells[5];
-      const validation = cells[6];
-      const action = cells[7];
+      const component = cells[2].replace(/`/g, "");
+      const permission = cells[4];
+      const dataBinding = cells[6];
+      const validation = cells[7];
+      const action = cells[8];
+      if (!component || component === "—") {
+        errors.push(elementId + " 컴포넌트가 비어 있음");
+      } else if (componentLine && !/해당 없음\s*—/.test(component) && !componentLine.includes(component)) {
+        errors.push(elementId + " 컴포넌트가 9장 컴포넌트 목록에 없음: " + component);
+      }
       if (permission.includes("관리자")) hasAdminCapability = true;
       if (!/(?:DATA-\d{3,}|정적|해당 없음\s*—)/.test(dataBinding)) {
         errors.push(elementId + " 데이터 바인딩이 DATA ID·정적·해당 없음 중 하나가 아님");
@@ -304,10 +326,21 @@ function inspect(file) {
     if (!hasTableDataRow(interactions, "트리거")) errors.push(block.id + " 상호작용·전이 정의 행이 없음");
 
     const states = section(block.body, "##### 화면 상태", "##### 반응형·접근성");
+    if (!states.includes("검증 SC")) errors.push(block.id + " 화면 상태 표에 검증 SC 열이 없음");
     for (const state of screenStates) {
-      if (!new RegExp("^\\|\\s*" + escapeRegExp(state) + "\\s*\\|", "m").test(states)) {
+      const stateRow = states.match(new RegExp("^\\|\\s*" + escapeRegExp(state) + "\\s*\\|.*$", "m"));
+      if (!stateRow) {
         errors.push(block.id + " 화면 상태 누락: " + state);
+        continue;
       }
+      const verification = markdownCells(stateRow[0])[5] || "";
+      if (p0Screens.includes(block.id) && !/(?:SC-\d{3,}|해당 없음\s*—)/.test(verification)) {
+        errors.push(block.id + " P0 화면 상태의 검증 SC가 없음: " + state);
+      }
+    }
+
+    for (const refId of references(block.body, /REF-\d{3,}/g)) {
+      if (!refIds.includes(refId)) errors.push(block.id + "가 정의되지 않은 참고 레퍼런스를 참조: " + refId);
     }
 
     const responsive = section(block.body, "##### 반응형·접근성");
@@ -373,6 +406,11 @@ function inspect(file) {
     frDataRefs.push(...references(dataCell, /DATA-\d{3,}/g));
     if (cells[7] && !/^\[(?:E2E|통합|단위|수동)\]/.test(cells[7])) warnings.push(frId + " 검증 방법이 [E2E]·[통합]·[단위]·[수동] 라벨로 시작하지 않음");
   }
+
+  for (const row of ["실행 검증", "테스트 식별자", "상태 유도"]) {
+    if (!new RegExp("^\\|\\s*" + row + "\\s*\\|", "m").test(frSection)) errors.push("6.x NFR에 '" + row + "' 행이 없음");
+  }
+  if (!frSection.includes("data-testid")) errors.push("6.x NFR 테스트 식별자 행에 data-testid 규칙이 없음");
 
   const success = section(text, "## 7. Success Criteria", "## 8. Edge Cases");
   for (const column of ["ID", "소프트웨어가 보장할 기준", "관련 FR", "관련 화면", "측정 방법", "현재 PRD 데이터로 검증 가능", "라벨"]) {
@@ -454,6 +492,7 @@ function inspect(file) {
 
   const stackSection = section(text, "### 11.1 레벨·스택", "### 11.2 시스템 가정 10칸");
   if (!stackSection.includes("**테스트:**")) errors.push("11.1에 '**테스트:**' 줄(단위·E2E 러너·실행 명령)이 없음");
+  if (!stackSection.includes("**테스트 계정·시드:**")) errors.push("11.1에 '**테스트 계정·시드:**' 줄(역할별 계정·시드 방법)이 없음");
   const bkitSpec = section(text, "## 15. bkit 실행 명세", "## 부록 A. 데이터 계약");
   if (bkitSpec && !/11\.1 테스트/.test(bkitSpec)) errors.push("15장 완료 조건에 11.1 테스트 명령 실행 통과가 없음");
 

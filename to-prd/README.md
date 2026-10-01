@@ -1,6 +1,6 @@
 # to-prd
 
-bkit(PDCA)가 `/pdca plan`부터 바로 소비할 수 있는 **화면 중심 실행 계약형 PRD**를 만드는 Claude Code 스킬입니다. 역할·화면·메뉴·로그인·UI 요소를 먼저 정의하고, 화면의 행동과 데이터에서 Functional Requirements와 데이터 계약을 도출합니다.
+bkit(PDCA)가 `/pdca plan`부터 바로 소비할 수 있는 **화면 중심 실행 계약형 PRD**를 만드는 Claude Code·Codex 스킬입니다. 역할·화면·메뉴·로그인·UI 요소와 디자인 기준을 먼저 정의하고, 화면의 행동과 데이터에서 Functional Requirements, 데이터 계약, 화면 테스트 기준을 도출합니다. 화면 디자인과 화면 테스트를 중간에 별도 단계로 두지 않고 PRD 안에서 완결합니다.
 
 기획 문서 또는 브리프를 다음 구조로 변환합니다.
 
@@ -15,10 +15,21 @@ bkit(PDCA)가 `/pdca plan`부터 바로 소비할 수 있는 **화면 중심 실
 
 ```bash
 git clone https://github.com/donchang07/skills.git
+```
+
+Claude Code:
+
+```bash
 cp -r skills/to-prd ~/.claude/skills/to-prd
 ```
 
-Claude Code를 재시작하면 `/to-prd`로 호출할 수 있습니다.
+Codex:
+
+```bash
+cp -r skills/to-prd ~/.codex/skills/to-prd
+```
+
+재시작하면 Claude Code에서는 `/to-prd`, Codex에서는 `$to-prd`로 호출할 수 있습니다. 두 환경은 같은 SKILL.md와 산출물 구조를 사용합니다. bkit 개발 명령(`/pdca ...`)은 Claude Code에서 실행합니다.
 
 ## 언제 쓰나
 
@@ -38,9 +49,9 @@ Claude Code를 재시작하면 `/to-prd`로 호출할 수 있습니다.
 | `docs/benchmark.md` | 경쟁 맥락·차별화·외부 사실 |
 | `docs/userflow.md` | 사용자 흐름·화면 |
 | `docs/brandvoice.md` | 서비스 이름·보이스 |
-| `docs/DESIGN.md` | 시각 시스템 |
+| `docs/DESIGN.md` | 시각 시스템·컴포넌트. 없으면 Apple 기본값(`assets/apple-DESIGN.md`)을 복사 |
 | `docs/PRD.md` | 기존 정본·ID·결정·개정 이력 |
-| 브리프·현재 대화·코드 | 최신 결정과 실제 시스템 제약 |
+| 브리프(PRD템플릿 Word 포함)·현재 대화·코드 | 최신 결정, 참고 사이트, 테스트 계정, 실제 시스템 제약 |
 
 ## 산출물과 단일 정본
 
@@ -49,6 +60,7 @@ Claude Code를 재시작하면 `/to-prd`로 호출할 수 있습니다.
 ```text
 docs/PRD.md                         제품 통합 정본
     │
+    ├─ docs/DESIGN.md               없을 때만 Apple 기본값 복사
     ├─ docs/00-pm/{feature}.prd.md  bkit feature projection
     ├─ docs/00-pm/_decisions.md     미결 결정 projection
     ├─ docs/00-pm/_product.gate.md  제품 gate
@@ -57,7 +69,7 @@ docs/PRD.md                         제품 통합 정본
 
 feature PRD를 직접 수정하지 않습니다. 업데이트는 정본을 먼저 바꾸고 영향받는 파생본을 다시 만듭니다. 파생본에만 존재하는 사람의 편집은 덮어쓰기 전에 정본으로 옮깁니다.
 
-기존 PRD에 `PRD 스키마: screen-first-v1`이 없으면 FR/SC ID를 보존한 채 화면 계약으로 마이그레이션합니다. 역할·화면·메뉴·인증·요소·데이터 연결이 완성되기 전에는 기존 최종본을 덮어쓰지 않습니다.
+현재 스키마는 `screen-first-v2`입니다. `screen-first-v1` PRD는 ID를 보존한 채 디자인 기준·컴포넌트·상태별 검증 SC·테스트 계정·테스트 식별자를 보강해 v2로 올립니다. 스키마 표기가 없으면 FR/SC ID를 보존한 채 화면 계약으로 마이그레이션합니다. 역할·화면·메뉴·인증·요소·데이터 연결이 완성되기 전에는 기존 최종본을 덮어쓰지 않습니다.
 
 ## Blocker가 있을 때
 
@@ -107,13 +119,13 @@ to-prd
     - 화면 인벤토리
     - 데스크톱/모바일 메뉴
     - 로그인·권한·세션 흐름
-    - 화면별 레이아웃·UI 요소·행동·데이터·8개 상태
-6.  Functional Requirements + NFR
+    - 화면별 디자인 참고·레이아웃·UI 요소(컴포넌트)·행동·데이터·8개 상태(검증 SC)
+6.  Functional Requirements + NFR (실행 검증·테스트 식별자·상태 유도)
 7.  Success Criteria
 8.  Edge Cases
-9.  브랜드 & 디자인
+9.  브랜드 & 디자인 (DESIGN.md·Pretendard·토큰·컴포넌트·참고 레퍼런스)
 10. 범위 / 비범위 / 우선순위 / 납기
-11. 레벨·스택 + 시스템 가정 10칸
+11. 레벨·스택·테스트 계정 + 시스템 가정 10칸
 12. 구현자 오픈 이슈
 13. 작성자 결정 요청
 14. feature 분해표
@@ -137,8 +149,25 @@ to-prd
 - 요소별 표시값·입력 규칙·권한·조건·데이터·행동 결과
 - 초기·로딩·빈·성공·검증 오류·시스템 오류·권한 없음·오프라인 상태
 - 반응형·접근성 기준
+- 화면별 디자인 참고와 요소별 컴포넌트
 
 관리자 기능이나 보호 데이터가 있는데 로그인 화면이 없거나, 화면 요소가 `DATA-*`와 `FR-*`에 연결되지 않으면 착수 Blocker입니다.
+
+## 디자인 기준
+
+- 프로젝트에 `docs/DESIGN.md`가 있으면 그대로 사용합니다.
+- 없으면 `assets/apple-DESIGN.md`(Apple 디자인 시스템, Pretendard)를 `docs/DESIGN.md`로 복사합니다. 기존 파일은 덮어쓰지 않습니다.
+- 폰트는 항상 Pretendard입니다.
+- PRD 9장에 토큰 요약, 컴포넌트 목록, 브리프의 참고 사이트(`REF-*`)를 기록하고, UI 요소의 컴포넌트 열은 이 목록의 이름만 사용합니다.
+
+## 화면 테스트
+
+화면 테스트는 별도로 설계하지 않고 화면 계약에서 도출합니다.
+
+- P0 화면의 주요 전이·적용 상태·역할별 차이·인증과 세션은 각각 `[E2E]` SC가 됩니다.
+- 반응형은 NFR 뷰포트로, 접근성은 자동 접근성 검사로 판정합니다.
+- 요소 ID를 `data-testid`로 쓰고, 역할별 테스트 계정·시드와 상태 유도 방법을 PRD에 둡니다.
+- 스크린샷 비교 테스트는 완료 조건에 넣지 않습니다.
 
 ## 시스템 가정
 
@@ -174,7 +203,10 @@ node scripts/validate_prd.mjs docs/PRD.md docs/00-pm/example.prd.md
 - 필수 장
 - `SCR/화면 요소/DATA/FR/SC` 정의·중복·참조 무결성
 - 역할·화면 인벤토리·메뉴·인증 계약
-- 화면별 메타·레이아웃·UI 요소·전이·8개 상태·반응형·접근성
+- 화면별 메타·디자인 참고·레이아웃·UI 요소·컴포넌트·전이·8개 상태·반응형·접근성
+- 9장 DESIGN.md·Pretendard·토큰·컴포넌트 목록·참고 레퍼런스
+- P0 화면 상태별 검증 SC
+- NFR 테스트 식별자·상태 유도, 11.1 테스트 계정·시드
 - 관리자 기능과 로그인/인증 화면의 일치
 - UI 요소의 데이터 바인딩과 FR의 화면·데이터 연결
 - feature 분해표의 화면·FR·SC·데이터 누락
@@ -205,6 +237,7 @@ to-prd/
 ├── SKILL.md
 ├── README.md
 ├── assets/
+│   ├── apple-DESIGN.md
 │   └── prd-template.md
 ├── references/
 │   ├── bkit-contract.md
