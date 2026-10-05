@@ -267,14 +267,27 @@ to-prd/
 ├── README.md
 ├── assets/
 │   ├── apple-DESIGN.md
-│   └── prd-template.md
+│   ├── prd-template.md
+│   └── brief/
+│       ├── PRD템플릿_v1.2.docx        # 현업 입력 양식
+│       └── PRD작성핸드북_v1.2.docx    # 현업 사용 안내
 ├── references/
 │   ├── bkit-contract.md
+│   ├── brief-mapping.md            # 브리프 → PRD 대응, 브리프 버전 선언
 │   ├── gate-checklist.md
 │   └── screen-definition-contract.md
 └── scripts/
+    ├── check_sync.mjs              # 템플릿·핸드북·스킬 동기화 검사
     ├── render_prd_html.mjs
     └── validate_prd.mjs
+```
+
+## 템플릿·핸드북과의 동기화
+
+템플릿·핸드북·스킬은 한 묶음입니다. 하나를 고치면 `references/brief-mapping.md`의 브리프 버전과 두 Word 파일의 파일명·바닥글·파일 속성 제목을 함께 올리고 다음을 실행합니다.
+
+```bash
+node scripts/check_sync.mjs
 ```
 
 ## 기존 버전과의 차이

@@ -14,7 +14,7 @@ if (!fs.existsSync(input)) {
 const source = fs.readFileSync(input, "utf8").replace(/\r\n/g, "\n");
 const lines = source.split("\n");
 
-const ID_PATTERN = /\b(SCR-\d{3,}(?:-EL-\d{2,})?|FR-\d{3,}|SC-\d{3,}|DATA-\d{3,}|NAV-\d{3,}|REF-\d{3,}|D-\d{3,}|I-\d{3,})((?:\.[A-Za-z_][\w]*)?)/g;
+const ID_PATTERN = /\b(SCR-\d{3,}(?:-EL-\d{2,})?|FR-\d{3,}|SC-\d{3,}|DATA-\d{3,}|NAV-\d{3,}|REF-\d{3,}|NG-\d{3,}|D-\d{3,}|I-\d{3,})((?:\.[A-Za-z_][\w]*)?)/g;
 const TEST_LABEL = /\[(E2E|통합|단위|수동)\]/g;
 const STATUS_LABEL = /\[(확정·출처|확정|조사·기준일|추정|가설|기본값|해당 없음|결정 필요|구현자|작성자)\]/g;
 
@@ -49,7 +49,7 @@ const anchors = new Set();
 for (const line of lines) {
   const heading = line.match(/^#{2,6}\s+(.*)$/);
   if (heading) anchors.add(headingAnchor(heading[1].trim()));
-  const row = line.match(/^\|\s*((?:SCR-\d{3,}-EL-\d{2,})|FR-\d{3,}|SC-\d{3,}|NAV-\d{3,}|REF-\d{3,}|D-\d{3,}|I-\d{3,})\s*\|/);
+  const row = line.match(/^\|\s*((?:SCR-\d{3,}-EL-\d{2,})|FR-\d{3,}|SC-\d{3,}|NAV-\d{3,}|REF-\d{3,}|NG-\d{3,}|D-\d{3,}|I-\d{3,})\s*\|/);
   if (row) anchors.add(anchorOf(row[1]));
 }
 
@@ -99,7 +99,7 @@ function renderTable(rows) {
   const head = "<thead><tr>" + header.map(function (cell) { return "<th>" + inline(cell) + "</th>"; }).join("") + "</tr></thead>";
   const tbody = body.map(function (row) {
     const first = row[0] || "";
-    const idMatch = first.match(/^((?:SCR-\d{3,}-EL-\d{2,})|FR-\d{3,}|SC-\d{3,}|NAV-\d{3,}|REF-\d{3,}|D-\d{3,}|I-\d{3,})$/);
+    const idMatch = first.match(/^((?:SCR-\d{3,}-EL-\d{2,})|FR-\d{3,}|SC-\d{3,}|NAV-\d{3,}|REF-\d{3,}|NG-\d{3,}|D-\d{3,}|I-\d{3,})$/);
     const rowId = idMatch ? ' id="' + anchorOf(idMatch[1]) + '"' : "";
     return "<tr" + rowId + ">" + row.map(function (cell, column) { return '<td data-label="' + escapeHtml((header[column] || "").replace(/\*\*/g, "")) + '">' + inline(cell) + "</td>"; }).join("") + "</tr>";
   }).join("");

@@ -513,6 +513,23 @@ function inspect(file) {
     }
   }
 
+  const nonGoals = section(text, "### 비목표 (Non-goals)", "## 4. User Scenarios");
+  if (!nonGoals) {
+    errors.push("3장에 '### 비목표 (Non-goals)' 절이 없음");
+  } else {
+    const ngIds = tableIds(nonGoals, "NG");
+    const ngDup = duplicates(ngIds);
+    if (ngDup.length > 0) errors.push("비목표 ID 중복: " + ngDup.join(", "));
+    if (ngIds.length === 0) warnings.push("3장 비목표에 NG-* 표가 없음 (브리프 1장 '이번에 만들지 않을 것')");
+    for (const column of ["제외 이유", "다시 검토할 시점"]) {
+      if (ngIds.length > 0 && !nonGoals.includes(column)) warnings.push("3장 비목표 표 열 누락: " + column);
+    }
+  }
+
+  if (!text.includes("### 11.4 AI 판정 계약")) {
+    warnings.push("11.4 AI 판정 계약 절이 없음 (AI 기능이 없으면 '해당 없음 — 브리프 7장')");
+  }
+
   const edge = section(text, "## 8. Edge Cases", "## 9. 브랜드 & 디자인");
   for (const column of ["상황", "발생 화면·요소", "사용자 표시 문구", "이후 동작", "데이터·로그"]) {
     if (!edge.includes(column)) errors.push("8장 오류 처리 표 열 누락: " + column);
