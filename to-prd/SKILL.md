@@ -26,7 +26,7 @@ description: 현업이 작성한 업무 브리프(assets/brief의 PRD템플릿 W
 
 - Step 0: `references/bkit-contract.md` — 지원하는 bkit 버전·경로·명령·설정
 - Step 2: `references/brief-mapping.md` — 업무 브리프 각 장의 PRD 위치, 모름·추천값 처리, 필수 항목 객관식 질문, 비목표·AI 판정 규칙
-- 배포용: `assets/brief/PRD템플릿_v1.2.docx`(현업 입력 양식), `assets/brief/PRD작성핸드북_v1.2.docx`(현업 사용 안내). 사용자가 템플릿이나 핸드북을 요청하면 이 파일을 전달한다. 현재 바닥글은 DN 그룹판이다. 다른 회사에 줄 때는 바닥글 회사명만 바꾼 사본을 만들고 내용과 버전은 바꾸지 않는다
+- 배포용: `assets/brief/PRD템플릿_v1.2.docx`(현업 입력 양식), `assets/brief/PRD작성핸드북_v1.2.docx`(현업 사용 안내). 사용자가 템플릿이나 핸드북을 요청하면 이 파일을 그대로 전달한다. 두 파일에는 바닥글이 없다
 - Step 3: `assets/apple-DESIGN.md` — 프로젝트에 DESIGN.md가 없을 때 복사하는 기본 디자인 시스템(Pretendard)
 - Step 4: `references/screen-definition-contract.md` — 화면·메뉴·권한·로그인·요소·상태·디자인 기준·화면 테스트 도출의 필수 계약
 - Step 5: `assets/prd-template.md` — 정본과 feature 파생본의 문서 구조

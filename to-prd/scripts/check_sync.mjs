@@ -15,7 +15,7 @@ const check = (id, ok, detail) => results.push({ id, ok: Boolean(ok), detail });
 function docx(rel) {
   const file = path.join(root, rel);
   const part = (name) => {
-    try { return execFileSync("unzip", ["-p", file, name], { encoding: "utf8", maxBuffer: 64 << 20 }); }
+    try { return execFileSync("unzip", ["-p", file, name], { encoding: "utf8", maxBuffer: 64 << 20, stdio: ["ignore", "pipe", "ignore"] }); }
     catch { return ""; }
   };
   const text = (xml) => xml
@@ -56,9 +56,9 @@ if (!fs.existsSync(path.join(root, tplRel)) || !fs.existsSync(path.join(root, hb
 
 const tpl = docx(tplRel);
 const hb = docx(hbRel);
-check("V-05 템플릿 바닥글 버전", tpl.footer.includes(`PRD 템플릿 ${version}`), tpl.footer.trim());
+check("V-05 템플릿 바닥글 없음", tpl.footer.trim() === "", tpl.footer.trim() || "없음");
 check("V-06 템플릿 파일 속성 제목 버전", tpl.title.includes(version), tpl.title);
-check("V-07 핸드북 바닥글 버전", hb.footer.includes(`PRD 작성 핸드북 ${version}`), hb.footer.trim());
+check("V-07 핸드북 바닥글 없음", hb.footer.trim() === "", hb.footer.trim() || "없음");
 check("V-08 핸드북 파일 속성 제목 버전", hb.title.includes(version), hb.title);
 const hbTplVersions = [...new Set((hb.body.match(/PRD템플릿[ _](v\d+\.\d+)/g) || []).map((m) => m.slice(-4)))];
 check("V-09 핸드북이 가리키는 템플릿 버전", hbTplVersions.length === 1 && hbTplVersions[0] === version, hbTplVersions.join(", "));

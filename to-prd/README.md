@@ -284,7 +284,7 @@ to-prd/
 
 ## 템플릿·핸드북과의 동기화
 
-템플릿·핸드북·스킬은 한 묶음입니다. 하나를 고치면 `references/brief-mapping.md`의 브리프 버전과 두 Word 파일의 파일명·바닥글·파일 속성 제목을 함께 올리고 다음을 실행합니다.
+템플릿·핸드북·스킬은 한 묶음입니다. 하나를 고치면 `references/brief-mapping.md`의 브리프 버전과 두 Word 파일의 파일명·파일 속성 제목을 함께 올리고 다음을 실행합니다.
 
 ```bash
 node scripts/check_sync.mjs
