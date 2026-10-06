@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-chang-book-template — Reusable book builder helpers.
+chang-book — Reusable book builder helpers.
 
 This module provides paragraph builder functions that produce Word XML
 matching the books.dotx template. Use it to construct a book document

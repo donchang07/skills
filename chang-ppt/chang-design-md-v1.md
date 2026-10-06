@@ -1,5 +1,5 @@
 # DESIGN.md
-## chang-presentation-brand v2.0 통합 디자인 시스템
+## chang-ppt v2.0 통합 디자인 시스템
 
 장동인교수 (KAIST 김재철AI대학원 · AIBB LAB) 발표 자료, CAIO 강의 슬라이드, CAIO 웹포털, AI 워크북, LLM 진단도구 등 모든 디지털 자산에 적용되는 통합 비주얼 시스템입니다.
 
@@ -87,7 +87,7 @@
 
 ## 3. 색상 시스템
 
-### 3.1 Heritage (chang-presentation-brand 시그니처)
+### 3.1 Heritage (chang-ppt 시그니처)
 
 | Token | HEX | 용도 |
 |---|---|---|
@@ -230,9 +230,9 @@ Fallback 스택:
 
 ### 6.1 핵심 원칙: Square Box
 
-**Frame이 직각이면 콘텐츠도 직각**입니다. chang-presentation-brand의 navy 직각 frame이 시그니처이므로, 콘텐츠 박스(stat-card, compare-card, chart-card, insight-card, pyramid-layer, illust-card 등)는 모두 border-radius 0의 square box로 통일합니다.
+**Frame이 직각이면 콘텐츠도 직각**입니다. chang-ppt의 navy 직각 frame이 시그니처이므로, 콘텐츠 박스(stat-card, compare-card, chart-card, insight-card, pyramid-layer, illust-card 등)는 모두 border-radius 0의 square box로 통일합니다.
 
-이는 Clay.com의 24px 둥근 모서리 시스템과 가장 큰 차이점입니다. Clay는 frame이 없으므로 카드를 둥글게 처리해도 충돌하지 않지만, chang-presentation-brand는 직각 frame과 통합되려면 모든 박스가 직각이어야 합니다.
+이는 Clay.com의 24px 둥근 모서리 시스템과 가장 큰 차이점입니다. Clay는 frame이 없으므로 카드를 둥글게 처리해도 충돌하지 않지만, chang-ppt는 직각 frame과 통합되려면 모든 박스가 직각이어야 합니다.
 
 ### 6.2 예외 (원형 유지)
 
@@ -454,17 +454,17 @@ cool-gray canvas + heritage navy 단일톤. 둥근 모서리 사용. 한글 맑�
 
 ---
 
-## 부록 A. chang-presentation-brand SKILL.md 통합 (전체 텍스트)
+## 부록 A. chang-ppt SKILL.md 통합 (전체 텍스트)
 
 기존 SKILL.md 파일을 아래 전체 텍스트로 교체하시면 v2.0 사양이 반영됩니다.
 
 ```markdown
 ---
-name: chang-presentation-brand
+name: chang-ppt
 description: 장동인 (KAIST 김재철AI대학원 · AIBB LAB) PPTX 강의 자료 생성 스킬. v2.0 cream canvas + saturated 6색 카드 시스템. 좌측 navy stripe + 안쪽 가는 수직선 + 상단 가로 실선의 헤리티지 L자 frame 유지. CAIO 강의, 매일경제·기획재정부·홍수통제소 등 기관 강의 자료에 사용.
 ---
 
-# chang-presentation-brand v2.0
+# chang-ppt v2.0
 
 ## 목적
 장동인교수의 모든 강의 자료(PPTX)를 일관된 v2.0 디자인 시스템으로 자동 생성합니다.
@@ -609,7 +609,7 @@ pip install python-pptx
 
 ```python
 """
-chang-presentation-brand template.pptx를 v2.0으로 변환하는 스크립트.
+chang-ppt template.pptx를 v2.0으로 변환하는 스크립트.
 
 실행 전 기존 template.pptx를 template_v1_backup.pptx로 백업하세요.
 """
@@ -806,8 +806,8 @@ print(f'백업 위치: {BACKUP}')
 ### B.3 실행 방법
 
 ```bash
-# 1. chang-presentation-brand 디렉토리로 이동
-cd /path/to/skills/chang-presentation-brand/
+# 1. chang-ppt 디렉토리로 이동
+cd /path/to/skills/chang-ppt/
 
 # 2. 변환 스크립트 실행
 python convert_to_v2.py
@@ -869,8 +869,8 @@ python convert_to_v2.py
 
 (2) 강의 슬라이드 사례집 (CAIO 10기, 매일경제, 기획재정부, 홍수통제소) 라이브러리화
 
-(3) chang-presentation-brand 공식 웹사이트 (디자인 시스템 갤러리)
+(3) chang-ppt 공식 웹사이트 (디자인 시스템 갤러리)
 
 ---
 
-본 문서는 v2.0으로, 2026년 5월 3일 자 chang-presentation-brand 디자인 시스템 공식 사양입니다. 향후 발견되는 시각적 충돌, 한글 가독성 이슈, PPTX 렌더링 차이를 반영하여 v2.x로 점진 개선됩니다.
+본 문서는 v2.0으로, 2026년 5월 3일 자 chang-ppt 디자인 시스템 공식 사양입니다. 향후 발견되는 시각적 충돌, 한글 가독성 이슈, PPTX 렌더링 차이를 반영하여 v2.x로 점진 개선됩니다.

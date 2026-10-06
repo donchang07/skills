@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""chang-book-template — Finalize unpacked docx package before re-pack.
+"""chang-book — Finalize unpacked docx package before re-pack.
 
 books.dotx를 .docx로 단순 복사한 unpacked 디렉토리에는 다음 4가지 잠재 손상 원인이 있습니다.
 이 스크립트는 pack 직전에 호출하여 모두 자동 정리합니다.

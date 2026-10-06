@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-chang-book-template — Minimal usage example.
+chang-book — Minimal usage example.
 
 Run this from the working directory after unpacking books.dotx:
 
@@ -32,7 +32,7 @@ def main():
     cover = build_cover(
         title_main="예제 책 제목",
         title_sub="[예제]",
-        subtitle="chang-book-template 동작 검증용 미니 도서",
+        subtitle="chang-book 동작 검증용 미니 도서",
         author="장동인",
         affiliations=["KAIST 김재철AI대학원 책임교수", "AIBB LAB 대표"],
         notes=["이 문서는 스킬 동작 확인용 예제입니다."],
@@ -44,7 +44,7 @@ def main():
         heading="머리말",
         level=1,
         body=[
-            "이 책은 chang-book-template 스킬이 실제로 books.dotx 템플릿을 "
+            "이 책은 chang-book 스킬이 실제로 books.dotx 템플릿을 "
             "정확히 적용하는지를 검증하기 위한 최소 예제입니다."
         ],
         bullets=[

@@ -1,5 +1,5 @@
 ---
-name: chang-presentation-brand
+name: chang-ppt
 description: "KAIST AI대학원 장동인 교수의 강의/발표 프레젠테이션에 일관된 브랜드 스타일을 적용합니다. 프레젠테이션, 슬라이드, 덱, PPT, 강의자료, 발표자료를 만들 때 자동으로 활성화됩니다."
 ---
 

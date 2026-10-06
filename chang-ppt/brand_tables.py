@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""chang-presentation-brand — 표 규격 자동 적용.
+"""chang-ppt — 표 규격 자동 적용.
 
   python brand_tables.py <입력.pptx> <출력.pptx>
 

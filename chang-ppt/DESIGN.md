@@ -1,5 +1,5 @@
 # DESIGN.md
-## chang-presentation-brand v2.1 통합 디자인 시스템
+## chang-ppt v2.1 통합 디자인 시스템
 
 장동인교수 (KAIST 김재철AI대학원 · AIBB LAB) 발표 자료, CAIO 강의 슬라이드, CAIO 웹포털, AI 워크북, LLM 진단도구 등 모든 디지털 자산에 적용되는 통합 비주얼 시스템입니다.
 
@@ -89,7 +89,7 @@
 
 ## 3. 색상 시스템
 
-### 3.1 Heritage (chang-presentation-brand 시그니처)
+### 3.1 Heritage (chang-ppt 시그니처)
 
 | Token | HEX | 용도 |
 |---|---|---|
@@ -232,9 +232,9 @@ Fallback 스택:
 
 ### 6.1 핵심 원칙: Square Box
 
-**Frame이 직각이면 콘텐츠도 직각**입니다. chang-presentation-brand의 navy 직각 frame이 시그니처이므로, 콘텐츠 박스(stat-card, compare-card, chart-card, insight-card, pyramid-layer, illust-card 등)는 모두 border-radius 0의 square box로 통일합니다.
+**Frame이 직각이면 콘텐츠도 직각**입니다. chang-ppt의 navy 직각 frame이 시그니처이므로, 콘텐츠 박스(stat-card, compare-card, chart-card, insight-card, pyramid-layer, illust-card 등)는 모두 border-radius 0의 square box로 통일합니다.
 
-이는 Clay.com의 24px 둥근 모서리 시스템과 가장 큰 차이점입니다. Clay는 frame이 없으므로 카드를 둥글게 처리해도 충돌하지 않지만, chang-presentation-brand는 직각 frame과 통합되려면 모든 박스가 직각이어야 합니다.
+이는 Clay.com의 24px 둥근 모서리 시스템과 가장 큰 차이점입니다. Clay는 frame이 없으므로 카드를 둥글게 처리해도 충돌하지 않지만, chang-ppt는 직각 frame과 통합되려면 모든 박스가 직각이어야 합니다.
 
 ### 6.2 예외 (원형 유지)
 
@@ -466,4 +466,4 @@ cool-gray canvas + heritage navy 단일톤. 둥근 모서리 사용. 한글 맑�
 
 ---
 
-본 문서는 v2.1로, 2026년 5월 3일 자 chang-presentation-brand 디자인 시스템 공식 사양입니다. 향후 발견되는 시각적 충돌, 한글 가독성 이슈, PPTX 렌더링 차이를 반영하여 v2.x로 점진 개선됩니다.
+본 문서는 v2.1로, 2026년 5월 3일 자 chang-ppt 디자인 시스템 공식 사양입니다. 향후 발견되는 시각적 충돌, 한글 가독성 이슈, PPTX 렌더링 차이를 반영하여 v2.x로 점진 개선됩니다.
