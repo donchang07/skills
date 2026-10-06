@@ -1,0 +1,7 @@
+{
+  "name": "to-prd",
+  "version": "1.3.0",
+  "description": "업무 브리프를 bkit용 화면 중심 PRD와 읽기용 HTML로 정리합니다.",
+  "author": { "name": "donchang07" },
+  "skills": "./skills/"
+}

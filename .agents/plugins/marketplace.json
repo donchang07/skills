@@ -1,0 +1,20 @@
+{
+  "name": "donchang-skills",
+  "interface": {
+    "displayName": "Donchang Skills"
+  },
+  "plugins": [
+    {
+      "source": {
+        "source": "local",
+        "path": "./plugins/to-prd"
+      },
+      "name": "to-prd",
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}
