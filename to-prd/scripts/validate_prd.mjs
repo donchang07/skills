@@ -520,14 +520,14 @@ function inspect(file) {
     const ngIds = tableIds(nonGoals, "NG");
     const ngDup = duplicates(ngIds);
     if (ngDup.length > 0) errors.push("비목표 ID 중복: " + ngDup.join(", "));
-    if (ngIds.length === 0) warnings.push("3장 비목표에 NG-* 표가 없음 (브리프 1장 '이번에 만들지 않을 것')");
+    if (ngIds.length === 0) warnings.push("3장 비목표에 NG-* 표가 없음 (브리프 3장 '이번에 제외할 것과 이유')");
     for (const column of ["제외 이유", "다시 검토할 시점"]) {
       if (ngIds.length > 0 && !nonGoals.includes(column)) warnings.push("3장 비목표 표 열 누락: " + column);
     }
   }
 
   if (!text.includes("### 11.4 AI 판정 계약")) {
-    warnings.push("11.4 AI 판정 계약 절이 없음 (AI 기능이 없으면 '해당 없음 — 브리프 7장')");
+    warnings.push("11.4 AI 판정 계약 절이 없음 (AI 기능이 없으면 '해당 없음 — 브리프 4장')");
   }
 
   const edge = section(text, "## 8. Edge Cases", "## 9. 브랜드 & 디자인");

@@ -9,7 +9,7 @@ description: 현업이 작성한 업무 브리프(assets/brief의 PRD템플릿 W
 
 품질 기준은 하나다.
 
-> 이 PRD만 받은 bkit이 어떤 사용자를 위해 어떤 화면을 만들고, 화면 안에 어떤 컴포넌트로 무엇을 넣고, 메뉴·권한·로그인을 어떻게 구성하며, 어떤 데이터와 상태를 처리하고, 어떤 E2E로 완료를 판정할지 알 수 있는가.
+> 이 PRD만 받은 bkit이 어떤 사용자를 위해 어떤 화면을 만들고, 화면 안에 어떤 컴포넌트로 무엇을 넣고, 메뉴·권한·로그인을 어떻게 구성하며, 어떤 데이터와 상태를 처리하고, 어떤 E2E로 완료를 판정할지 알 수 있다.
 
 ## 운영 불변식
 
@@ -25,8 +25,9 @@ description: 현업이 작성한 업무 브리프(assets/brief의 PRD템플릿 W
 ## 단계별 리소스
 
 - Step 0: `references/bkit-contract.md` — 지원하는 bkit 버전·경로·명령·설정
+- Step 1: 기존 `docs/PRD.md`, `docs/PRD.draft.md`, `docs/00-pm/*.prd.md` — 존재 여부와 내용을 확인해 실행 모드 판단
 - Step 2: `references/brief-mapping.md` — 업무 브리프 각 장의 PRD 위치, 모름·추천값 처리, 필수 항목 객관식 질문, 비목표·AI 판정 규칙
-- 배포용: `assets/brief/PRD템플릿_v1.2.docx`(현업 입력 양식), `assets/brief/PRD작성핸드북_v1.2.docx`(현업 사용 안내). 사용자가 템플릿이나 핸드북을 요청하면 이 파일을 그대로 전달한다. 두 파일에는 바닥글이 없다
+- 배포용: `assets/brief/PRD템플릿_v1.3.docx`(현업 입력 양식), `assets/brief/PRD작성핸드북_v1.3.docx`(현업 사용 안내). 사용자가 템플릿이나 핸드북을 요청하면 이 파일을 그대로 전달한다. 두 파일에는 바닥글이 없다
 - Step 3: `assets/apple-DESIGN.md` — 프로젝트에 DESIGN.md가 없을 때 복사하는 기본 디자인 시스템(Pretendard)
 - Step 4: `references/screen-definition-contract.md` — 화면·메뉴·권한·로그인·요소·상태·디자인 기준·화면 테스트 도출의 필수 계약
 - Step 5: `assets/prd-template.md` — 정본과 feature 파생본의 문서 구조
@@ -35,7 +36,7 @@ description: 현업이 작성한 업무 브리프(assets/brief의 PRD템플릿 W
 - 유지보수: `scripts/check_sync.mjs` — 템플릿·핸드북·스킬의 버전과 핵심 규칙 일치 검사
 - Step 7: `scripts/render_prd_html.mjs` — 정본을 Apple 스타일의 읽기용 `PRD.html`로 변환
 
-필요한 단계에서 해당 파일을 읽는다. README는 실행 지침이 아니므로 읽을 필요가 없다.
+필요한 단계에서 해당 파일을 읽는다.
 
 ## 입력과 산출물
 
@@ -123,7 +124,7 @@ FR을 확정하기 전에 11장을 먼저 채운다.
 
 **테스트 계정·시드:** 11.1에 역할별 테스트 계정(비로그인·일반 사용자·관리자)과 시드 방법을 둔다. 브리프에 없으면 역할마다 시드 계정 1개를 `[기본값]`으로 둔다. 비밀번호·토큰 값은 쓰지 않고 환경 변수 이름만 쓴다.
 
-**AI 판정 계약:** 브리프 7장 AI 기능이 `해당 없음`이 아니면 11.4를 `references/brief-mapping.md` 7절대로 채운다. AI 결과와 사람 확정값은 부록 A에서 다른 필드다. 확정·되돌리기는 FR과 `[E2E]` SC로 만든다.
+**AI 판정 계약:** 브리프 4장 AI 기능이 `해당 없음`이 아니면 11.4를 `references/brief-mapping.md` 7절대로 채운다. AI 결과와 사람 확정값은 부록 A에서 다른 필드다. 확정·되돌리기는 FR과 `[E2E]` SC로 만든다.
 
 **디자인 기준:** 프로젝트에 `docs/DESIGN.md`가 있으면 그대로 사용한다. 없으면 `assets/apple-DESIGN.md`를 `docs/DESIGN.md`로 복사하고 `[기본값] Apple 디자인 시스템`으로 기록한다. 기존 DESIGN.md는 덮어쓰지 않는다. 폰트는 항상 **Pretendard**다. 프로젝트 DESIGN.md가 다른 폰트를 지정하면 파일은 고치지 않고 9장에 Pretendard 우선을 기록한다. Step 4에서 컴포넌트를 지정하려면 이 단계에서 디자인 기준이 확정되어 있어야 한다.
 
@@ -211,7 +212,7 @@ FR을 확정하기 전에 11장을 먼저 채운다.
 `assets/prd-template.md`를 읽고 정본을 완성한다.
 
 - 0장: Executive Summary와 Context Anchor의 WHY/WHO/RISK/SUCCESS/SCOPE
-- 1~3장: 개요·배경·목표. 3장 비목표는 `NG-*` 표로 쓰고 각 항목에 제외 이유와 다시 검토할 시점을 둔다. 브리프 9장 `나중에 추가할 것`은 비목표가 아니라 10장 이후 범위다.
+- 1~3장: 개요·배경·목표. 3장 비목표는 `NG-*` 표로 쓰고 각 항목에 제외 이유와 다시 검토할 시점을 둔다. 브리프 3장 `나중에 추가할 것`은 비목표가 아니라 10장 이후 범위다.
 - 4장: 사용자 시나리오와 역할별 흐름
 - 5장: 화면 인벤토리·메뉴·인증·화면별 상세 계약
 - 6~8장: 화면에서 도출한 FR·SC·오류 계약

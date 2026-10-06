@@ -269,8 +269,8 @@ to-prd/
 │   ├── apple-DESIGN.md
 │   ├── prd-template.md
 │   └── brief/
-│       ├── PRD템플릿_v1.2.docx        # 현업 입력 양식
-│       └── PRD작성핸드북_v1.2.docx    # 현업 사용 안내
+│       ├── PRD템플릿_v1.3.docx        # 현업 입력 양식
+│       └── PRD작성핸드북_v1.3.docx    # 현업 사용 안내
 ├── references/
 │   ├── bkit-contract.md
 │   ├── brief-mapping.md            # 브리프 → PRD 대응, 브리프 버전 선언
