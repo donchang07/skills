@@ -1,0 +1,9 @@
+{
+  "name": "vercel-rag",
+  "version": "1.0.0",
+  "description": "Vercel + Supabase에서 PDF RAG 파이프라인을 만들 때의 플랫폼 제약·버그·해결책 레퍼런스입니다.",
+  "author": {
+    "name": "donchang07"
+  },
+  "repository": "https://github.com/donchang07/skills"
+}

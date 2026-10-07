@@ -1,0 +1,24 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "github-pages-handbook",
+  "version": "1.0.0",
+  "description": "기술 주제를 한국어 핸드북으로 만들어 GitHub Pages 정적 사이트로 출판합니다.",
+  "author": {
+    "name": "donchang07"
+  },
+  "repository": "https://github.com/donchang07/skills",
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "github-pages-handbook",
+        "shortDescription": "기술 핸드북을 GitHub Pages로 출판",
+        "longDescription": "기술 주제를 한국어 핸드북으로 만들어 GitHub Pages 정적 사이트로 출판합니다.",
+        "developerName": "donchang07",
+        "category": "Productivity",
+        "defaultPrompt": [
+          "이 주제로 GitHub Pages 핸드북을 만들어줘."
+        ]
+      }
+    }
+  }
+}

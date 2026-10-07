@@ -1,0 +1,17 @@
+{
+  "extraKnownMarketplaces": {
+    "donchang-skills": {
+      "source": {
+        "source": "github",
+        "repo": "donchang07/skills"
+      }
+    }
+  },
+  "enabledPlugins": {
+    "to-prd@donchang-skills": true,
+    "chang-ppt@donchang-skills": true,
+    "chang-book@donchang-skills": true,
+    "github-pages-handbook@donchang-skills": true,
+    "vercel-rag@donchang-skills": true
+  }
+}

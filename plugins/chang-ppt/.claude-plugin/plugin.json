@@ -1,0 +1,9 @@
+{
+  "name": "chang-ppt",
+  "version": "1.0.0",
+  "description": "장동인 교수 강의·발표 자료에 KAIST AI대학원 브랜드 스타일을 적용합니다.",
+  "author": {
+    "name": "donchang07"
+  },
+  "repository": "https://github.com/donchang07/skills"
+}

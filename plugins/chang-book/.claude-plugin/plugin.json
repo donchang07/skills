@@ -1,0 +1,9 @@
+{
+  "name": "chang-book",
+  "version": "1.0.0",
+  "description": "책 원고를 books.dotx 템플릿과 편집 표준에 맞춰 Word로 집필·편집합니다.",
+  "author": {
+    "name": "donchang07"
+  },
+  "repository": "https://github.com/donchang07/skills"
+}

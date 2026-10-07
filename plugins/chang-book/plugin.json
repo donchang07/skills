@@ -1,0 +1,24 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "chang-book",
+  "version": "1.0.0",
+  "description": "책 원고를 books.dotx 템플릿과 편집 표준에 맞춰 Word로 집필·편집합니다.",
+  "author": {
+    "name": "donchang07"
+  },
+  "repository": "https://github.com/donchang07/skills",
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "chang-book",
+        "shortDescription": "책 원고 집필·편집 Word 표준",
+        "longDescription": "책 원고를 books.dotx 템플릿과 편집 표준에 맞춰 Word로 집필·편집합니다.",
+        "developerName": "donchang07",
+        "category": "Productivity",
+        "defaultPrompt": [
+          "이 원고를 책 편집 표준에 맞춰 정리해줘."
+        ]
+      }
+    }
+  }
+}

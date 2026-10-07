@@ -1,6 +1,11 @@
 {
   "name": "donchang-skills",
-  "owner": { "name": "donchang07" },
+  "owner": {
+    "name": "donchang07"
+  },
+  "metadata": {
+    "description": "장동인 교수의 강의·집필·PRD·핸드북·RAG 작업용 스킬 모음입니다."
+  },
   "plugins": [
     {
       "name": "to-prd",
@@ -8,6 +13,34 @@
       "description": "업무 브리프를 bkit용 화면 중심 PRD와 읽기용 HTML로 정리합니다.",
       "version": "1.3.0",
       "category": "productivity"
+    },
+    {
+      "name": "chang-ppt",
+      "source": "./plugins/chang-ppt",
+      "description": "장동인 교수 강의·발표 자료에 KAIST AI대학원 브랜드 스타일을 적용합니다.",
+      "version": "1.0.0",
+      "category": "design"
+    },
+    {
+      "name": "chang-book",
+      "source": "./plugins/chang-book",
+      "description": "책 원고를 books.dotx 템플릿과 편집 표준에 맞춰 Word로 집필·편집합니다.",
+      "version": "1.0.0",
+      "category": "productivity"
+    },
+    {
+      "name": "github-pages-handbook",
+      "source": "./plugins/github-pages-handbook",
+      "description": "기술 주제를 한국어 핸드북으로 만들어 GitHub Pages 정적 사이트로 출판합니다.",
+      "version": "1.0.0",
+      "category": "productivity"
+    },
+    {
+      "name": "vercel-rag",
+      "source": "./plugins/vercel-rag",
+      "description": "Vercel + Supabase에서 PDF RAG 파이프라인을 만들 때의 플랫폼 제약·버그·해결책 레퍼런스입니다.",
+      "version": "1.0.0",
+      "category": "development"
     }
   ]
 }

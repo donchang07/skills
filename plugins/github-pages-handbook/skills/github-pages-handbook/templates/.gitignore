@@ -1,0 +1,5 @@
+# Obsidian vault metadata
+.obsidian/
+
+# macOS
+.DS_Store
