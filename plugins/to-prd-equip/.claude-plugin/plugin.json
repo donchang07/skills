@@ -1,0 +1,7 @@
+{
+  "name": "to-prd-equip",
+  "version": "0.1.0",
+  "description": "장비 소프트웨어의 고객 변경 요청과 기존 소스를 bkit용 변경 영역 PRD로 정리합니다(code-prd-equip 포함).",
+  "author": { "name": "donchang07" },
+  "repository": "https://github.com/donchang07/skills"
+}
