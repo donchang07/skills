@@ -3,6 +3,13 @@
   "owner": { "name": "donchang07" },
   "plugins": [
     {
+      "name": "chang-ppt",
+      "source": "./plugins/chang-ppt",
+      "description": "강의·발표 PPT 제작과 스토리·도식·브랜드 개선 및 결과 검증",
+      "version": "2.0.0",
+      "category": "productivity"
+    },
+    {
       "name": "to-prd",
       "source": "./plugins/to-prd",
       "description": "업무 브리프를 bkit용 화면 중심 PRD와 읽기용 HTML로 정리합니다.",
