@@ -38,5 +38,5 @@ node to-prd-equip/scripts/validate_prd.mjs to-prd-equip/examples/sample-customer
 - 실제 고객 변경 요청서 2~3건으로 시험(장비 업체 소스와 요청서 필요)
 - Word 양식과 작성 핸드북, `check_sync.mjs`
 - 플러그인 배포본(`plugins/to-prd-equip/`)과 빌드 스크립트
-- 소스 역생성(`_as-is`) 단계는 이 스킬 밖입니다. 결과를 `[역추출]` 라벨로 받기만 합니다
+- 소스 역생성은 짝 스킬 `code-prd-equip`이 맡습니다. 이 스킬은 그 결과를 `[역추출]` 라벨로 받기만 합니다
 - `[골든]`·`[가상호스트]` 실행 명령은 가상 팹이 있어야 동작합니다. 예시의 `vfab` 명령은 가상의 이름입니다
