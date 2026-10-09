@@ -15,6 +15,13 @@
       "description": "업무 브리프를 bkit용 화면 중심 PRD와 읽기용 HTML로 정리합니다.",
       "version": "1.3.0",
       "category": "productivity"
+    },
+    {
+      "name": "to-prd-equip",
+      "source": "./plugins/to-prd-equip",
+      "description": "장비 소프트웨어 변경 요청과 기존 소스를 bkit용 변경 영역 PRD로 정리합니다(code-prd-equip 포함, 초안).",
+      "version": "0.1.0",
+      "category": "productivity"
     }
   ]
 }

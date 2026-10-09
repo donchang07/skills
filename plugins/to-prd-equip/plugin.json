@@ -1,0 +1,20 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "to-prd-equip",
+  "version": "0.1.0",
+  "description": "장비 소프트웨어의 고객 변경 요청과 기존 소스를 bkit용 변경 영역 PRD로 정리합니다(code-prd-equip 포함).",
+  "author": { "name": "donchang07" },
+  "repository": "https://github.com/donchang07/skills",
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "to-prd-equip",
+        "shortDescription": "장비 소프트웨어 변경 요청에서 bkit 실행용 PRD까지",
+        "longDescription": "변경 영역 PRD를 만드는 to-prd-equip과 기존 소스에서 현재 상태를 추출하는 code-prd-equip, 고객 변경 요청서 양식, 착수 게이트와 검사 스크립트를 포함합니다.",
+        "developerName": "donchang07",
+        "category": "Productivity",
+        "defaultPrompt": ["첨부한 고객 변경 요청서로 bkit용 장비 PRD를 만들어줘.", "이 장비 소스에서 현재 상태 문서를 추출해줘."]
+      }
+    }
+  }
+}
