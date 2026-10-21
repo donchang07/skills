@@ -6,7 +6,7 @@
       "name": "chang-ppt",
       "source": "./plugins/chang-ppt",
       "description": "강의·발표 PPT 제작과 스토리·도식·브랜드 개선 및 결과 검증",
-      "version": "2.0.0",
+      "version": "2.1.0",
       "category": "productivity"
     },
     {

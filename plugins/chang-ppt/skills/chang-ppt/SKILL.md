@@ -1,6 +1,6 @@
 ---
 name: chang-ppt
-description: "장동인 교수의 강의·발표 PPT를 신규 제작하거나 기존 PPT의 내용·스토리·도식·서식을 개선합니다. 슬라이드별 narrative와 브랜드 템플릿을 적용하고 결과를 검증합니다. chang-ppt 스킬 자체의 개선에도 사용합니다."
+description: "장동인 교수의 강의·발표 PPT를 신규 제작하거나 기존 PPT의 내용·스토리·도식·서식을 개선합니다. 슬라이드별 narrative와 브랜드 템플릿을 적용하고 결과를 검증합니다. 신규 제작·전체 개편은 조사·스토리 설계·제작·QA 전문 에이전트 팀으로 진행합니다. 특정 장만 다시, 수정, 보완, 이전 결과 업데이트 요청과 chang-ppt 스킬 자체의 개선에도 사용합니다."
 ---
 
 # Chang PPT 설계 및 브랜드 기준
@@ -10,7 +10,8 @@ description: "장동인 교수의 강의·발표 PPT를 신규 제작하거나 �
 - 신규 제작, 기존 PPT 개선, 스킬 자체 개선을 이 스킬에서 처리한다. 요청에 맞는 모드를 선택하고 입력·산출물·수정 범위를 기록한다. PPT 편집 요청으로 스킬 파일까지 수정하지 않는다.
 - 이 폴더의 SKILL.md·references·template.pptx를 한 묶음의 기준으로 읽는다. 스킬 개발 시 저장소 `chang-ppt/`가 정본이고 개인 설치본은 배포 사본이다. 개인 설치본으로 발표를 제작할 때도 해당 폴더의 참조를 함께 사용한다. 실행 기록에 실제 기준 경로와 버전 또는 지문을 남긴다.
 - 기존 PPT 개선에서는 사용자 파일을 출발점으로 사용하고 고정 페이지·마스터를 보존한다. 신규 제작에서는 동봉 템플릿을 사용한다. 원본을 덮어쓰지 않고 구분되는 결과 파일을 만든다.
-- 내용 설계와 narrative 작성에는 [스토리·편집 계약](references/story-contract.md)을 읽는다. 반복 편집·렌더링·검증에는 [도구와 QA 절차](references/tooling-qa.md)를 읽는다. 전체 개편·역할별 병렬 작업·부분 재실행에는 [협업 절차](references/orchestration.md)를 읽는다.
+- 내용 설계와 narrative 작성에는 [스토리·편집 계약](references/story-contract.md)을 읽는다. 반복 편집·렌더링·검증에는 [도구와 QA 절차](references/tooling-qa.md)를 읽는다.
+- 신규 제작·전체 개편·부분 재실행은 [협업 절차](references/orchestration.md)를 먼저 읽고 그 흐름대로 진행한다. Claude Code에서는 `chang-ppt-researcher`(근거), `chang-ppt-story-designer`(스토리·명세), `chang-ppt-builder`(제작), `chang-ppt-qa`(독립 검증) 에이전트에 위임한다. 정렬·서식 같은 작은 변경은 팀 없이 직접 수정하고 QA만 맡긴다.
 
 ## 적용 순서와 기준의 소유권
 
