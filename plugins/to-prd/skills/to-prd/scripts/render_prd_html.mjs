@@ -14,8 +14,8 @@ if (!fs.existsSync(input)) {
 const source = fs.readFileSync(input, "utf8").replace(/\r\n/g, "\n");
 const lines = source.split("\n");
 
-const ID_PATTERN = /\b(SCR-\d{3,}(?:-EL-\d{2,})?|FR-\d{3,}|SC-\d{3,}|DATA-\d{3,}|NAV-\d{3,}|REF-\d{3,}|NG-\d{3,}|D-\d{3,}|I-\d{3,})((?:\.[A-Za-z_][\w]*)?)/g;
-const TEST_LABEL = /\[(E2E|통합|단위|수동)\]/g;
+const ID_PATTERN = /\b(SCR-\d{3,}(?:-EL-\d{2,})?|FR-\d{3,}|SC-\d{3,}|DATA-\d{3,}|NAV-\d{3,}|REF-\d{3,}|NG-\d{3,}|G-\d{3,}|EV-\d{3,}|D-\d{3,}|I-\d{3,})((?:\.[A-Za-z_][\w]*)?)/g;
+const TEST_LABEL = /\[(E2E|통합|단위|평가|수동)\]/g;
 const STATUS_LABEL = /\[(확정·출처|확정|조사·기준일|추정|가설|기본값|해당 없음|결정 필요|구현자|작성자)\]/g;
 
 function escapeHtml(value) {
@@ -49,7 +49,7 @@ const anchors = new Set();
 for (const line of lines) {
   const heading = line.match(/^#{2,6}\s+(.*)$/);
   if (heading) anchors.add(headingAnchor(heading[1].trim()));
-  const row = line.match(/^\|\s*((?:SCR-\d{3,}-EL-\d{2,})|FR-\d{3,}|SC-\d{3,}|NAV-\d{3,}|REF-\d{3,}|NG-\d{3,}|D-\d{3,}|I-\d{3,})\s*\|/);
+  const row = line.match(/^\|\s*((?:SCR-\d{3,}-EL-\d{2,})|FR-\d{3,}|SC-\d{3,}|NAV-\d{3,}|REF-\d{3,}|NG-\d{3,}|G-\d{3,}|EV-\d{3,}|D-\d{3,}|I-\d{3,})\s*\|/);
   if (row) anchors.add(anchorOf(row[1]));
 }
 
@@ -61,7 +61,7 @@ function inline(text) {
     html = html.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
     html = html.replace(/\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
     html = html.replace(/(^|[\s(])(https?:\/\/[^\s<)]+)/g, '$1<a href="$2" target="_blank" rel="noopener">$2</a>');
-    html = html.replace(TEST_LABEL, function (_, label) { return '<span class="pill test test-' + ({ "E2E": "e2e", "통합": "int", "단위": "unit", "수동": "manual" })[label] + '">' + label + "</span>"; });
+    html = html.replace(TEST_LABEL, function (_, label) { return '<span class="pill test test-' + ({ "E2E": "e2e", "통합": "int", "단위": "unit", "평가": "eval", "수동": "manual" })[label] + '">' + label + "</span>"; });
     html = html.replace(STATUS_LABEL, function (_, label) {
       const tone = /확정/.test(label) ? "ok" : /결정 필요|가설|추정/.test(label) ? "warn" : "neutral";
       return '<span class="pill status ' + tone + '">' + label + "</span>";
@@ -99,7 +99,7 @@ function renderTable(rows) {
   const head = "<thead><tr>" + header.map(function (cell) { return "<th>" + inline(cell) + "</th>"; }).join("") + "</tr></thead>";
   const tbody = body.map(function (row) {
     const first = row[0] || "";
-    const idMatch = first.match(/^((?:SCR-\d{3,}-EL-\d{2,})|FR-\d{3,}|SC-\d{3,}|NAV-\d{3,}|REF-\d{3,}|NG-\d{3,}|D-\d{3,}|I-\d{3,})$/);
+    const idMatch = first.match(/^((?:SCR-\d{3,}-EL-\d{2,})|FR-\d{3,}|SC-\d{3,}|NAV-\d{3,}|REF-\d{3,}|NG-\d{3,}|G-\d{3,}|EV-\d{3,}|D-\d{3,}|I-\d{3,})$/);
     const rowId = idMatch ? ' id="' + anchorOf(idMatch[1]) + '"' : "";
     return "<tr" + rowId + ">" + row.map(function (cell, column) { return '<td data-label="' + escapeHtml((header[column] || "").replace(/\*\*/g, "")) + '">' + inline(cell) + "</td>"; }).join("") + "</tr>";
   }).join("");
@@ -337,7 +337,7 @@ a.id:hover{background:var(--primary);color:#fff;text-decoration:none}
 .id-fr{background:#eef6ee;color:#1d6b33}.id-sc{background:#fff4e5;color:#995200}.id-data{background:#f3eefc;color:#6a3fb5}.id-nav,.id-ref{background:#eeeef2;color:#4a4a50}.id-d,.id-i{background:#fdeceb;color:#a3201b}
 a.id-fr:hover{background:#1d6b33}a.id-sc:hover{background:#995200}a.id-data:hover{background:#6a3fb5}
 .pill{display:inline-block;font-size:12px;font-weight:600;letter-spacing:0;padding:1px 8px;border-radius:9999px;white-space:nowrap}
-.test-e2e{background:#0066cc;color:#fff}.test-int{background:#5e5ce6;color:#fff}.test-unit{background:#30a46c;color:#fff}.test-manual{background:#8e8e93;color:#fff}
+.test-e2e{background:#0066cc;color:#fff}.test-int{background:#5e5ce6;color:#fff}.test-unit{background:#30a46c;color:#fff}.test-eval{background:#c2410c;color:#fff}.test-manual{background:#8e8e93;color:#fff}
 .status.ok{background:#e3f4e8;color:var(--ok)}.status.warn{background:#fff1e0;color:var(--warn)}.status.neutral{background:#eeeef2;color:#4a4a50}
 .prio.p0{background:#1d1d1f;color:#fff}.prio.p1{background:#d2d2d7;color:#1d1d1f}.prio.p2{background:#eeeef2;color:#7a7a7a}
 footer{max-width:1440px;margin:0 auto;padding:0 24px 48px;font-size:12px;color:var(--muted)}

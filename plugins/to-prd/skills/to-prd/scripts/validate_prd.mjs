@@ -31,7 +31,8 @@ const requiredHeadings = [
   "## 14. feature 분해표",
   "## 15. bkit 실행 명세",
   "## 부록 A. 데이터 계약",
-  "## 부록 B. 외부 사실 확인"
+  "## 부록 B. 외부 사실 확인",
+  "## 부록 C. 변경 이력과 영향"
 ];
 
 const screenSubheadings = [
@@ -169,8 +170,12 @@ function inspect(file) {
     errors.push("상단 메타의 상태가 final, draft, superseded 중 하나가 아님");
   }
 
-  if (!/^> PRD 스키마: screen-first-v2\s*$/m.test(text)) {
-    errors.push("상단 메타에 'PRD 스키마: screen-first-v2'가 없음 (v1이면 v2 보강 필요)");
+  if (!/^> PRD 스키마: screen-first-v3\s*$/m.test(text)) {
+    errors.push("상단 메타에 'PRD 스키마: screen-first-v3'가 없음 (v2면 v3 보강, v1이면 v2·v3 보강 필요)");
+  }
+
+  if (!/^> 작성 모드: (?:Full|Lean|변경 노트)(?=\s|$)/m.test(text)) {
+    errors.push("상단 메타에 '작성 모드: Full | Lean | 변경 노트'가 없음");
   }
 
   if (!/^> 정본: docs\/PRD\.md · 정본 개정: v\d+\.\d+,/m.test(text)) {
@@ -408,7 +413,7 @@ function inspect(file) {
       if (!scIds.includes(scId)) errors.push(frId + "가 정의되지 않은 SC를 참조: " + scId);
     }
     frDataRefs.push(...references(dataCell, /DATA-\d{3,}/g));
-    if (cells[7] && !/^\[(?:E2E|통합|단위|수동)\]/.test(cells[7])) warnings.push(frId + " 검증 방법이 [E2E]·[통합]·[단위]·[수동] 라벨로 시작하지 않음");
+    if (cells[7] && !/^\[(?:E2E|통합|단위|평가|수동)\]/.test(cells[7])) warnings.push(frId + " 검증 방법이 [E2E]·[통합]·[단위]·[평가]·[수동] 라벨로 시작하지 않음");
   }
 
   for (const row of ["실행 검증", "테스트 식별자", "상태 유도"]) {
@@ -428,7 +433,7 @@ function inspect(file) {
       continue;
     }
     const scId = cells[0];
-    if (!/^\[(?:E2E|통합|단위|수동)\]/.test(cells[4])) errors.push(scId + " 측정 방법이 [E2E]·[통합]·[단위]·[수동] 라벨로 시작하지 않음");
+    if (!/^\[(?:E2E|통합|단위|평가|수동)\]/.test(cells[4])) errors.push(scId + " 측정 방법이 [E2E]·[통합]·[단위]·[평가]·[수동] 라벨로 시작하지 않음");
     if (/^\[수동\]/.test(cells[4]) && !/(?:이유|불가|production|실제)/.test(cells[4])) warnings.push(scId + " [수동]인데 자동화할 수 없는 이유가 보이지 않음");
     for (const frId of references(cells[2], /FR-\d{3,}/g)) {
       if (!frIds.includes(frId)) errors.push(scId + "가 정의되지 않은 FR을 참조: " + frId);
@@ -526,8 +531,66 @@ function inspect(file) {
     }
   }
 
-  if (!text.includes("### 11.4 AI 판정 계약")) {
-    warnings.push("11.4 AI 판정 계약 절이 없음 (AI 기능이 없으면 '해당 없음 — 브리프 4장')");
+  const goals = section(text, "### 성공 지표", "### 비목표 (Non-goals)");
+  if (!goals) {
+    errors.push("3장에 '### 성공 지표' 절이 없음");
+  } else {
+    for (const column of ["구분", "지표", "현재값", "목표값", "측정 방법·데이터 출처", "측정 시점", "책임자"]) {
+      if (!goals.includes(column)) errors.push("3장 성공 지표 표 열 누락: " + column);
+    }
+    const gIds = tableIds(goals, "G");
+    if (gIds.length === 0) errors.push("3장 성공 지표에 G-* 행이 없음");
+    const gDup = duplicates(gIds);
+    if (gDup.length > 0) errors.push("성공 지표 ID 중복: " + gDup.join(", "));
+  }
+
+  const aiContract = section(text, "### 11.4 AI 판정 계약", "### 11.5 AI 품질 평가");
+  const aiEval = section(text, "### 11.5 AI 품질 평가", "### 11.6 AI 운영 기준");
+  const aiOps = section(text, "### 11.6 AI 운영 기준", "## 12. 오픈 이슈 / 리스크 [구현자]");
+  for (const [name, body] of [["11.4 AI 판정 계약", aiContract], ["11.5 AI 품질 평가", aiEval], ["11.6 AI 운영 기준", aiOps]]) {
+    if (!text.includes("### " + name)) errors.push(name + " 절이 없음 (AI 기능이 없으면 '해당 없음 — 브리프 4장')");
+  }
+  const aiUsed = aiContract && !/^\s*해당 없음\s*—/m.test(aiContract.trim().split(/\r?\n/)[0] || "") && /^\|\s*(?!AI 기능|-)[^|\s][^|]*\|/m.test(aiContract);
+  if (aiUsed) {
+    if (!aiContract.includes("반드시 사람이 확인할 조건")) errors.push("11.4 AI 판정 계약 표에 '반드시 사람이 확인할 조건' 열이 없음");
+    const evRows = aiEval.split(/\r?\n/).filter(function (line) { return /^\|\s*EV-\d{3,}\s*\|/.test(line); }).map(markdownCells);
+    if (!evRows.some(function (cells) { return /^품질/.test(cells[2] || ""); })) errors.push("11.5에 품질 EV-* 행이 없음");
+    const forbidden = evRows.filter(function (cells) { return /^금지/.test(cells[2] || ""); });
+    if (forbidden.length === 0) errors.push("11.5에 금지 EV-* 행이 없음");
+    for (const cells of forbidden) {
+      if (!/^0\s*건/.test(cells[4] || "")) errors.push(cells[0] + " 금지 행동의 합격선이 0건이 아님");
+    }
+    const evDup = duplicates(evRows.map(function (cells) { return cells[0]; }));
+    if (evDup.length > 0) errors.push("EV ID 중복: " + evDup.join(", "));
+    for (const key of ["**판단 보류:**", "**비용:**", "**응답시간:**", "**버전 고정:**", "**운영 감시:**", "**롤백 조건:**"]) {
+      if (!aiOps.includes(key)) errors.push("11.6 AI 운영 기준에 " + key.replace(/\*/g, "") + " 항목이 없음");
+    }
+    if (!/^\|\s*AI 판단 보류\s*\|/m.test(text)) errors.push("AI 기능이 있는데 어떤 화면에도 'AI 판단 보류' 상태가 없음");
+    if (!stackSection.includes("**AI 평가:**")) errors.push("11.1에 '**AI 평가:**' 줄(평가 명령·데이터 경로)이 없음");
+    if (bkitSpec && !/11\.5|금지|세 번째 관문|③/.test(bkitSpec)) errors.push("15장 완료 조건에 AI 평가 세 번째 관문이 없음");
+    const evIds = evRows.map(function (cells) { return cells[0]; });
+    for (const row of text.split(/\r?\n/).filter(function (line) { return /^\|\s*SC-\d{3,}\s*\|/.test(line); })) {
+      const cells = markdownCells(row);
+      if (/^\[평가\]/.test(cells[4] || "")) {
+        const refs = references(cells[4], /EV-\d{3,}/g);
+        if (refs.length === 0) errors.push(cells[0] + " [평가] SC가 EV ID를 참조하지 않음");
+        for (const id of refs) if (!evIds.includes(id)) errors.push(cells[0] + "가 정의되지 않은 EV를 참조: " + id);
+      }
+    }
+    for (const row of text.split(/\r?\n/).filter(function (line) { return /^\|\s*AI 판단 보류\s*\|/.test(line); })) {
+      if (!/SC-\d{3,}/.test(markdownCells(row)[5] || "")) errors.push("'AI 판단 보류' 상태에 검증 SC가 없음");
+    }
+  }
+
+  if (!aiUsed && /^\|\s*EV-\d{3,}\s*\|/m.test(aiEval)) errors.push("11.4가 해당 없음인데 11.5에 EV 행이 있음");
+
+  const changeLog = section(text, "## 부록 C. 변경 이력과 영향", null);
+  if (changeLog) {
+    for (const column of ["개정", "바뀐 결정", "영향받는 ID", "영향받는 feature", "구현 상태", "재작업", "다음 명령"]) {
+      if (!changeLog.includes(column)) errors.push("부록 C 변경 영향표 열 누락: " + column);
+    }
+    const isFeature = resolved.includes(path.join("docs", "00-pm"));
+    if (!/^\|\s*v\d+\.\d+/m.test(changeLog)) (isFeature ? warnings : errors).push("부록 C에 개정 행이 없음");
   }
 
   const edge = section(text, "## 8. Edge Cases", "## 9. 브랜드 & 디자인");
