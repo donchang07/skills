@@ -40,6 +40,11 @@ check('출력 경로 대소문자 일치',!/docs\/prd\.(md|html)/.test(hb.paragr
 check('질문 수 규칙 일치',mapping.includes('최대 4문항')&&skill.includes('최대 4문항'));
 check('내부 실행 계약 유지',['AI 판정 계약','NG-*','Playwright','data-testid','match rate','세 관문','EV-*','AI 판단 보류','11.6'].every(t=>skill.includes(t)));
 check('AI 계약: 템플릿 PRD ↔ 게이트 ↔ 검증기',['### 11.5 AI 품질 평가','### 11.6 AI 운영 기준','| AI 판단 보류 |'].every(t=>read('assets/prd-template.md').includes(t))&&read('references/gate-checklist.md').includes('| HG-15 |')&&read('scripts/validate_prd.mjs').includes('11.5 AI 품질 평가'));
+const exists=p=>fs.existsSync(path.join(root,p));
+check('독립 검토 팀: 스킬 ↔ 참조 ↔ 게이트 ↔ 핸드북',exists('references/review-team.md')&&skill.includes('references/review-team.md')&&read('references/gate-checklist.md').includes('검토 방식')&&hb.paragraphs.join('\n').includes('따로 부른 검토자'));
+check('검토만 모드: 스킬 ↔ 핸드북 ↔ 시나리오',skill.includes('**검토 모드**')&&hb.paragraphs.join('\n').includes('검토만 해줘')&&exists('evals/scenarios.md')&&read('evals/scenarios.md').includes('S5 검토만'));
+check('피드백 규칙화: 스킬 ↔ 핸드북',skill.includes('_conventions.md')&&hb.paragraphs.join('\n').includes('작성 규칙으로 남겨'));
+check('산출물 검사·예시·평가 세트 존재와 참조',['scripts/check_output.mjs','examples/sample-prd.md','evals/triggers.json','evals/scenarios.md'].every(p=>exists(p)&&(skill.includes(p)||skill.includes(p.split('/')[0]+'/'))));
 check('스키마 일치',[skill,mapping,read('assets/prd-template.md'),read('scripts/validate_prd.mjs')].every(t=>t.includes('screen-first-v3')));
 for(const r of results)console.log((r.ok?'PASS ':'FAIL ')+r.name);
 const fail=results.filter(r=>!r.ok).length;

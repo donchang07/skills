@@ -1,8 +1,8 @@
 # 업무 브리프 → PRD 대응 계약
 
-> 브리프 버전: v1.4
-> 템플릿: `assets/brief/PRD템플릿_v1.4.docx`
-> 핸드북: `assets/brief/PRD작성핸드북_v1.4.docx`
+> 브리프 버전: v1.5
+> 템플릿: `assets/brief/PRD템플릿_v1.5.docx`
+> 핸드북: `assets/brief/PRD작성핸드북_v1.5.docx`
 > PRD 스키마: screen-first-v3
 
 템플릿·핸드북·to-prd는 한 묶음이다. 어느 하나를 바꾸면 세 곳의 버전을 함께 올리고 `node scripts/check_sync.mjs`로 확인한다.

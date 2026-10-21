@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "to-prd",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "description": "업무 브리프를 bkit용 화면 중심 PRD와 읽기용 HTML로 정리합니다.",
   "author": { "name": "donchang07" },
   "repository": "https://github.com/donchang07/skills",

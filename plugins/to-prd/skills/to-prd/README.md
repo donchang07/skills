@@ -75,6 +75,8 @@ docs/PRD.md                         제품 통합 정본
     ├─ docs/DESIGN.md               없을 때만 Apple 기본값 복사
     ├─ docs/00-pm/{feature}.prd.md  bkit feature projection
     ├─ docs/00-pm/_decisions.md     미결 결정 projection
+    ├─ docs/00-pm/_workspace/       작업 메모·검토자별 결과(일부 재실행용)
+    ├─ docs/00-pm/_conventions.md   반복 피드백에서 만든 프로젝트 작성 규칙
     ├─ docs/00-pm/_review.md        출시 후 성공 지표 회고
     ├─ docs/00-pm/_product.gate.md  제품 gate
     ├─ docs/00-pm/{feature}.gate.md feature gate
@@ -282,14 +284,22 @@ to-prd/
 │   ├── apple-DESIGN.md
 │   ├── prd-template.md
 │   └── brief/
-│       ├── PRD템플릿_v1.4.docx        # 현업 입력 양식
-│       └── PRD작성핸드북_v1.4.docx    # 현업 사용 안내
+│       ├── PRD템플릿_v1.5.docx        # 현업 입력 양식
+│       └── PRD작성핸드북_v1.5.docx    # 현업 사용 안내
+├── examples/
+│   └── sample-prd.md               # 모든 검사를 통과하는 완성 예시(AI 포함 Full)
+├── evals/
+│   ├── triggers.json               # 호출 조건 시험 문장 10 + 경계 사례 10
+│   ├── scenarios.md                # 실행 시나리오 5종과 검증 조건
+│   └── briefs/                     # 시나리오용 업무 브리프
 ├── references/
 │   ├── bkit-contract.md
 │   ├── brief-mapping.md            # 브리프 → PRD 대응, 브리프 버전 선언
 │   ├── gate-checklist.md
+│   ├── review-team.md              # 독립 검토자 구성·적대적 확인·작업 폴더
 │   └── screen-definition-contract.md
 └── scripts/
+    ├── check_output.mjs            # 저장한 산출물 묶음의 정합성 검사
     ├── check_sync.mjs              # 템플릿·핸드북·스킬 동기화 검사
     ├── render_prd_html.mjs
     └── validate_prd.mjs
@@ -320,6 +330,10 @@ node scripts/check_sync.mjs
 | 목표 한 줄 | 성공 지표 G-*(현재·목표·측정 시점·책임자)와 출시 후 회고 |
 | AI 응답을 모킹한 E2E만 | AI 품질 평가 EV-*(합격선·금지 0건)와 운영 기준 |
 | 개정 시 파생본만 재생성 | 부록 C 변경 영향표로 재작업 feature와 명령 안내 |
+| 작성자가 자기 PRD를 채점 | 작성 맥락을 보지 않은 독립 검토자가 판정, 결함은 반박 확인 후 반영 |
+| 실행 과정이 남지 않음 | `docs/00-pm/_workspace/`에 작업 메모·검토 결과를 남겨 일부만 다시 실행 |
+| 같은 수정 요청 반복 | 두 번째부터 `_conventions.md` 프로젝트 규칙으로 일반화 |
+| 스킬 회귀 확인 수단 없음 | `evals/` 시나리오·호출 조건 시험, `examples/sample-prd.md` 검사기 회귀 기준 |
 
 ## 원칙
 
