@@ -1,0 +1,58 @@
+{
+  "skill": "to-prd",
+  "note": "호출 조건 시험 문장. should_not_trigger는 표현이 비슷하지만 다른 스킬이나 직접 답변이 맞는 경계 사례다. description을 고친 뒤 다시 확인한다.",
+  "should_trigger": [
+    "첨부한 PRD템플릿 채운 거 보고 bkit에 넣을 PRD 만들어줘",
+    "/to-prd 품질팀 클레임 접수 앱 브리프야. PRD로 정리해줘",
+    "docs/PRD.md에 반려 사유 입력 화면 하나만 추가 반영해줘",
+    "지금 있는 docs/PRD.md 고치지 말고 착수 가능한지 검토만 해줘",
+    "PRD 게이트만 다시 돌려줘. 아까 지적된 SCR-003은 고쳤어",
+    "bkit으로 바로 /pdca plan 하려는데 PRD가 없어. 기획 메모로 시작해줘",
+    "PRD에서 버튼 라벨이 또 너무 딱딱하대. 반영하고 다음부터도 그렇게 해줘",
+    "현업 담당자한테 줄 to-prd PRD 템플릿이랑 핸드북 파일 줘",
+    "AI가 견적을 초안으로 만들어 주는 앱인데 AI 기준까지 넣어서 PRD 써줘",
+    "idea.md랑 userflow.md 있어. 이걸로 화면 중심 PRD 만들고 feature도 나눠줘"
+  ],
+  "should_not_trigger": [
+    {
+      "prompt": "설비 PLC 제어 소프트웨어 변경 요청서를 bkit PRD로 바꿔줘",
+      "better": "to-prd-equip"
+    },
+    {
+      "prompt": "이 레거시 소스에서 현재 기능 목록을 뽑아 AS-IS 문서로 만들어줘",
+      "better": "code-prd-equip"
+    },
+    {
+      "prompt": "DN그룹 전 부서용 바이브코딩 PRD 교육 자료 한 벌 만들어줘",
+      "better": "prd-vibecoding-kit"
+    },
+    {
+      "prompt": "PRD는 됐고 이제 마일스톤 로드맵 짜줘",
+      "better": "roadmap"
+    },
+    {
+      "prompt": "M2 마일스톤 구현 계획이랑 태스크 목록 만들어줘",
+      "better": "plan"
+    },
+    {
+      "prompt": "아직 뭘 만들지 모르겠어. 서비스 아이디어부터 같이 잡아줘",
+      "better": "brainstorming-idea"
+    },
+    {
+      "prompt": "PRD에 맞춰 SCR-002 화면 목업을 만들어줘",
+      "better": "mockup-build"
+    },
+    {
+      "prompt": "PRD 내용을 Word 보고서 형식으로 예쁘게 바꿔줘",
+      "better": "docx"
+    },
+    {
+      "prompt": "경영진 보고용으로 신사업 PRD 써줘. 개발은 외주 줄 거라 bkit은 안 써",
+      "better": "일반 문서(docs) — bkit 무관 이해관계자용 PRD"
+    },
+    {
+      "prompt": "헥토그룹 사내 교육에 쓸 PRD 템플릿과 핸드북을 회사 이름 넣어서 새로 만들어줘",
+      "better": "prd-vibecoding-kit"
+    }
+  ]
+}

@@ -316,7 +316,7 @@ function inspect(file) {
       const action = cells[8];
       if (!component || component === "—") {
         errors.push(elementId + " 컴포넌트가 비어 있음");
-      } else if (componentLine && !/해당 없음\s*—/.test(component) && !componentLine.includes(component)) {
+      } else if (componentLine && !/해당 없음\s*—/.test(component) && !componentLine.split(/[,·、\s`]+/).map(function (token) { return token.trim(); }).includes(component)) {
         errors.push(elementId + " 컴포넌트가 9장 컴포넌트 목록에 없음: " + component);
       }
       if (permission.includes("관리자")) hasAdminCapability = true;
@@ -565,7 +565,7 @@ function inspect(file) {
     for (const key of ["**판단 보류:**", "**비용:**", "**응답시간:**", "**버전 고정:**", "**운영 감시:**", "**롤백 조건:**"]) {
       if (!aiOps.includes(key)) errors.push("11.6 AI 운영 기준에 " + key.replace(/\*/g, "") + " 항목이 없음");
     }
-    if (!/^\|\s*AI 판단 보류\s*\|/m.test(text)) errors.push("AI 기능이 있는데 어떤 화면에도 'AI 판단 보류' 상태가 없음");
+    if (!/^\|\s*AI 판단 보류\s*\|/m.test(screens)) errors.push("AI 기능이 있는데 어떤 화면에도 'AI 판단 보류' 상태가 없음");
     if (!stackSection.includes("**AI 평가:**")) errors.push("11.1에 '**AI 평가:**' 줄(평가 명령·데이터 경로)이 없음");
     if (bkitSpec && !/11\.5|금지|세 번째 관문|③/.test(bkitSpec)) errors.push("15장 완료 조건에 AI 평가 세 번째 관문이 없음");
     const evIds = evRows.map(function (cells) { return cells[0]; });
@@ -577,7 +577,7 @@ function inspect(file) {
         for (const id of refs) if (!evIds.includes(id)) errors.push(cells[0] + "가 정의되지 않은 EV를 참조: " + id);
       }
     }
-    for (const row of text.split(/\r?\n/).filter(function (line) { return /^\|\s*AI 판단 보류\s*\|/.test(line); })) {
+    for (const row of screens.split(/\r?\n/).filter(function (line) { return /^\|\s*AI 판단 보류\s*\|/.test(line); })) {
       if (!/SC-\d{3,}/.test(markdownCells(row)[5] || "")) errors.push("'AI 판단 보류' 상태에 검증 SC가 없음");
     }
   }
