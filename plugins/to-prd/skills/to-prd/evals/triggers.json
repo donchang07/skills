@@ -14,15 +14,45 @@
     "idea.md랑 userflow.md 있어. 이걸로 화면 중심 PRD 만들고 feature도 나눠줘"
   ],
   "should_not_trigger": [
-    { "prompt": "설비 PLC 제어 소프트웨어 변경 요청서를 bkit PRD로 바꿔줘", "better": "to-prd-equip" },
-    { "prompt": "이 레거시 소스에서 현재 기능 목록을 뽑아 AS-IS 문서로 만들어줘", "better": "code-prd-equip" },
-    { "prompt": "DN그룹 전 부서용 바이브코딩 PRD 교육 자료 한 벌 만들어줘", "better": "prd-vibecoding-kit" },
-    { "prompt": "PRD는 됐고 이제 마일스톤 로드맵 짜줘", "better": "roadmap" },
-    { "prompt": "M2 마일스톤 구현 계획이랑 태스크 목록 만들어줘", "better": "plan" },
-    { "prompt": "투자자에게 보여 줄 제품 전략 PRD를 PPT로 만들어줘", "better": "chang-ppt 또는 일반 문서" },
-    { "prompt": "PRD랑 MRD 차이가 뭐야?", "better": "직접 답변" },
-    { "prompt": "아직 뭘 만들지 모르겠어. 서비스 아이디어부터 같이 잡아줘", "better": "brainstorming-idea" },
-    { "prompt": "PRD에 맞춰 SCR-002 화면 목업을 만들어줘", "better": "mockup-build" },
-    { "prompt": "PRD 내용을 Word 보고서 형식으로 예쁘게 바꿔줘", "better": "docx" }
+    {
+      "prompt": "설비 PLC 제어 소프트웨어 변경 요청서를 bkit PRD로 바꿔줘",
+      "better": "to-prd-equip"
+    },
+    {
+      "prompt": "이 레거시 소스에서 현재 기능 목록을 뽑아 AS-IS 문서로 만들어줘",
+      "better": "code-prd-equip"
+    },
+    {
+      "prompt": "DN그룹 전 부서용 바이브코딩 PRD 교육 자료 한 벌 만들어줘",
+      "better": "prd-vibecoding-kit"
+    },
+    {
+      "prompt": "PRD는 됐고 이제 마일스톤 로드맵 짜줘",
+      "better": "roadmap"
+    },
+    {
+      "prompt": "M2 마일스톤 구현 계획이랑 태스크 목록 만들어줘",
+      "better": "plan"
+    },
+    {
+      "prompt": "아직 뭘 만들지 모르겠어. 서비스 아이디어부터 같이 잡아줘",
+      "better": "brainstorming-idea"
+    },
+    {
+      "prompt": "PRD에 맞춰 SCR-002 화면 목업을 만들어줘",
+      "better": "mockup-build"
+    },
+    {
+      "prompt": "PRD 내용을 Word 보고서 형식으로 예쁘게 바꿔줘",
+      "better": "docx"
+    },
+    {
+      "prompt": "경영진 보고용으로 신사업 PRD 써줘. 개발은 외주 줄 거라 bkit은 안 써",
+      "better": "일반 문서(docs) — bkit 무관 이해관계자용 PRD"
+    },
+    {
+      "prompt": "헥토그룹 사내 교육에 쓸 PRD 템플릿과 핸드북을 회사 이름 넣어서 새로 만들어줘",
+      "better": "prd-vibecoding-kit"
+    }
   ]
 }

@@ -18,7 +18,11 @@ const read = (p) => (exists(p) ? fs.readFileSync(p, "utf8") : "");
 
 const finalPath = path.join(docs, "PRD.md");
 const draftPath = path.join(docs, "PRD.draft.md");
-const isFinal = exists(finalPath);
+// 업데이트 중 착수 불가가 나오면 기존 정본 옆에 새 draft가 생긴다. 그때는 draft가 이번 실행의 결과다.
+const draftIsCurrent = exists(draftPath)
+  && !/^> 상태: superseded/m.test(read(draftPath))
+  && (!exists(finalPath) || fs.statSync(draftPath).mtimeMs >= fs.statSync(finalPath).mtimeMs);
+const isFinal = exists(finalPath) && !draftIsCurrent;
 const prdPath = isFinal ? finalPath : draftPath;
 check("정본 또는 draft 존재", exists(prdPath), path.relative(project, prdPath));
 if (!exists(prdPath)) finish();
@@ -77,18 +81,20 @@ check("gate에 HG-15까지 결과", /HG-15/.test(productGate));
 check("_decisions.md", exists(path.join(pm, "_decisions.md")));
 
 const workspace = path.join(pm, "_workspace");
-check("작업 메모 01_mapping.md", exists(path.join(workspace, "01_mapping.md")));
+check("작업 메모 01_mapping.md", exists(path.join(workspace, "01_mapping.md")) || /작업 메모 없음/.test(productGate), /작업 메모 없음/.test(productGate) ? "검토 모드 — 작업 메모 없음 기록" : "");
 check("기계 검사 기록 02_validate.txt", exists(path.join(workspace, "02_validate.txt")));
 const reviews = exists(workspace) ? fs.readdirSync(workspace).filter((f) => /^03_review_.+\.md$/.test(f)) : [];
-const singleSession = /단일 세션 역할 전환/.test(productGate);
-const minReviews = mode === "Full" ? 5 : mode === "Lean" ? 2 : 1; // review-team.md 2절: Full = 게이트·현업·구현·검증·누락
-check("검토자별 결과 03_review_*", singleSession || reviews.length >= minReviews, `${reviews.length}개 (모드 ${mode} 최소 ${minReviews}${singleSession ? ", 단일 세션" : ""})`);
+// review-team.md 2절: Full·검토 모드 = 게이트·현업·구현·검증·누락 5개, Lean = 2개, 변경 노트 = 1개.
+// 단일 세션 역할 전환이어도 역할별 결과 표는 따로 남긴다(5절).
+const reviewMode = /검토 모드/.test(productGate);
+const minReviews = reviewMode || mode === "Full" ? 5 : mode === "Lean" ? 2 : 1;
+check("검토자별 결과 03_review_*", reviews.length >= minReviews, `${reviews.length}개 (${reviewMode ? "검토 모드" : "작성 모드 " + mode} 최소 ${minReviews})`);
 
 const claude = read(path.join(project, "CLAUDE.md"));
 const block = (claude.match(/<!-- to-prd:begin[\s\S]*?<!-- to-prd:end -->/) || [""])[0];
 if (isFinal) {
   check("CLAUDE.md to-prd 블록", block);
-  check("블록 개정 = 정본 개정", revision && block.includes(revision), revision);
+  check("블록 개정 = 정본 개정", revision && new RegExp(revision.replace(".", "\\.") + "(?![0-9])").test(block), revision);
   const testLine = (section(prd, "### 11.1 레벨·스택", "### 11.2").match(/\*\*테스트:\*\*[^\n]*/) || [""])[0];
   const commands = [...testLine.matchAll(/`([^`]+)`/g)].map((m) => m[1]);
   check("블록에 11.1 테스트 명령", commands.length > 0 && commands.every((c) => block.includes(c)), commands.join(" · ") || "11.1 명령 없음");
