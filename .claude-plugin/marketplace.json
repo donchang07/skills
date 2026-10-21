@@ -1,12 +1,21 @@
 {
   "name": "donchang-skills",
-  "owner": { "name": "donchang07" },
+  "owner": {
+    "name": "donchang07"
+  },
   "plugins": [
     {
       "name": "chang-ppt",
       "source": "./plugins/chang-ppt",
       "description": "강의·발표 PPT 제작과 스토리·도식·브랜드 개선 및 결과 검증",
       "version": "2.1.0",
+      "category": "productivity"
+    },
+    {
+      "name": "chang-html",
+      "source": "./plugins/chang-html",
+      "description": "HTML 실습 교안(참가자용·강사용) 제작·개선과 chang-ppt 브랜드·근거·검증",
+      "version": "1.0.0",
       "category": "productivity"
     },
     {
