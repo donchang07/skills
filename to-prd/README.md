@@ -75,6 +75,7 @@ docs/PRD.md                         제품 통합 정본
     ├─ docs/DESIGN.md               없을 때만 Apple 기본값 복사
     ├─ docs/00-pm/{feature}.prd.md  bkit feature projection
     ├─ docs/00-pm/_decisions.md     미결 결정 projection
+    ├─ docs/00-pm/_review.md        출시 후 성공 지표 회고
     ├─ docs/00-pm/_product.gate.md  제품 gate
     ├─ docs/00-pm/{feature}.gate.md feature gate
     └─ CLAUDE.md의 to-prd 블록       bkit 실행 규칙
@@ -82,7 +83,7 @@ docs/PRD.md                         제품 통합 정본
 
 feature PRD를 직접 수정하지 않습니다. 업데이트는 정본을 먼저 바꾸고 영향받는 파생본을 다시 만듭니다. 파생본에만 존재하는 사람의 편집은 덮어쓰기 전에 정본으로 옮깁니다.
 
-현재 스키마는 `screen-first-v2`입니다. `screen-first-v1` PRD는 ID를 보존한 채 디자인 기준·컴포넌트·상태별 검증 SC·테스트 계정·테스트 식별자를 보강해 v2로 올립니다. 스키마 표기가 없으면 FR/SC ID를 보존한 채 화면 계약으로 마이그레이션합니다. 역할·화면·메뉴·인증·요소·데이터 연결이 완성되기 전에는 기존 최종본을 덮어쓰지 않습니다.
+현재 스키마는 `screen-first-v3`입니다. `screen-first-v2` PRD는 ID를 보존한 채 작성 모드, 3장 성공 지표(G-*), AI 기능이 있으면 11.4 사람 확인 조건·11.5 AI 품질 평가(EV-*)·11.6 AI 운영 기준과 `AI 판단 보류` 상태, 부록 C 변경 영향표를 보강해 v3로 올립니다. `screen-first-v1` PRD는 먼저 v2 보강(디자인 기준·컴포넌트·상태별 검증 SC·테스트 계정·테스트 식별자)을 한 뒤 v3로 올립니다. 스키마 표기가 없으면 FR/SC ID를 보존한 채 화면 계약으로 마이그레이션합니다. 역할·화면·메뉴·인증·요소·데이터 연결이 완성되기 전에는 기존 최종본을 덮어쓰지 않습니다.
 
 ## Blocker가 있을 때
 
@@ -205,7 +206,8 @@ HTML은 읽기용입니다. 수정은 항상 `docs/PRD.md`에서 합니다. 착�
 - UI는 `docs/DESIGN.md`, 폰트는 Pretendard, 컴포넌트는 PRD 9장 목록
 - 모든 UI 요소에 PRD 요소 ID를 `data-testid`로 부여
 - `/pdca analyze` 단계에서 PRD 11.1의 단위 테스트·Playwright 명령을 실제로 실행
-- 완료는 match rate 기준과 테스트 전체 통과의 두 관문
+- 완료는 match rate 기준과 테스트 전체 통과의 두 관문. AI 기능이 있으면 PRD 11.5 평가(품질 합격선 이상, 금지 행동 0건)를 더한 세 관문
+- AI 모델·프롬프트·참고자료는 PRD 11.6에 고정한 버전만 사용
 
 마커 밖의 내용은 수정하지 않으며, 착수 불가(draft)일 때는 블록을 갱신하지 않습니다.
 
@@ -280,8 +282,8 @@ to-prd/
 │   ├── apple-DESIGN.md
 │   ├── prd-template.md
 │   └── brief/
-│       ├── PRD템플릿_v1.3.docx        # 현업 입력 양식
-│       └── PRD작성핸드북_v1.3.docx    # 현업 사용 안내
+│       ├── PRD템플릿_v1.4.docx        # 현업 입력 양식
+│       └── PRD작성핸드북_v1.4.docx    # 현업 사용 안내
 ├── references/
 │   ├── bkit-contract.md
 │   ├── brief-mapping.md            # 브리프 → PRD 대응, 브리프 버전 선언
@@ -314,6 +316,10 @@ node scripts/check_sync.mjs
 | 정성 검토 | Hard Gate + 점수 + Node 검사 |
 | 미결 항목 한 종류 | 구현자 이슈와 작성자 결정 분리 |
 | 경로·명령이 본문에 섞임 | versioned bkit contract reference로 분리 |
+| 항상 같은 분량 | 작성 모드(Full·Lean·변경 노트) 자동 판정 |
+| 목표 한 줄 | 성공 지표 G-*(현재·목표·측정 시점·책임자)와 출시 후 회고 |
+| AI 응답을 모킹한 E2E만 | AI 품질 평가 EV-*(합격선·금지 0건)와 운영 기준 |
+| 개정 시 파생본만 재생성 | 부록 C 변경 영향표로 재작업 feature와 명령 안내 |
 
 ## 원칙
 
