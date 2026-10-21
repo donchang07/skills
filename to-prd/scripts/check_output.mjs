@@ -81,7 +81,7 @@ check("작업 메모 01_mapping.md", exists(path.join(workspace, "01_mapping.md"
 check("기계 검사 기록 02_validate.txt", exists(path.join(workspace, "02_validate.txt")));
 const reviews = exists(workspace) ? fs.readdirSync(workspace).filter((f) => /^03_review_.+\.md$/.test(f)) : [];
 const singleSession = /단일 세션 역할 전환/.test(productGate);
-const minReviews = mode === "Full" ? 4 : mode === "Lean" ? 2 : 1;
+const minReviews = mode === "Full" ? 5 : mode === "Lean" ? 2 : 1; // review-team.md 2절: Full = 게이트·현업·구현·검증·누락
 check("검토자별 결과 03_review_*", singleSession || reviews.length >= minReviews, `${reviews.length}개 (모드 ${mode} 최소 ${minReviews}${singleSession ? ", 단일 세션" : ""})`);
 
 const claude = read(path.join(project, "CLAUDE.md"));
