@@ -1,0 +1,7 @@
+{
+  "name": "chang-html",
+  "version": "1.0.0",
+  "description": "장동인 교수의 HTML 실습 교안(참가자용·강사용) 제작 및 개선: chang-ppt 브랜드, 근거·기준일, 복사 프롬프트, 강사 노트, 결과 검증",
+  "author": {"name": "donchang07"},
+  "repository": "https://github.com/donchang07/skills"
+}

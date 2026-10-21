@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{FILE_NAME}} {{VERSION}} | {{TITLE}} (장동인 교수)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+  <!-- chang-html v1 · 색상은 chang-ppt references/color-system.md와 같다. 새 색을 추가하지 말 것 -->
+  <style>
+    :root {
+      --navy:#1B2A4A; --body:#2C3E5A; --sub:#7F8FA9; --brand:#3A86FF; --neut:#F5F5F7; --white:#FFFFFF;
+      --key:#B45309; --key-bg:#FFF4E8;   /* 핵심 주장·주요 수치 */
+      --good:#0F766E; --good-bg:#EAF6F3; /* 성과·기회·권고안 */
+      --warn:#2563EB; --warn-bg:#EDF3FF; /* 주의 조건·확인 필요 */
+      --risk:#355C7D; --risk-bg:#EEF2F6; /* 위험·중단 조건 */
+      --tech:#7C3AED; --tech-bg:#F3EEFE; /* 기술 범주(기술·혁신 세트) */
+      --code:#0F172A;
+    }
+    body { font-family:'Pretendard',-apple-system,BlinkMacSystemFont,system-ui,sans-serif; background:var(--white); color:var(--body); }
+    .c-navy{color:var(--navy)} .c-body{color:var(--body)} .c-sub{color:var(--sub)} .c-brand{color:var(--brand)}
+    .bg-navy{background:var(--navy)} .bg-neut{background:var(--neut)}
+    /* 상자는 직각. 둥근 모서리를 쓰지 않는다 */
+    .box{border:1px solid var(--sub); background:var(--white);}
+    .sem{border-left:4px solid; padding:1rem 1.25rem;}
+    .sem-key{border-color:var(--key); background:var(--key-bg);} .sem-key .lbl{color:var(--key)}
+    .sem-good{border-color:var(--good); background:var(--good-bg);} .sem-good .lbl{color:var(--good)}
+    .sem-warn{border-color:var(--warn); background:var(--warn-bg);} .sem-warn .lbl{color:var(--warn)}
+    .sem-risk{border-color:var(--risk); background:var(--risk-bg);} .sem-risk .lbl{color:var(--risk)}
+    .lbl{font-weight:700; display:block; margin-bottom:.25rem;}
+    /* 섹션 머리: 번호 + 가운데 제목 24px Bold 네이비 */
+    .sec-head{text-align:center; margin-bottom:1.5rem;}
+    .sec-badge{display:inline-block; min-width:2.25rem; padding:.15rem .5rem; background:var(--navy); color:#fff; font-weight:700; font-size:.875rem; margin-bottom:.5rem;}
+    .sec-title{font-size:1.5rem; font-weight:700; color:var(--navy);}
+    .sec-sub{font-size:1rem; font-weight:700; color:var(--navy); margin-top:.35rem;}
+    .mid-title{font-size:1.125rem; font-weight:700; color:var(--navy);}
+    /* narrative: 핵심 한 줄 Bold + 설명 한 줄 Regular, 가운데 */
+    .narrative{text-align:center; padding:1.25rem 1rem; margin-top:1.5rem; border-top:1px solid var(--neut);}
+    .narrative .head{font-weight:700; color:var(--navy);}
+    .narrative .detail{color:var(--body); margin-top:.25rem;}
+    /* 출처: 섹션 하단 왼쪽, 작은 글씨, 배경 없음 */
+    .source{font-size:.75rem; color:var(--sub); text-align:left; margin-top:.75rem;}
+    /* 표: 머리 네이비 흰 Bold, 교차 배경, 0.5px 보조색 선 */
+    table.brand{width:100%; border-collapse:collapse; font-size:.875rem;}
+    table.brand th{background:var(--navy); color:#fff; font-weight:700; text-align:left; padding:.6rem .75rem; border:.5px solid var(--sub);}
+    table.brand td{padding:.55rem .75rem; border:.5px solid var(--sub); vertical-align:top;}
+    table.brand tbody tr:nth-child(even) td{background:var(--neut);}
+    table.brand td.hl{background:var(--key-bg)!important; color:var(--key); font-weight:700;}
+    /* 코드·프롬프트 */
+    .code{background:var(--code); color:#E2E8F0; font-family:Consolas,'D2Coding',monospace; font-size:.8rem; line-height:1.6; padding:1rem 1.25rem; white-space:pre-wrap; overflow-x:auto; border-left:4px solid var(--brand);}
+    .prompt{background:var(--code); color:#F8FAFC; font-size:.85rem; line-height:1.7; padding:1rem 1.25rem; white-space:pre-wrap; border-left:4px solid var(--good);}
+    .btn{display:inline-block; padding:.35rem .8rem; font-size:.75rem; font-weight:700; color:#fff; background:var(--navy); border:0; cursor:pointer;}
+    .btn-brand{background:var(--brand);} .btn-good{background:var(--good);}
+    /* Part 구분 */
+    .part{text-align:center; padding:3rem 1rem;}
+    .part .no{color:var(--brand); font-weight:700;}
+    .part .rule{width:12rem; height:3px; background:var(--brand); margin:.5rem auto 1rem;}
+    .part .name{font-size:1.875rem; font-weight:700; color:var(--navy);}
+    /* 탭 */
+    .tab-btn{padding:.75rem 1rem; font-size:.875rem; font-weight:600; color:var(--sub); border-bottom:3px solid transparent;}
+    .tab-btn.on{color:var(--navy); border-bottom-color:var(--brand); background:var(--neut);}
+    /* 강사 노트(강사용 파일에만 들어감) */
+    .instructor-note{border:2px solid var(--key); background:var(--key-bg); padding:1.25rem; font-size:.875rem; margin-bottom:1.5rem;}
+    .instructor-note summary{cursor:pointer; font-weight:700; color:var(--key);}
+    @media print{ .no-print{display:none!important} .tab-content{display:block!important; margin-bottom:2rem} details>*:not(summary){display:block!important} section{break-inside:avoid-page} }
+  </style>
+</head>
+<body class="antialiased" data-file="{{FILE_NAME}} {{VERSION}}">
+
+  <!-- COMPONENT: toolbar -->
+  <div class="sticky top-0 z-50 bg-navy px-6 py-3 no-print">
+    <div class="max-w-6xl mx-auto flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-center gap-2 text-white text-sm font-bold">
+        <span class="px-2 py-0.5 text-xs" style="background:var(--brand)">FILE</span>
+        <span id="file-label">{{FILE_NAME}} {{VERSION}}</span>
+        <span class="font-normal text-xs hidden sm:inline" style="color:#CBD5E1">| 기준일 {{AS_OF}}</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <button onclick="downloadSelf()" class="btn btn-good">교안 다운로드</button>
+        <button onclick="window.print()" class="btn btn-brand">PDF로 인쇄</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- COMPONENT: cover -->
+  <header class="bg-navy text-white px-6 py-14">
+    <div class="max-w-6xl mx-auto text-center">
+      <div class="text-sm font-bold mb-3" style="color:#93C5FD">{{COURSE_NAME}}</div>
+      <h1 class="text-3xl md:text-4xl font-extrabold leading-tight">{{TITLE}}</h1>
+      <p class="mt-3 text-lg" style="color:#CBD5E1">{{SUBTITLE}}</p>
+      <div class="w-48 h-[3px] mx-auto my-6" style="background:var(--brand)"></div>
+      <p class="text-sm" style="color:#CBD5E1">장동인 · KAIST AI 대학원 책임교수 / AIBB LAB 대표</p>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-6 py-10 space-y-12">
+
+    <!-- COMPONENT: toc (Part 카드 3열, 마지막 정리 카드는 key 색) -->
+    <section class="box p-8">
+      <div class="sec-head"><div class="sec-title">오늘의 순서</div></div>
+      <div class="grid md:grid-cols-3 gap-4">
+        <a href="#part-1" class="box p-5 block" style="border-left:4px solid var(--brand)">
+          <div class="text-sm font-bold c-brand">Part 1</div>
+          <div class="text-lg font-bold c-navy mt-1">{{PART1_TITLE}}</div>
+          <div class="text-sm c-body mt-2">{{PART1_DESC}}</div>
+        </a>
+        <a href="#wrap-up" class="box p-5 block sem-key" style="border-left-width:4px">
+          <div class="text-sm font-bold" style="color:var(--key)">정리</div>
+          <div class="text-lg font-bold c-navy mt-1">다음 행동</div>
+          <div class="text-sm c-body mt-2">핵심 체크리스트와 출처</div>
+        </a>
+      </div>
+    </section>
+
+    <!-- COMPONENT: part-divider -->
+    <section id="part-1" class="part box">
+      <div class="no">Part 1</div>
+      <div class="rule"></div>
+      <div class="name">{{PART1_TITLE}}</div>
+      <p class="c-body mt-3">{{PART1_DESC}}</p>
+    </section>
+
+    <!-- COMPONENT: section (머리 → 목표 → 본문 → narrative → 출처) -->
+    <section class="box p-8">
+      <div class="sec-head">
+        <span class="sec-badge">01</span>
+        <div class="sec-title">{{SECTION_TITLE}}</div>
+        <div class="sec-sub">{{SECTION_SUBTITLE}}</div>
+      </div>
+
+      <!-- COMPONENT: goal (이 장의 목표) -->
+      <div class="sem sem-warn mb-6"><span class="lbl">이 장의 목표</span>{{GOAL}}</div>
+
+      <!-- COMPONENT: table -->
+      <h3 class="mid-title mb-3">1. {{SUBHEAD}}</h3>
+      <table class="brand mb-6">
+        <thead><tr><th>구분</th><th>A</th><th>B</th></tr></thead>
+        <tbody>
+          <tr><td class="font-bold">항목</td><td>값</td><td class="hl">강조할 차이</td></tr>
+          <tr><td class="font-bold">항목</td><td>값</td><td>값</td></tr>
+        </tbody>
+      </table>
+
+      <!-- COMPONENT: semantic-boxes (의미색은 문서 전체에서 같은 뜻으로만) -->
+      <div class="grid md:grid-cols-2 gap-4 mb-6">
+        <div class="sem sem-key"><span class="lbl">핵심 결론</span>{{KEY}}</div>
+        <div class="sem sem-good"><span class="lbl">권고안</span>{{GOOD}}</div>
+        <div class="sem sem-warn"><span class="lbl">확인 필요</span>{{WARN}}</div>
+        <div class="sem sem-risk"><span class="lbl">중단 조건</span>{{RISK}}</div>
+      </div>
+
+      <!-- COMPONENT: flow (단계 전개: 번호 + 직각 상자 + 화살표) -->
+      <div class="flex flex-wrap items-stretch gap-2 mb-6">
+        <div class="box p-4 flex-1 min-w-[150px] text-center"><div class="font-bold c-brand">1</div><div class="font-bold c-navy">{{STEP1}}</div><div class="text-sm mt-1">{{STEP1_DESC}}</div></div>
+        <div class="self-center c-sub font-bold">→</div>
+        <div class="box p-4 flex-1 min-w-[150px] text-center"><div class="font-bold c-brand">2</div><div class="font-bold c-navy">{{STEP2}}</div><div class="text-sm mt-1">{{STEP2_DESC}}</div></div>
+      </div>
+
+      <!-- COMPONENT: copy-prompt (id는 문서 안에서 유일, 버튼과 같은 id) -->
+      <div class="mb-6">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-sm font-bold c-navy">{{PROMPT_LABEL}}</span>
+          <button onclick="copyPrompt('p-01-1')" class="btn btn-good no-print">프롬프트 복사</button>
+        </div>
+<pre id="p-01-1" class="prompt">{{PROMPT_TEXT}}
+
+완료 조건
+1. {{DONE_1}}</pre>
+      </div>
+
+      <!-- COMPONENT: code -->
+      <div class="mb-6">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-sm font-bold c-navy">{{CODE_LABEL}}</span>
+          <button onclick="copyPrompt('c-01-1')" class="btn no-print">명령 복사</button>
+        </div>
+<pre id="c-01-1" class="code"># 설명 줄은 주석으로
+{{COMMAND}}</pre>
+      </div>
+
+      <!-- COMPONENT: diagram (인라인 SVG: 직각 노드, 화살표에 의미 라벨, 색은 팔레트만) -->
+      <div class="box p-4 mb-6 overflow-x-auto">
+        <svg viewBox="0 0 760 180" class="w-full min-w-[640px]" font-family="Pretendard, sans-serif">
+          <defs><marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#7F8FA9"/></marker></defs>
+          <rect x="20" y="50" width="200" height="80" fill="#EDF3FF" stroke="#2563EB" stroke-width="1.5"/>
+          <text x="120" y="88" text-anchor="middle" font-size="16" font-weight="700" fill="#1B2A4A">{{NODE_A}}</text>
+          <text x="120" y="110" text-anchor="middle" font-size="13" fill="#2C3E5A">{{NODE_A_DESC}}</text>
+          <line x1="222" y1="90" x2="536" y2="90" stroke="#7F8FA9" stroke-width="2" marker-end="url(#arr)"/>
+          <text x="380" y="80" text-anchor="middle" font-size="12" fill="#7F8FA9">{{EDGE_LABEL}}</text>
+          <rect x="540" y="50" width="200" height="80" fill="#EAF6F3" stroke="#0F766E" stroke-width="1.5"/>
+          <text x="640" y="88" text-anchor="middle" font-size="16" font-weight="700" fill="#1B2A4A">{{NODE_B}}</text>
+          <text x="640" y="110" text-anchor="middle" font-size="13" fill="#2C3E5A">{{NODE_B_DESC}}</text>
+        </svg>
+      </div>
+
+      <!-- COMPONENT: tabs (실습 Lab 묶음) -->
+      <div class="mb-6">
+        <div class="flex flex-wrap border-b no-print" style="border-color:var(--sub)">
+          <button onclick="switchTab('tab1')" id="btn-tab1" class="tab-btn on">Lab 1</button>
+          <button onclick="switchTab('tab2')" id="btn-tab2" class="tab-btn">Lab 2</button>
+        </div>
+        <div id="tab1" class="tab-content p-5 box border-t-0">{{LAB1}}</div>
+        <div id="tab2" class="tab-content p-5 box border-t-0 hidden">{{LAB2}}</div>
+      </div>
+
+      <!-- COMPONENT: screenshot (실제 화면은 base64로 내장, 캡션과 함께) -->
+      <figure class="mb-6">
+        <img src="{{DATA_URI}}" alt="{{ALT}}" class="box w-full max-w-3xl mx-auto">
+        <figcaption class="text-sm c-sub text-center mt-2">{{CAPTION}}</figcaption>
+      </figure>
+
+      <!-- COMPONENT: narrative + source (장마다 끝에) -->
+      <div class="narrative">
+        <div class="head">{{HEADLINE}}</div>
+        <div class="detail">{{DETAIL}}</div>
+      </div>
+      <div class="source">출처: {{SOURCE_SHORT}} ({{AS_OF}} 확인)</div>
+    </section>
+
+    <!-- COMPONENT: troubleshooting -->
+    <section class="box p-8">
+      <div class="sec-head"><span class="sec-badge">02</span><div class="sec-title">현장 문제 해결표</div></div>
+      <table class="brand">
+        <thead><tr><th>증상</th><th>원인</th><th>조치</th></tr></thead>
+        <tbody><tr><td>{{SYMPTOM}}</td><td>{{CAUSE}}</td><td>{{FIX}}</td></tr></tbody>
+      </table>
+    </section>
+
+    <!-- COMPONENT: checklist -->
+    <section id="wrap-up" class="box p-8">
+      <div class="sec-head"><span class="sec-badge">03</span><div class="sec-title">핵심 체크리스트</div></div>
+      <div class="grid md:grid-cols-3 gap-4">
+        <div class="box p-5"><div class="font-bold c-brand">①</div><div class="font-bold c-navy">{{CHECK1}}</div><div class="text-sm mt-1">{{CHECK1_DESC}}</div></div>
+      </div>
+      <div class="narrative">
+        <div class="head">{{CLOSING_HEAD}}</div>
+        <div class="detail">{{CLOSING_DETAIL}}</div>
+      </div>
+    </section>
+
+    <!-- COMPONENT: sources -->
+    <section class="box p-8">
+      <div class="sec-head"><span class="sec-badge">04</span><div class="sec-title">출처와 기준일 ({{AS_OF}} 확인)</div></div>
+      <ul class="text-sm space-y-1 list-disc pl-5">
+        <li><a class="c-brand underline" href="{{URL}}">{{SOURCE_NAME}}</a> · {{WHAT_IT_SUPPORTS}}</li>
+      </ul>
+    </section>
+  </main>
+
+  <footer class="max-w-6xl mx-auto px-6 py-8 text-center text-xs c-sub" style="border-top:1px solid var(--neut)">
+    <p>{{FILE_NAME}} {{VERSION}} • Prof. Dong-In Chang (KAIST / AIBB LAB / ai4ceo.app)</p>
+  </footer>
+
+  <div id="toast" class="fixed bottom-6 right-6 bg-navy text-white px-4 py-2 text-xs font-semibold opacity-0 pointer-events-none transition-opacity">복사되었습니다</div>
+
+  <script>
+    function switchTab(id){
+      const scope=document.getElementById(id).parentElement;
+      scope.querySelectorAll('.tab-content').forEach(e=>e.classList.add('hidden'));
+      scope.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('on'));
+      document.getElementById(id).classList.remove('hidden');
+      document.getElementById('btn-'+id).classList.add('on');
+    }
+    function showToast(m){const t=document.getElementById('toast');t.innerText=m;t.classList.remove('opacity-0');setTimeout(()=>t.classList.add('opacity-0'),2000);}
+    function copyPrompt(id){
+      const text=document.getElementById(id).innerText;
+      if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(text).then(()=>showToast('복사되었습니다')).catch(()=>fallbackCopy(text));}else{fallbackCopy(text);}
+    }
+    function fallbackCopy(text){
+      const ta=document.createElement('textarea');ta.value=text;ta.style.position='fixed';ta.style.opacity='0';
+      document.body.appendChild(ta);ta.select();
+      try{document.execCommand('copy');showToast('복사되었습니다');}catch(e){showToast('복사 실패: 직접 선택해 복사하십시오');}
+      document.body.removeChild(ta);
+    }
+    function downloadSelf(){
+      const blob=new Blob(['<!DOCTYPE html>\n'+document.documentElement.outerHTML],{type:'text/html;charset=utf-8'});
+      const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=document.body.dataset.file+'.html';
+      document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(a.href);
+    }
+    /* INSTRUCTOR-JS */
+  </script>
+</body>
+</html>
