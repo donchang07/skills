@@ -133,7 +133,7 @@ to-prd
     - 화면 인벤토리
     - 데스크톱/모바일 메뉴
     - 로그인·권한·세션 흐름
-    - 화면별 디자인 참고·레이아웃·UI 요소(컴포넌트)·행동·데이터·8개 상태(검증 SC)
+    - 화면별 디자인 참고·레이아웃·UI 요소(컴포넌트)·행동·데이터·8개 상태(AI 결과 화면은 `AI 판단 보류` 포함)(검증 SC)
 6.  Functional Requirements + NFR (실행 검증·테스트 식별자·상태 유도)
 7.  Success Criteria
 8.  Edge Cases
@@ -245,7 +245,7 @@ node scripts/validate_prd.mjs docs/PRD.md docs/00-pm/example.prd.md
 - 필수 장
 - `SCR/화면 요소/DATA/FR/SC` 정의·중복·참조 무결성
 - 역할·화면 인벤토리·메뉴·인증 계약
-- 화면별 메타·디자인 참고·레이아웃·UI 요소·컴포넌트·전이·8개 상태·반응형·접근성
+- 화면별 메타·디자인 참고·레이아웃·UI 요소·컴포넌트·전이·8개 상태(AI 결과 화면은 `AI 판단 보류` 포함)·반응형·접근성
 - 9장 DESIGN.md·Pretendard·토큰·컴포넌트 목록·참고 레퍼런스
 - P0 화면 상태별 검증 SC
 - NFR 테스트 식별자·상태 유도, 11.1 테스트 계정·시드
@@ -311,7 +311,7 @@ node scripts/check_sync.mjs
 | `docs/PRD.md` 하나 | 정본 + feature projection + decisions + gate |
 | 기획 문서 4개 중심 | 일부 문서 또는 브리프도 가능 |
 | roadmap에 구현 분해 위임 | feature를 bkit PDCA 단위로 분해 |
-| 단순 화면 표 | 역할·화면·메뉴·인증·레이아웃·요소·행동·데이터·8개 상태 계약 |
+| 단순 화면 표 | 역할·화면·메뉴·인증·레이아웃·요소·행동·데이터·8개 상태(AI 결과 화면은 `AI 판단 보류` 포함) 계약 |
 | 서술형 Edge Cases | 문구·동작·로그 계약 |
 | 정성 검토 | Hard Gate + 점수 + Node 검사 |
 | 미결 항목 한 종류 | 구현자 이슈와 작성자 결정 분리 |

@@ -174,7 +174,7 @@ function inspect(file) {
     errors.push("상단 메타에 'PRD 스키마: screen-first-v3'가 없음 (v2면 v3 보강, v1이면 v2·v3 보강 필요)");
   }
 
-  if (!/^> 작성 모드: (?:Full|Lean|변경 노트)\b/m.test(text)) {
+  if (!/^> 작성 모드: (?:Full|Lean|변경 노트)(?=\s|$)/m.test(text)) {
     errors.push("상단 메타에 '작성 모드: Full | Lean | 변경 노트'가 없음");
   }
 
@@ -554,11 +554,11 @@ function inspect(file) {
   if (aiUsed) {
     if (!aiContract.includes("반드시 사람이 확인할 조건")) errors.push("11.4 AI 판정 계약 표에 '반드시 사람이 확인할 조건' 열이 없음");
     const evRows = aiEval.split(/\r?\n/).filter(function (line) { return /^\|\s*EV-\d{3,}\s*\|/.test(line); }).map(markdownCells);
-    if (!evRows.some(function (cells) { return cells[2] === "품질"; })) errors.push("11.5에 품질 EV-* 행이 없음");
-    const forbidden = evRows.filter(function (cells) { return cells[2] === "금지"; });
+    if (!evRows.some(function (cells) { return /^품질/.test(cells[2] || ""); })) errors.push("11.5에 품질 EV-* 행이 없음");
+    const forbidden = evRows.filter(function (cells) { return /^금지/.test(cells[2] || ""); });
     if (forbidden.length === 0) errors.push("11.5에 금지 EV-* 행이 없음");
     for (const cells of forbidden) {
-      if (!/^0\s*건$/.test(cells[4] || "")) errors.push(cells[0] + " 금지 행동의 합격선이 0건이 아님");
+      if (!/^0\s*건/.test(cells[4] || "")) errors.push(cells[0] + " 금지 행동의 합격선이 0건이 아님");
     }
     const evDup = duplicates(evRows.map(function (cells) { return cells[0]; }));
     if (evDup.length > 0) errors.push("EV ID 중복: " + evDup.join(", "));
@@ -567,15 +567,30 @@ function inspect(file) {
     }
     if (!/^\|\s*AI 판단 보류\s*\|/m.test(text)) errors.push("AI 기능이 있는데 어떤 화면에도 'AI 판단 보류' 상태가 없음");
     if (!stackSection.includes("**AI 평가:**")) errors.push("11.1에 '**AI 평가:**' 줄(평가 명령·데이터 경로)이 없음");
-    if (bkitSpec && !/11\.5|금지/.test(bkitSpec)) errors.push("15장 완료 조건에 AI 평가 세 번째 관문이 없음");
+    if (bkitSpec && !/11\.5|금지|세 번째 관문|③/.test(bkitSpec)) errors.push("15장 완료 조건에 AI 평가 세 번째 관문이 없음");
+    const evIds = evRows.map(function (cells) { return cells[0]; });
+    for (const row of text.split(/\r?\n/).filter(function (line) { return /^\|\s*SC-\d{3,}\s*\|/.test(line); })) {
+      const cells = markdownCells(row);
+      if (/^\[평가\]/.test(cells[4] || "")) {
+        const refs = references(cells[4], /EV-\d{3,}/g);
+        if (refs.length === 0) errors.push(cells[0] + " [평가] SC가 EV ID를 참조하지 않음");
+        for (const id of refs) if (!evIds.includes(id)) errors.push(cells[0] + "가 정의되지 않은 EV를 참조: " + id);
+      }
+    }
+    for (const row of text.split(/\r?\n/).filter(function (line) { return /^\|\s*AI 판단 보류\s*\|/.test(line); })) {
+      if (!/SC-\d{3,}/.test(markdownCells(row)[5] || "")) errors.push("'AI 판단 보류' 상태에 검증 SC가 없음");
+    }
   }
+
+  if (!aiUsed && /^\|\s*EV-\d{3,}\s*\|/m.test(aiEval)) errors.push("11.4가 해당 없음인데 11.5에 EV 행이 있음");
 
   const changeLog = section(text, "## 부록 C. 변경 이력과 영향", null);
   if (changeLog) {
     for (const column of ["개정", "바뀐 결정", "영향받는 ID", "영향받는 feature", "구현 상태", "재작업", "다음 명령"]) {
       if (!changeLog.includes(column)) errors.push("부록 C 변경 영향표 열 누락: " + column);
     }
-    if (!/^\|\s*v\d+\.\d+/m.test(changeLog)) errors.push("부록 C에 개정 행이 없음");
+    const isFeature = resolved.includes(path.join("docs", "00-pm"));
+    if (!/^\|\s*v\d+\.\d+/m.test(changeLog)) (isFeature ? warnings : errors).push("부록 C에 개정 행이 없음");
   }
 
   const edge = section(text, "## 8. Edge Cases", "## 9. 브랜드 & 디자인");
