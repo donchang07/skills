@@ -1,0 +1,175 @@
+{
+  "type": "linear-process",
+  "canvas": {
+    "width": 1600,
+    "height": 900,
+    "theme": "light"
+  },
+  "headline": "위험 성향만 바꿔도 구매 배분이 달라진다",
+  "subtitle": "DN솔루션즈 구매부서 · 문제 정의 → 온톨로지 → 최적화 → What-if → 사람의 결정",
+  "focal": "opt",
+  "reading_path": [
+    "q",
+    "onto",
+    "opt",
+    "whatif",
+    "decide"
+  ],
+  "palette_set": "기본 비즈니스",
+  "groups": [
+    {
+      "id": "problem",
+      "label": "문제 정의",
+      "kind": "zone"
+    },
+    {
+      "id": "solution",
+      "label": "솔루션",
+      "kind": "zone"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "q",
+      "label": "무엇을 얼마나 살까",
+      "sub": "3품목 × 공급사 4곳\n목표 비용·리스크·납기\n2027 Q1 · 구매본부장 결정",
+      "group": "problem",
+      "shape": "box",
+      "role": "normal",
+      "source": [
+        "T1",
+        "T2"
+      ]
+    },
+    {
+      "id": "onto",
+      "label": "온톨로지",
+      "sub": "객체 9 · 관계 8 · 액션 5\n제약 6개\nWhat-if·결정도 객체로",
+      "group": "solution",
+      "shape": "box",
+      "role": "normal",
+      "source": [
+        "T2"
+      ]
+    },
+    {
+      "id": "opt",
+      "label": "위험 성향별 대안",
+      "sub": "A 비용최소 87.1억\nB 리스크균형 88.9억\nC 공급안정 94.7억",
+      "group": "solution",
+      "shape": "box",
+      "role": "focal",
+      "source": [
+        "T2"
+      ]
+    },
+    {
+      "id": "whatif",
+      "label": "What-if (B안 기준)",
+      "sub": "중국 중단 +7.2억\n엔화 +15% 변화 없음\n볼스크류 납기 30일: 불가",
+      "group": "solution",
+      "shape": "box",
+      "role": "normal",
+      "source": [
+        "T2"
+      ]
+    },
+    {
+      "id": "decide",
+      "label": "사람이 결정·기록",
+      "sub": "예: 본부장이 B안 택하면\nC안 대비 5.8억 절감\n기각안·재검토 조건 기록",
+      "group": "solution",
+      "shape": "box",
+      "role": "normal",
+      "source": [
+        "T2"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "from": "q",
+      "to": "onto",
+      "style": "solid",
+      "source": [
+        "T2"
+      ]
+    },
+    {
+      "from": "onto",
+      "to": "opt",
+      "style": "solid",
+      "source": [
+        "T2"
+      ]
+    },
+    {
+      "from": "opt",
+      "to": "whatif",
+      "style": "solid",
+      "source": [
+        "T2"
+      ]
+    },
+    {
+      "from": "whatif",
+      "to": "decide",
+      "style": "solid",
+      "source": [
+        "T2"
+      ]
+    }
+  ],
+  "annotations": [
+    {
+      "id": "q_note",
+      "text": "주물 베드 1,000세트\n볼스크류 3,200개\nLM가이드 4,000개",
+      "near": "q",
+      "source": [
+        "T2"
+      ]
+    },
+    {
+      "id": "onto_note",
+      "text": "순소요·공급능력·MOQ\n납기·최대비중·최소약정",
+      "near": "onto",
+      "source": [
+        "T2"
+      ]
+    },
+    {
+      "id": "opt_note",
+      "text": "위험 성향 λ 0→0.3→1.0\n+ 최대비중 100→60→40%\n→ 중국 비중 48→37→16%",
+      "near": "opt",
+      "source": [
+        "T2"
+      ]
+    },
+    {
+      "id": "w4_note",
+      "text": "조달 불가: 맞는 구매안 없음\n이 결과가 가장 값지다\n못 지킬 납기를 미리 드러냄",
+      "near": "whatif",
+      "source": [
+        "T2"
+      ]
+    },
+    {
+      "id": "human_note",
+      "text": "AI는 고르지 않는다\n중단 확률 판단은 사람의 몫",
+      "near": "decide",
+      "source": [
+        "T2"
+      ]
+    },
+    {
+      "id": "src",
+      "text": "단가·공급사·수량은 가상 데이터 기준 · 회사 배경만 공개 자료 참고",
+      "placement": "bottom-band",
+      "source": [
+        "T2"
+      ]
+    }
+  ],
+  "takeaway": "λ는 경영진의 위험 선호 — 누가 정할지 거버넌스로 정한다",
+  "assumed": []
+}

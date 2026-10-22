@@ -1,0 +1,14 @@
+{
+  "run": "20261022_dn-procurement-ontology",
+  "source_range": "claude.ai 대화 [T1]~[T3] (도구 로그 제외)",
+  "type": "linear-process",
+  "versions": [
+    {"v": 1, "story": 3.67, "visual": 3.83, "red": 0, "decision": "수정 필요(story 평균 < 4.0)"},
+    {"v": 2, "story": 4.0, "visual": 4.0, "red": 0, "decision": "통과"}
+  ],
+  "final": "final/dn-procurement-ontology.svg|png",
+  "renderer": "playwright chromium 141.0.7390.37, Pretendard",
+  "remaining": ["🟡 visual: 캔버스 하단 약 144px 빈 공간", "🟢 story: opt_note '+ 공급사 최대비중' 대상 명시 검토", "🟢 visual: 구역 간 간격 18px vs 노드 간격 50px"],
+  "not_run": [],
+  "notes": "v1 심사 에이전트는 플러그인 에이전트 정의 대신 SKILL.md 역할 설명을 전달한 기본 서브에이전트로 실행, v2부터 plugins/chang-diagram/agents 정의 적용"
+}

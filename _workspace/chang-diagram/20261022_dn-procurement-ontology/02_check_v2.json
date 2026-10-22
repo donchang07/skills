@@ -1,0 +1,20 @@
+{
+  "renderer": "playwright chromium 141.0.7390.37",
+  "status": "run",
+  "canvas": [
+    1600,
+    900
+  ],
+  "density": "normal",
+  "pretendard_available": true,
+  "counts": {
+    "nodes": 5,
+    "edges": 4,
+    "texts": 21
+  },
+  "summary": {
+    "errors": 0,
+    "warnings": 0
+  },
+  "issues": []
+}
