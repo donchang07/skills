@@ -59,7 +59,7 @@ description: "AI와 나눈 대화·메모·회의 내용이나 보고서·PDF의
 4. **심사 (병렬)**: 한 메시지에서 `chang-diagram-story-judge`와 `chang-diagram-visual-judge`를 함께 호출한다. 두 심사자는 서로의 보고서를 읽지 않는다.
 5. **통합 판정 (메인)**: [review-rubric.md](references/review-rubric.md)의 통과 기준으로 두 보고서를 합친다. 내용 지적은 distiller→builder, 화면 지적은 builder로 보낸다. 두 심사가 충돌하면 내용은 story-judge, 형식은 visual-judge를 따르고 판단 근거를 `04_decision_v{N}.md`에 적는다.
 6. **수정 반복**: 수정 후 지적받은 심사자만 다시 부른다. 수정·재심사는 최대 2회. 남은 🔴는 통과로 바꾸지 않고 보고한다.
-7. **완료 (메인)**: 최종 SVG·PNG를 결과 경로에 복사하고 `{RUN}/05_manifest.json`(원문 범위, 버전별 점수, 최종 판정, 렌더러·글꼴, not_run)을 쓴다. 이어서 `make_report.py`로 `report.md`와 `report.html`을 만든다. 문서에는 그림마다 headline, 그림, takeaway, 그림 내용을 글로 옮긴 목록(reading_path 순), 원문 범위가 들어가고, 끝에 심사 점수·남은 지적 부록이 붙는다(청중용으로 낼 때는 `--no-review`). 사용자에게 결과 경로(그림·md·html), 한 줄 메시지, 최종 점수, 남은 지적을 보고하고 PNG를 보여 준다.
+7. **완료 (메인)**: 최종 SVG·PNG를 결과 경로에 복사하고 `{RUN}/05_manifest.json`(원문 범위, 버전별 점수, 최종 판정, 렌더러·글꼴, not_run)을 쓴다. 이어서 `make_report.py`로 `report.md`와 `report.html`을 만든다. 문서에는 그림마다 장 이름, 그림, 그림 내용을 글로 옮긴 목록(reading_path 순, 끝에 결론), 원문 범위가 들어가고(headline·takeaway는 그림 안에 있으므로 제목이나 상자로 반복하지 않는다), 끝에 심사 점수·남은 지적 부록이 붙는다(청중용으로 낼 때는 `--no-review`). 사용자에게 결과 경로(그림·md·html), 한 줄 메시지, 최종 점수, 남은 지적을 보고하고 PNG를 보여 준다.
 
 ### 일괄 모드 (batch)
 

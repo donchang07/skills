@@ -23,6 +23,8 @@ PALETTE = {
 }
 ENDPOINT_TOLERANCE = 12
 MIN_FONT_AT_1600 = 14
+CANVAS_WIDTH = 1600
+FONT_TOKENS = {42.0, 28.0, 22.0, 20.0, 17.0, 16.0, 14.0}
 MAX_LINES = {"normal": 4, "dense": 6}
 BREAK_END = re.compile(r"(→|←|↔|\(|약)$")
 BREAK_START = re.compile(r"^(%p?|\)|→|(배|건|명|개|억|만|조)(?![가-힣])|billion|million|trillion|GW|TB|미만|이상|이하|초과)")
@@ -46,7 +48,7 @@ COLLECT_JS = r"""
     return { text: t.textContent.trim().slice(0, 40), rect: box(t), size: parseFloat(cs.fontSize),
       family: cs.fontFamily, fill: cs.fill, node: owner(t, 'data-node'), edge: owner(t, 'data-edge'),
       segs: (() => { const leaves = [...t.querySelectorAll('tspan')].filter(s => !s.querySelector('tspan') && s.textContent.trim());
-        return (leaves.length ? leaves : [t]).map(s => { const r = box(s); return { left: r[0], top: r[1], bottom: r[3], text: s.textContent }; }); })() };
+        return (leaves.length ? leaves : [t]).map(s => { const r = box(s); return { left: r[0], top: r[1], bottom: r[3], text: s.textContent, size: parseFloat(getComputedStyle(s).fontSize) }; }); })() };
   });
   const nodes = [...svg.querySelectorAll('[data-node]')].map(g => {
     const b = g.querySelector('[data-box]');
@@ -76,7 +78,12 @@ COLLECT_JS = r"""
   svg.querySelectorAll('*').forEach(el => { for (const a of ['fill', 'stroke']) {
     const v = el.getAttribute(a); if (v) colors.add(v.trim().toLowerCase()); } });
   const outer = [...svg.querySelectorAll('text, [data-box], [data-role="icon"]')].map(el => box(el));
-  return { W, H, texts, nodes, edges, colors: [...colors], outer,
+  const panels = [...svg.querySelectorAll('rect')].filter(r => {
+    const f = getComputedStyle(r).fill; const s = getComputedStyle(r).stroke;
+    const b = box(r); const big = (b[2] - b[0]) >= W - 1 && (b[3] - b[1]) >= H - 1;
+    return !big && ((f && f !== 'none' && !f.endsWith(', 0)')) || (s && s !== 'none')) && (b[2] - b[0]) > 40 && (b[3] - b[1]) > 20;
+  }).map(r => box(r));
+  return { W, H, texts, nodes, edges, colors: [...colors], outer, panels,
     pretendard: (() => { const c = document.createElement('canvas').getContext('2d');
       const w = f => { c.font = '40px ' + f; return c.measureText('가나다 ABC 123').width; };
       return w('Pretendard, monospace') !== w('monospace') || w('Pretendard, serif') !== w('serif'); })(),
@@ -144,6 +151,11 @@ def check(data: dict, spec: dict | None, max_lines: int) -> list[dict]:
         if not n["hasBox"]:
             add("error", "missing_box", [n["id"]], "node has no [data-box] shape")
 
+    if abs(W - CANVAS_WIDTH) > 0.5:
+        add("warning", "canvas_width", [], f"canvas width {W:.0f}px; use {CANVAS_WIDTH} so every diagram shows the same type size")
+    off = sorted({s["size"] for t in data["texts"] for s in t["segs"] if round(s["size"], 1) not in FONT_TOKENS})
+    if off:
+        add("warning", "font_token", [], f"font sizes outside the fixed scale {sorted(FONT_TOKENS)}: {off}")
     min_font = max(12, MIN_FONT_AT_1600 * W / 1600)
     for t in data["texts"]:
         if t["size"] < min_font - 0.01:
@@ -182,6 +194,18 @@ def check(data: dict, spec: dict | None, max_lines: int) -> list[dict]:
         text_h = max(s["bottom"] for s in segs) - min(s["top"] for s in segs)
         if box_h > 0 and text_h / box_h < 0.5:
             add("warning", "card_whitespace", [nid], f"text fills {text_h / box_h:.0%} of the box height")
+
+    area = lambda b: (b[2] - b[0]) * (b[3] - b[1])
+    holds = lambda p, r: r[0] >= p[0] - 1 and r[1] >= p[1] - 1 and r[2] <= p[2] + 1 and r[3] <= p[3] + 1
+    for t in data["texts"]:
+        r = t["rect"]
+        own = [p for p in data["panels"] if holds(p, r)]
+        for p in data["panels"]:
+            # a tag or label with its own smaller box may sit on a larger box's edge on purpose
+            if overlap(r, p, pad=1) > 4 and not holds(p, r) and not any(area(c) < area(p) for c in own):
+                add("error", "text_box_clip", [t["node"] or t["edge"] or ""],
+                    f"'{t['text']}' crosses the edge of a box/band at {[round(v) for v in p]}")
+                break
 
     for a, b in itertools.combinations(data["texts"], 2):
         if overlap(a["rect"], b["rect"], pad=1) > 4:

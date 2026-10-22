@@ -4,8 +4,9 @@ Usage:
     python make_report.py RUN --title "AI Index Report 2026 장별 다이어그램" [--embed png|svg] [--no-review]
 
 RUN is either one diagram folder (RUN/final/*.png) or a batch folder whose subfolders each
-have final/. For each diagram the report shows the source title, headline, image, takeaway,
-the diagram's text in reading order and source pages; an appendix lists judge scores and remaining notes from
+have final/. For each diagram the report shows the source title, the image (its headline and
+takeaway are drawn inside it, so they are not repeated around it), the diagram's text in reading
+order ending with the takeaway, and source pages; an appendix lists judge scores and remaining notes from
 05_manifest.json unless --no-review is given.
 report.md links the PNG files by relative path; report.html embeds the images so the one file
 can be shared.
@@ -34,13 +35,10 @@ nav ol { columns:2; padding-left:20px; margin:0 0 40px; }
 nav a { color:var(--navy); text-decoration:none; }
 nav a:hover { text-decoration:underline; }
 section { border-top:1px solid #E3E7EE; padding:40px 0; }
-.chapter { color:var(--brand); font-weight:700; font-size:14px; letter-spacing:.02em; margin:0; }
 h2 { color:var(--navy); font-size:26px; margin:4px 0 4px; }
-h2 + figure { margin-top:16px; }
+h2.chapter { color:var(--brand); font-size:20px; margin:0 0 12px; }
 figure { margin:0; }
 figure img { width:100%; height:auto; border:1px solid #E3E7EE; border-radius:8px; background:#fff; }
-.takeaway { margin:16px 0 0; padding:12px 16px; border-left:4px solid var(--brand); background:var(--soft);
-            color:var(--navy); font-weight:700; }
 .source { color:var(--muted); font-size:14px; margin:8px 0 0; }
 details { margin:12px 0 0; }
 summary { cursor:pointer; color:var(--navy); font-weight:700; }
@@ -81,6 +79,8 @@ def points(spec: dict) -> list[str]:
     out = [" — ".join(x for x in (flat(nodes[i].get("label")), flat(nodes[i].get("sub"))) if x) for i in order]
     out += [f"주석: {flat(a.get('text'))}" for a in spec.get("annotations", [])
             if a.get("text") and not str(a["text"]).startswith("출처")]
+    if spec.get("takeaway"):
+        out.append(f"결론: {flat(spec['takeaway'])}")
     return [p for p in out if p]
 
 
@@ -98,7 +98,7 @@ def collect(run: Path) -> list[dict]:
         items.append({
             "id": folder.name, "title": title, "origin": origin,
             "headline": spec.get("headline", ""),
-            "takeaway": spec.get("takeaway", ""), "points": points(spec),
+            "points": points(spec),
             "png": pngs[0], "svg": pngs[0].with_suffix(".svg"),
             "score": {**(scored[-1] if scored else {}), "v": (manifest.get("versions") or [{}])[-1].get("v", "-")},
             "remaining": manifest.get("remaining", []),
@@ -112,10 +112,8 @@ def write_md(run: Path, items: list[dict], title: str, review: bool) -> Path:
     out += [f"{i}. [{it['title']}: {it['headline']}](#{it['id']})" for i, it in enumerate(items, 1)] + [""]
     for it in items:
         rel = it["png"].relative_to(run).as_posix()
-        out += [f'<a id="{it["id"]}"></a>', "", f"## {it['title']}", "", f"**{it['headline']}**", ""]
+        out += [f'<a id="{it["id"]}"></a>', "", f"## {it['title']}", ""]
         out += [f"![{it['headline']}]({rel})", ""]
-        if it["takeaway"]:
-            out += [f"> {it['takeaway']}", ""]
         if it["points"]:
             out += ["그림 내용:", ""] + [f"- {p}" for p in it["points"]] + [""]
         if it["origin"]:
@@ -146,10 +144,8 @@ def write_html(run: Path, items: list[dict], title: str, review: bool, embed: st
              f"<h1>{e(title)}</h1><p class='meta'>{date.today():%Y-%m-%d} · 그림 {len(items)}장</p>",
              "<nav><ol>" + "".join(f"<li><a href='#{e(it['id'])}'>{e(it['title'])}: {e(it['headline'])}</a></li>" for it in items) + "</ol></nav>"]
     for it in items:
-        parts.append(f"<section id='{e(it['id'])}'><p class='chapter'>{e(it['title'])}</p><h2>{e(it['headline'])}</h2>")
+        parts.append(f"<section id='{e(it['id'])}'><h2 class='chapter'>{e(it['title'])}</h2>")
         parts.append(f"<figure><img src='{image_uri(it, embed)}' alt='{e(it['headline'])}'></figure>")
-        if it["takeaway"]:
-            parts.append(f"<p class='takeaway'>{e(it['takeaway'])}</p>")
         if it["points"]:
             parts.append("<details><summary>그림 내용을 글로 보기</summary><ul>"
                          + "".join(f"<li>{e(p)}</li>" for p in it["points"]) + "</ul></details>")
