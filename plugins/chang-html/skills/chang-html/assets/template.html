@@ -1,283 +1,777 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{{FILE_NAME}} {{VERSION}} | {{TITLE}} (장동인 교수)</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
-  <!-- chang-html v1 · 색상은 chang-ppt references/color-system.md와 같다. 새 색을 추가하지 말 것 -->
-  <style>
-    :root {
-      --navy:#1B2A4A; --body:#2C3E5A; --sub:#7F8FA9; --brand:#3A86FF; --neut:#F5F5F7; --white:#FFFFFF;
-      --key:#B45309; --key-bg:#FFF4E8;   /* 핵심 주장·주요 수치 */
-      --good:#0F766E; --good-bg:#EAF6F3; /* 성과·기회·권고안 */
-      --warn:#2563EB; --warn-bg:#EDF3FF; /* 주의 조건·확인 필요 */
-      --risk:#355C7D; --risk-bg:#EEF2F6; /* 위험·중단 조건 */
-      --tech:#7C3AED; --tech-bg:#F3EEFE; /* 기술 범주(기술·혁신 세트) */
-      --code:#0F172A;
-    }
-    body { font-family:'Pretendard',-apple-system,BlinkMacSystemFont,system-ui,sans-serif; background:var(--white); color:var(--body); }
-    .c-navy{color:var(--navy)} .c-body{color:var(--body)} .c-sub{color:var(--sub)} .c-brand{color:var(--brand)}
-    .bg-navy{background:var(--navy)} .bg-neut{background:var(--neut)}
-    /* 상자는 직각. 둥근 모서리를 쓰지 않는다 */
-    .box{border:1px solid var(--sub); background:var(--white);}
-    .sem{border-left:4px solid; padding:1rem 1.25rem;}
-    .sem-key{border-color:var(--key); background:var(--key-bg);} .sem-key .lbl{color:var(--key)}
-    .sem-good{border-color:var(--good); background:var(--good-bg);} .sem-good .lbl{color:var(--good)}
-    .sem-warn{border-color:var(--warn); background:var(--warn-bg);} .sem-warn .lbl{color:var(--warn)}
-    .sem-risk{border-color:var(--risk); background:var(--risk-bg);} .sem-risk .lbl{color:var(--risk)}
-    .lbl{font-weight:700; display:block; margin-bottom:.25rem;}
-    /* 섹션 머리: 번호 + 가운데 제목 24px Bold 네이비 */
-    .sec-head{text-align:center; margin-bottom:1.5rem;}
-    .sec-badge{display:inline-block; min-width:2.25rem; padding:.15rem .5rem; background:var(--navy); color:#fff; font-weight:700; font-size:.875rem; margin-bottom:.5rem;}
-    .sec-title{font-size:1.5rem; font-weight:700; color:var(--navy);}
-    .sec-sub{font-size:1rem; font-weight:700; color:var(--navy); margin-top:.35rem;}
-    .mid-title{font-size:1.125rem; font-weight:700; color:var(--navy);}
-    /* narrative: 핵심 한 줄 Bold + 설명 한 줄 Regular, 가운데 */
-    .narrative{text-align:center; padding:1.25rem 1rem; margin-top:1.5rem; border-top:1px solid var(--neut);}
-    .narrative .head{font-weight:700; color:var(--navy);}
-    .narrative .detail{color:var(--body); margin-top:.25rem;}
-    /* 출처: 섹션 하단 왼쪽, 작은 글씨, 배경 없음 */
-    .source{font-size:.75rem; color:var(--sub); text-align:left; margin-top:.75rem;}
-    /* 표: 머리 네이비 흰 Bold, 교차 배경, 0.5px 보조색 선 */
-    table.brand{width:100%; border-collapse:collapse; font-size:.875rem;}
-    table.brand th{background:var(--navy); color:#fff; font-weight:700; text-align:left; padding:.6rem .75rem; border:.5px solid var(--sub);}
-    table.brand td{padding:.55rem .75rem; border:.5px solid var(--sub); vertical-align:top;}
-    table.brand tbody tr:nth-child(even) td{background:var(--neut);}
-    table.brand td.hl{background:var(--key-bg)!important; color:var(--key); font-weight:700;}
-    /* 코드·프롬프트 */
-    .code{background:var(--code); color:#E2E8F0; font-family:Consolas,'D2Coding',monospace; font-size:.8rem; line-height:1.6; padding:1rem 1.25rem; white-space:pre-wrap; overflow-x:auto; border-left:4px solid var(--brand);}
-    .prompt{background:var(--code); color:#F8FAFC; font-size:.85rem; line-height:1.7; padding:1rem 1.25rem; white-space:pre-wrap; border-left:4px solid var(--good);}
-    .btn{display:inline-block; padding:.35rem .8rem; font-size:.75rem; font-weight:700; color:#fff; background:var(--navy); border:0; cursor:pointer;}
-    .btn-brand{background:var(--brand);} .btn-good{background:var(--good);}
-    /* Part 구분 */
-    .part{text-align:center; padding:3rem 1rem;}
-    .part .no{color:var(--brand); font-weight:700;}
-    .part .rule{width:12rem; height:3px; background:var(--brand); margin:.5rem auto 1rem;}
-    .part .name{font-size:1.875rem; font-weight:700; color:var(--navy);}
-    /* 탭 */
-    .tab-btn{padding:.75rem 1rem; font-size:.875rem; font-weight:600; color:var(--sub); border-bottom:3px solid transparent;}
-    .tab-btn.on{color:var(--navy); border-bottom-color:var(--brand); background:var(--neut);}
-    /* 강사 노트(강사용 파일에만 들어감) */
-    .instructor-note{border:2px solid var(--key); background:var(--key-bg); padding:1.25rem; font-size:.875rem; margin-bottom:1.5rem;}
-    .instructor-note summary{cursor:pointer; font-weight:700; color:var(--key);}
-    @media print{ .no-print{display:none!important} .tab-content{display:block!important; margin-bottom:2rem} details>*:not(summary){display:block!important} section{break-inside:avoid-page} }
-  </style>
-</head>
-<body class="antialiased" data-file="{{FILE_NAME}} {{VERSION}}">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{FILE_NAME}} | {{TITLE}} (장동인 교수)</title>
+<!-- chang-html 기본 템플릿(v1.9 디자인 체계). 글꼴은 jsDelivr의 Pretendard·D2Coding만 쓴다. Tailwind·Google Fonts를 넣지 않는다. -->
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/d2coding@1.3.2/d2coding-subset.css">
+<style>
+/* D2Coding 부분 글꼴에 없는 공백·괄호를 채우는 내장 글꼴. 그대로 둔다. */
+@font-face{font-family:'D2Coding Fill';font-style:normal;font-weight:400;font-display:swap;src:url(data:font/woff;base64,d09GRgABAAAAAARAAAsAAAAABOwAAQCDAAAAAAAAAAAAAAAAAAAAAAAAAABPUy8yAAACnAAAAE4AAABgavZtR2NtYXAAAALsAAAARAAAAFwCFgEOZ2FzcAAABDAAAAAQAAAAEAAXAAlnbHlmAAABCAAAAPkAAAEeehVXdWhlYWQAAAI0AAAANgAAADYmIzsxaGhlYQAAAnwAAAAgAAAAJAHYArZobXR4AAACbAAAABAAAAAQAokAvGxvY2EAAAIkAAAAEAAAABAAswD6bWF4cAAAAgQAAAAdAAAAIABCAphuYW1lAAADMAAAAOcAAAGIHeU153Bvc3QAAAQYAAAAFgAAACD/ewA7eJxjYGRo+l/FuIDpGwM7AwOjqLKgsaiiIOOCEyf+PWL65viXzZG5hoGRIQSopgiqRlDR1FhQ2ZSx6N+jEyeYvv1pcWT65QhUYwVUsxmoRp2BQdjYyMyW0cTMGmigEpssowgbu6gcM5AWA4uoAeXUtBmtLHRVvdzioxXlTJX45SUF5BSj49081XQtGHMcdLv8Xew1dddpm3EysQlLKYme09W0dw5YqQuyyRFo0y6ITYxQ87UZTSF22jGZm+oxQiwAColBLGXcZaGr5gm2S0BSnl/JFGyXlyrQLhVH3ZUBzkC7zokqSQmzMXGaaa8D2uXi36XrAAAK9EAqAAAAeJxjYGRgYGBn4mHQZuhi4GEA8RCAmYERABKKAN0AAAAAAAAAAAAAEgAkAFkAjwCPAAEAAAABAIPeEZvXXw889SAJA+gAAAAA0ablrQAAAADXLBGq+i/+4QQEA5EAAAAIAAIAAAAAAAAB9AAAAAAAggBUADoAQQAAeJxjYGRgYA76L8UQwPzil/7/TSwsDEARFMAIAIuqBY94nGNgZvzCOIGBlYEDSH9hYPg/B0YzGDH84mBg4mbjZGJkBCIGBgZmBiQQ5BnhxuDAoMCwgDnofxaQbAerAWEGJj6mbUBKgYERAKn7EAkAAHicY2BgYGJgYGAGYhEgyQimWRg8gDQfAwdQjo1BgSGaIZahmqGWYcH//0BxFP7/h/+X/1/2v/N/x/80sG4kAABtyRMYeJxdkN1Kw0AQhb+aqvRGfIS91IsGm9oieuUPpblpIRSR3qVNaQMSpVXBF/MRfAIfxQfw7GSRUJaZObPnnMxkgWPmRLTaHeBLUeMWp+pqfMAJ3wFHOH4Cbjc0h1zzG/CR3d/zwiufbClZs+FNzjOWnKsmXNBjQDegoe4mjBXOfFs5fc7lKoUqYjG3POu4xhd31q1UV6ofyoUpR+bxEwtjvb4y1rHQTl4x1bQZGSlP6lPxS3kftJHfoJCnkiuTa8275uaasM+6Pf7R9tiFnZ3+LKavSLhRdyddKWXx/wJXygPhyz9kyDfpAHicY2BmAIP/FQxWQIqRAQ0AACgAAbYAAAAAAAMACAACABAAAf//AAM=) format('woff');unicode-range:U+0020,U+005B,U+005D,U+007B,U+007D,U+00A0}
+@font-face{font-family:'D2Coding Fill';font-style:normal;font-weight:700;font-display:swap;src:url(data:font/woff;base64,d09GRgABAAAAAAREAAsAAAAABPAAAQCDAAAAAAAAAAAAAAAAAAAAAAAAAABPUy8yAAACoAAAAE4AAABgbCJtJ2NtYXAAAALwAAAARAAAAFwCFgEOZ2FzcAAABDQAAAAQAAAAEAAXAAlnbHlmAAABCAAAAQAAAAEW4j5udmhlYWQAAAI4AAAANgAAADYmEzMdaGhlYQAAAoAAAAAgAAAAJAHHArZobXR4AAACcAAAABAAAAAQAnkArWxvY2EAAAIoAAAAEAAAABAArwD0bWF4cAAAAggAAAAdAAAAIABCB81uYW1lAAADNAAAAOYAAAGUHrk3NHBvc3QAAAQcAAAAFgAAACD/ewA7eJxjYGSo/l/FuJLpGwM7AwOjqLKgsaiiIOPK/fv/XWL6FvpXL5S5hoGRwRuophKqRlDR1FhQ2ZSx8t+l/fuZvv1pCWW6FApUY/S/knEHMyeDKgODsLGRmS2jiZk10EAlWUYRNnY5ZiAlBuarAWXUtBmNXJRl/bwz0/QMZXllxPjFJNIyvfzklF0Ya83UZgS5BbvvUjPh4xCWkhO6qqYY7Bq8Sc0CaDmDFdAlB4AuAdrCqKzEBjJcm9EUYp8dk7keI5AGC4hBLGQ84KIs5+eZlSYhxicmzSdroJeW5eUnC7RHykJtFdBcRbWzQnJSIhx8xmrr3IPdgnrUzBgA9iw+1nicY2BkYGBgZ7dj0GboZeBhAPEQgJmBEQAYLQEXAAAAAAAAAAAAABIAJABXAIsAiwABAAAAAQCDCilxl18PPPUgCQPoAAAAANGm3XYAAAAA1ywRzfoe/uEEBAORAAEACAACAAAAAAAAAfQAAAAAAHsASwAyADoAAHicY2BkYGAO+i/FEMD84pfc/00sLAxAERTACACKIwV+eJxjYGb8wrSHgZWBg/EL4xcGhv9zYDSDEcMvDgYmbjZOJkZGIGJgYGBmQAJBnhFuDApAuIA56H8WkGwHqwFhBiY+pm1ASoGBEQC12xAWAAB4nGNgYGBiYGBgBmIRIMkIplkYPIA0HwMHUI6NQYEhmiGWoZqhlmHB//9AcRT+/4f/l/9f9r/zf8f/NLBuJAAAbckTGHicdY9PS0JREMV/z3/VrqW0uriqRVKmErrSInJTEBHirnyiwuMZWoJfzI/g0s/hx+jceZcQQS4zc+aeOffMBU4YkCcqnAFrRYYjztVlOMcpm4DzXLANuLCHi7TYBVyiHFV4YMY3K+ZMGTPhB8clQ65Ua9xwS4PrgJq6e+FZ4Uw3l9LnT6mmQilVMR0SHbf34sK6kepIdakc2+STabxjbKyfT411fGknP/Eqt3fe6NFX3xM/lPZRG/kNYmlSqbrCibrDe/fPfJj3Iuzp9Jsqd4oabZv6FZOYc/bXe+WGcP2Y1x8cUzkLAAB4nGNgZgCD/xUMVkCKkQENAAAoAAG2AAAAAAADAAgAAgAQAAH//wAD) format('woff');unicode-range:U+0020,U+005B,U+005D,U+007B,U+007D,U+00A0}
+:root{
+  --ink:#0E1A3B; --ink-2:#18264D; --paper:#F5F6FA; --text:#172036; --muted:#5A6480; --line:#D9DEEA;
+  /* 방식 색 3개. 한 교안 안에서 색 하나는 한 가지 뜻만 가집니다(예: c1=첫째 방식).
+     범례·표·그림·탭·카드에서 같은 뜻으로만 쓰고, 뜻이 없는 항목은 회색(.d-none)으로 둡니다. */
+  --c1:#14B8A6; --c2:#6C5CFF; --c3:#FFC93C;
+  --c3-line:#E0A800; /* 노랑을 흰 바탕의 선·화살표로 쓸 때만 */
+  --on-ink:#F5F6FA; --on-ink-muted:#B4BDD6; --on-ink-soft:#D3D9EA; --on-ink-dim:#C9D0E4; --ink-line:#2B3A66; --ink-btn-line:#3A4A78;
+  --code-bg:#E8EBF3; --code-ink:#E7EBF5; --row-em:#F0F2F8; --tint:#FAFBFD; --hover:#F7F8FB; --hero-sub:#DDE2F0;
+  --display:'Pretendard Variable',Pretendard,-apple-system,BlinkMacSystemFont,system-ui,'Apple SD Gothic Neo','Malgun Gothic',sans-serif;
+  --sans:'Pretendard Variable',Pretendard,-apple-system,BlinkMacSystemFont,system-ui,'Apple SD Gothic Neo','Malgun Gothic',sans-serif;
+  --mono:'D2Coding','D2Coding Fill',Consolas,'Courier New',monospace;
+  --measure:680px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--text);font-family:var(--sans);font-size:16px;line-height:1.7;letter-spacing:-.005em;-webkit-font-smoothing:antialiased;word-break:keep-all;overflow-wrap:break-word}
+h1,h2,h3,h4,.q,.lead{text-wrap:balance}
+p,li,td,dd,.desc{text-wrap:pretty}
+a{color:var(--text);text-decoration-color:var(--muted);text-underline-offset:3px}
+code{font-family:var(--mono);font-size:.92em;letter-spacing:0;background:var(--code-bg);padding:.08em .38em;border-radius:4px}
+:focus-visible{outline:3px solid currentColor;outline-offset:3px;border-radius:6px}
+.hidden{display:none!important}
+.nw{white-space:nowrap}
+.dot{display:inline-block;width:.62em;height:.62em;border-radius:50%;flex:none;vertical-align:.04em}
+.d-c1{background:var(--c1)} .d-c2{background:var(--c2)} .d-c3{background:var(--c3)}
+.d-none{background:transparent;box-shadow:inset 0 0 0 1.5px currentColor;opacity:.6}
 
-  <!-- COMPONENT: toolbar -->
-  <div class="sticky top-0 z-50 bg-navy px-6 py-3 no-print">
-    <div class="max-w-6xl mx-auto flex flex-wrap items-center justify-between gap-4">
-      <div class="flex items-center gap-2 text-white text-sm font-bold">
-        <span class="px-2 py-0.5 text-xs" style="background:var(--brand)">FILE</span>
-        <span id="file-label">{{FILE_NAME}} {{VERSION}}</span>
-        <span class="font-normal text-xs hidden sm:inline" style="color:#CBD5E1">| 기준일 {{AS_OF}}</span>
-      </div>
-      <div class="flex items-center gap-2">
-        <button onclick="downloadSelf()" class="btn btn-good">교안 다운로드</button>
-        <button onclick="window.print()" class="btn btn-brand">PDF로 인쇄</button>
-      </div>
+/* 툴바 */
+.toolbar{position:sticky;top:0;z-index:50;background:rgba(14,26,59,.96);backdrop-filter:blur(8px);border-bottom:1px solid var(--ink-line);color:var(--on-ink)}
+.toolbar-in{max-width:1320px;margin:0 auto;padding:10px 20px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px}
+.file{display:flex;align-items:baseline;gap:12px;font-size:14px;min-width:0}
+#file-label{font-weight:700}
+.file small{color:var(--on-ink-muted);font-size:13px}
+.tb-actions{display:flex;gap:8px}
+.btn-tb{font:500 14px/1 var(--sans);color:var(--on-ink);background:transparent;border:1px solid var(--ink-btn-line);border-radius:999px;padding:9px 16px;cursor:pointer}
+.btn-tb:hover{background:var(--ink-2);border-color:var(--on-ink-muted)}
+
+/* 첫 화면 */
+.hero{position:relative;background:var(--ink);color:var(--on-ink);overflow:hidden}
+.hero::before{content:"";position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(48% 62% at 74% 22%,rgba(20,184,166,.30),transparent 70%),
+             radial-gradient(46% 58% at 96% 78%,rgba(108,92,255,.38),transparent 70%),
+             radial-gradient(36% 46% at 58% 96%,rgba(255,201,60,.18),transparent 70%)}
+.hero-in{position:relative;max-width:1320px;margin:0 auto;padding:72px 20px 80px;display:grid;grid-template-columns:minmax(0,1fr);gap:48px;align-items:center}
+@media(min-width:1024px){.hero-in{grid-template-columns:minmax(0,1.02fr) minmax(0,1fr);gap:64px;padding:96px 32px 104px}}
+.byline{font-size:14px;color:var(--on-ink-muted);margin:0 0 22px}
+.hero h1{font-family:var(--display);font-weight:860;font-size:clamp(2.6rem,5.4vw,4.4rem);line-height:1.12;letter-spacing:-.03em;margin:0 0 22px}
+.hero h1 .h1-sub{display:block;font-weight:650;font-size:.52em;line-height:1.3;letter-spacing:-.015em;margin-top:.5em;color:var(--hero-sub)}
+.hero-lead{font-size:18px;line-height:1.75;color:var(--on-ink-soft);max-width:34em;margin:0 0 32px}
+.hero-lead b{color:var(--on-ink);font-weight:700}
+.legend{list-style:none;margin:0;padding:0;display:grid;gap:12px;max-width:30em}
+.legend li{display:grid;grid-template-columns:auto 1fr;column-gap:12px;align-items:baseline;padding:12px 0;border-top:1px solid var(--ink-line)}
+.legend li:last-child{border-bottom:1px solid var(--ink-line)}
+.legend .dot{width:12px;height:12px}
+.legend strong{font-size:16px}
+.legend span.desc{grid-column:2;color:var(--on-ink-muted);font-size:14px}
+
+/* 첫 화면 데모(선택) */
+.demo{min-width:0}
+.seg{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);gap:4px;padding:4px;background:var(--ink-2);border:1px solid var(--ink-line);border-radius:999px;margin-bottom:14px}
+.seg button{appearance:none;border:0;background:transparent;color:var(--on-ink-muted);font:500 15px/1.2 var(--sans);padding:10px 8px;border-radius:999px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;transition:background .25s,color .25s}
+.seg button .t{display:flex;align-items:center;gap:7px;font-weight:700}
+.seg button small{font-size:12px;opacity:.85}
+.seg button:hover{color:var(--on-ink)}
+.seg button[aria-pressed="true"]{background:var(--paper);color:var(--ink)}
+.sheet{background:#FFFFFF;color:var(--text);border-radius:18px;box-shadow:0 30px 80px -30px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.06);overflow:hidden}
+.sheet-head{padding:18px 22px 14px;border-bottom:1px solid var(--line)}
+.sheet-head .doc{font-size:13px;color:var(--muted)}
+.sheet-head .q{font-family:var(--display);font-weight:700;font-size:20px;line-height:1.4;margin:6px 0 0}
+.lines{padding:12px 14px 14px}
+.ln{display:grid;grid-template-columns:28px 1fr;gap:6px;padding:7px 8px;border-radius:8px;font-size:15px;line-height:1.55;transition:opacity .45s ease,background-color .45s ease,box-shadow .45s ease}
+.ln .n{font-family:var(--mono);font-size:12px;color:var(--muted);padding-top:3px;text-align:right}
+/* 지금 방식이 읽는 줄만 진하게: 줄의 class에 c1·c2·c3을 적어 둔다 */
+.sheet[data-mode="c1"] .ln:not(.c1),.sheet[data-mode="c2"] .ln:not(.c2),.sheet[data-mode="c3"] .ln:not(.c3){opacity:.3}
+.sheet[data-mode="c1"] .ln.c1{background:rgba(20,184,166,.10)}
+.sheet[data-mode="c2"] .ln.c2{background:rgba(108,92,255,.07);box-shadow:inset 3px 0 0 var(--c2);border-radius:0 8px 8px 0}
+.sheet[data-mode="c3"] .ln.c3{background:rgba(255,201,60,.22)}
+.answer{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:start;margin:0;padding:16px 22px 18px;border-top:1px solid var(--line);background:var(--tint);box-shadow:inset 4px 0 0 var(--c1);transition:box-shadow .35s}
+.sheet[data-mode="c2"] .answer{box-shadow:inset 4px 0 0 var(--c2)}
+.sheet[data-mode="c3"] .answer{box-shadow:inset 4px 0 0 var(--c3)}
+.answer .lab{font-weight:700;font-size:13px;color:var(--muted);padding-top:2px}
+.answer p{margin:0;font-size:16px;line-height:1.55}
+.demo-cap{font-size:13px;color:var(--on-ink-muted);margin:12px 4px 0}
+
+/* 본문 배치: 1280px 이상에서 왼쪽 레일 */
+.layout{max-width:1320px;margin:0 auto;padding:0 20px}
+.rail{display:none}
+@media(min-width:1280px){
+  .layout{display:grid;grid-template-columns:200px minmax(0,1fr);gap:56px;padding:0 32px}
+  .rail{display:block;position:sticky;top:72px;align-self:start;padding-top:88px}
+}
+.rail ol{list-style:none;margin:0;padding:0;border-left:1px solid var(--line)}
+.rail a{display:grid;grid-template-columns:28px 1fr;padding:6px 0 6px 14px;margin-left:-1px;border-left:2px solid transparent;font-size:14px;line-height:1.4;color:var(--muted);text-decoration:none}
+.rail a span{font-family:var(--mono);font-size:12px;padding-top:2px}
+.rail a:hover{color:var(--text)}
+.rail a[aria-current="true"]{color:var(--text);font-weight:700;border-left-color:var(--text)}
+main{min-width:0;max-width:1000px;padding:24px 0 40px}
+main > section{padding:60px 0 0}
+main > section + section{border-top:1px solid var(--line);margin-top:60px}
+/* 고정 툴바에 앵커 대상이 가리지 않게 */
+main > section,main [id]{scroll-margin-top:64px}
+h2.ch{font-family:var(--display);font-weight:780;font-size:30px;line-height:1.32;letter-spacing:-.025em;margin:0 0 20px;max-width:24em}
+h3{font-size:22px;font-weight:720;line-height:1.4;margin:44px 0 16px;letter-spacing:-.02em}
+h4{font-size:18px;font-weight:700;margin:0}
+p{margin:0 0 16px}
+.lead{font-size:18px;line-height:1.75;max-width:var(--measure);margin:0 0 28px}
+.lead .lab{display:block;font-size:14px;font-weight:700;color:var(--muted);margin-bottom:4px}
+.prose{max-width:var(--measure)}
+.src{font-size:13px;color:var(--muted);margin:28px 0 0;max-width:var(--measure)}
+.caution{max-width:var(--measure);background:#FFFFFF;border:1px solid var(--line);border-left:3px solid var(--text);padding:14px 18px;font-size:15px;margin:24px 0 0}
+.caution strong{display:block;margin-bottom:2px}
+.caution p{margin:0}
+
+/* 지도: 가로축 칸 + 칩 */
+.map{margin-top:8px}
+.map-axis{display:flex;align-items:center;gap:12px;font-size:14px;color:var(--muted);margin:0 0 12px}
+.map-axis::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,var(--muted),var(--line))}
+.map-grid{display:grid;grid-template-columns:1fr;gap:16px}
+@media(min-width:760px){.map-grid{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:1100px){.map-grid{grid-template-columns:repeat(var(--cols,4),minmax(0,1fr));gap:0}.map-col + .map-col{border-left:1px dashed var(--line)}}
+.map-col{padding:0 12px 8px}
+.map-col h4{font-size:16px;padding:10px 0 12px;border-bottom:1px solid var(--text);margin-bottom:12px}
+.map-col h4 small{display:block;font-weight:400;color:var(--muted);font-size:13px}
+.m{background:#FFFFFF;border:1px solid var(--line);border-radius:10px;padding:12px 14px 14px;margin-bottom:12px}
+.pill{display:inline-flex;align-items:center;gap:7px;border-radius:15px;padding:4px 12px;font-size:14px;font-weight:700;line-height:1.35;background:var(--code-bg);color:var(--text);margin-bottom:10px}
+.m-c1 .pill{background:var(--c1);color:var(--ink)}
+.m-c2 .pill{background:var(--c2);color:#FFFFFF}
+.m-c3 .pill{background:var(--c3);color:var(--ink)}
+.m-c1{border-color:rgba(20,184,166,.55)} .m-c2{border-color:rgba(108,92,255,.5)} .m-c3{border-color:rgba(255,201,60,.9)}
+.m dl{margin:0;display:grid;grid-template-columns:auto 1fr;column-gap:10px;row-gap:3px;font-size:14px;line-height:1.5}
+.m dt{color:var(--muted);white-space:nowrap}
+.m dd{margin:0}
+
+/* 비교표 */
+.tbl{overflow-x:auto;margin:8px 0 0;border:1px solid var(--line);background:#FFFFFF}
+table{width:100%;border-collapse:collapse;font-size:15px;line-height:1.55}
+th,td{padding:12px 14px;text-align:left;vertical-align:top}
+thead th{background:var(--ink);color:var(--on-ink);font-weight:700;font-size:14px;white-space:nowrap}
+thead th .dot{margin-right:6px}
+tbody tr + tr td{border-top:1px solid var(--line)}
+tbody td:first-child{font-weight:700;white-space:nowrap}
+tbody tr.em td{background:var(--row-em)}
+tr.key td{font-weight:700}
+tr.key td:first-child{box-shadow:inset 4px 0 0 var(--text)}
+thead th.c1{box-shadow:inset 0 5px 0 var(--c1)} thead th.c2{box-shadow:inset 0 5px 0 var(--c2)} thead th.c3{box-shadow:inset 0 5px 0 var(--c3)}
+.sum tbody td:nth-child(2){background:rgba(20,184,166,.06)} .sum tbody td:nth-child(3){background:rgba(108,92,255,.05)} .sum tbody td:nth-child(4){background:rgba(255,201,60,.10)}
+.sum tr.key td:nth-child(2){box-shadow:inset 0 -3px 0 var(--c1)} .sum tr.key td:nth-child(3){box-shadow:inset 0 -3px 0 var(--c2)} .sum tr.key td:nth-child(4){box-shadow:inset 0 -3px 0 var(--c3)}
+.map-legend{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);margin:10px 0 0}
+.map-legend .bar{display:inline-block;width:3px;height:1.1em;background:var(--text);flex:none}
+
+/* SVG 그림 */
+.fig{margin:8px 0 0;background:#FFFFFF;border:1px solid var(--line);border-radius:18px;padding:20px;overflow-x:auto}
+.fig svg{display:block;width:100%;height:auto;min-width:680px}
+.fig text{font-family:var(--sans)}
+
+/* 옆으로 밀리는 그림·표·폴더: 좁은 화면에서 오른쪽 흐림과 안내 문구 */
+.fig-wrap,.tbl-wrap,.folder-wrap{position:relative}
+.swipe{display:none;font-size:13px;color:var(--muted);margin:8px 0 0}
+@media(max-width:820px){
+  .fig-wrap::after,.tbl-wrap::after,.folder-wrap::after{content:"";position:absolute;top:1px;right:1px;bottom:1px;width:48px;pointer-events:none;transition:opacity .2s}
+  .fig-wrap::after{border-radius:0 18px 18px 0;background:linear-gradient(90deg,rgba(255,255,255,0),#FFFFFF)}
+  .tbl-wrap::after{background:linear-gradient(90deg,rgba(255,255,255,0),#FFFFFF)}
+  .folder-wrap::after{border-radius:0 12px 12px 0;background:linear-gradient(90deg,rgba(14,26,59,0),var(--ink))}
+  .scrolled-end::after,.fits::after{opacity:0}
+  .swipe{display:block}
+  .fits + .swipe{display:none}
+}
+
+/* 판단 기준 + 권고/중단 */
+.criteria{list-style:none;padding:0;margin:0 0 28px;display:grid;gap:10px;max-width:var(--measure)}
+.criteria li{display:grid;grid-template-columns:32px 1fr;font-size:18px;font-weight:500;padding-bottom:10px;border-bottom:1px solid var(--line)}
+.criteria li b{font-family:var(--display);font-weight:900;color:var(--muted)}
+.pair{display:grid;grid-template-columns:1fr;gap:16px;margin-top:24px}
+@media(min-width:760px){.pair{grid-template-columns:1fr 1fr}}
+.pair > div{padding:18px 20px;font-size:16px;border-radius:12px}
+.pair .rec{background:#FFFFFF;border:1px solid var(--line)}
+.pair .stop{background:var(--ink);color:var(--on-ink)}
+.pair strong{display:block;margin-bottom:4px}
+
+/* 준비 목록 */
+.prep{display:grid;grid-template-columns:1fr;gap:0 40px;margin:0;padding:0;list-style:none;counter-reset:pr}
+@media(min-width:760px){.prep{grid-template-columns:1fr 1fr}}
+.prep li{padding:14px 0 14px 52px;border-bottom:1px solid var(--line);font-size:16px;counter-increment:pr;position:relative}
+.prep li::before{content:counter(pr,decimal-leading-zero);position:absolute;left:0;top:12px;font-family:var(--display);font-weight:900;font-size:26px;line-height:1;color:var(--ink);opacity:.22}
+.prep li strong{display:block;font-size:16px;color:var(--text);font-weight:700;margin-bottom:2px}
+
+/* 코드·프롬프트 */
+.code{background:var(--ink);color:var(--on-ink);border-radius:12px;overflow:hidden;margin:12px 0 0}
+.code-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 16px;border-bottom:1px solid var(--ink-line)}
+.code-head h4{font-size:16px;color:var(--on-ink)}
+.code-head h4 small{font-weight:400;color:var(--on-ink-muted);font-size:13px;margin-right:8px}
+.copy{font:700 13px/1 var(--sans);color:var(--ink);background:var(--paper);border:0;border-radius:999px;padding:9px 16px;cursor:pointer;flex:none;min-width:64px}
+.copy:hover{background:#FFFFFF}
+.copy.done{background:#FFFFFF;color:var(--ink);box-shadow:0 0 0 2px var(--on-ink-muted)}
+pre{margin:0;padding:18px 20px 20px;font-family:var(--mono);font-size:14px;line-height:1.7;letter-spacing:0;white-space:pre-wrap;word-break:keep-all;overflow-wrap:anywhere;overflow-x:auto;color:var(--code-ink)}
+/* 폴더 구조: 줄바꿈 없이 열을 맞춘다(D2Coding은 한글 2칸) */
+.folder pre{white-space:pre;overflow-wrap:normal;overflow-x:auto}
+
+/* 실습 단계 탭 */
+.steps{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);gap:0;margin:8px 0 0;border:1px solid var(--line);background:#FFFFFF;border-radius:14px;overflow:hidden}
+.steps button{appearance:none;background:transparent;border:0;border-right:1px solid var(--line);padding:14px 10px 12px;text-align:left;font:500 14px/1.35 var(--sans);color:var(--muted);cursor:pointer;display:flex;flex-direction:column;gap:6px;min-width:0}
+.steps button:last-child{border-right:0}
+.steps .num{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;border:1.5px solid var(--line);font:700 13px/1 var(--mono);color:var(--text)}
+.steps .lbl{display:flex;align-items:center;gap:6px;font-weight:700;color:inherit}
+.steps button:hover{color:var(--text);background:var(--hover)}
+.steps button.is-active{background:var(--ink);color:var(--on-ink)}
+.steps button.is-active .num{border-color:var(--on-ink);color:var(--on-ink)}
+.steps button[data-m="c1"] .num{border-color:var(--c1)}
+.steps button[data-m="c2"] .num{border-color:var(--c2)}
+.steps button[data-m="c3"] .num{border-color:var(--c3)}
+@media(max-width:700px){.steps button{align-items:center;text-align:center;padding:10px 4px}.steps .lbl{font-size:12px;flex-direction:column;gap:2px}}
+.tab-content{padding-top:28px}
+.goal{display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:baseline;max-width:var(--measure);padding:0 0 0 16px;border-left:3px solid var(--text);margin-bottom:24px}
+.goal.g-c1{border-left-color:var(--c1)} .goal.g-c2{border-left-color:var(--c2)} .goal.g-c3{border-left-color:var(--c3)}
+.goal b{font-size:14px;white-space:nowrap}
+.goal p{margin:0;font-size:17px}
+
+/* 방식 카드(mx): 만드는 프롬프트 + 질문 스크립트 */
+.mxs{display:grid;gap:28px;margin-top:20px}
+.mx{background:#FFFFFF;border:1px solid var(--line);border-radius:18px;padding:26px 26px 24px;min-width:0}
+.mx-head{display:grid;grid-template-columns:56px minmax(0,1fr);gap:16px;align-items:start}
+.mx-num{font-family:var(--display);font-weight:900;font-size:44px;line-height:1;color:var(--ink);text-align:center;padding-top:2px}
+.mx h3{margin:2px 0 8px;font-family:var(--display);font-size:24px;font-weight:760}
+.mx-desc{margin:0;max-width:var(--measure);font-size:16px;color:var(--text)}
+.mx-meta{list-style:none;margin:16px 0 0 72px;padding:0;display:flex;flex-wrap:wrap;gap:8px}
+.mx-meta li{display:inline-flex;align-items:center;gap:6px;font-size:14px;line-height:1.4;background:var(--paper);border:1px solid var(--line);border-radius:999px;padding:5px 12px;min-width:0}
+.mx-meta li span{color:var(--muted)}
+.mx-meta li span::after{content:"";display:inline-block;width:1px;height:.9em;background:var(--line);margin-left:6px;vertical-align:-.1em}
+.mx-meta code{font-size:12.5px;background:transparent;padding:0}
+.mx-pair,.mx-one{display:grid;grid-template-columns:minmax(0,1fr);gap:14px;margin-top:20px}
+.mx-pair .code,.mx-one .code{margin:0;display:flex;flex-direction:column}
+.mx-pair pre,.mx-one pre{flex:1}
+@media(min-width:1024px){.mx-pair{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}}
+.mx .caution{margin-top:16px}
+.mx-c1{border-color:rgba(20,184,166,.55);box-shadow:inset 0 4px 0 var(--c1)} .mx-c1 .mx-num{color:var(--c1)}
+.mx-c2{border-color:rgba(108,92,255,.5);box-shadow:inset 0 4px 0 var(--c2)} .mx-c2 .mx-num{color:var(--c2)}
+.mx-c3{border-color:rgba(255,201,60,.9);box-shadow:inset 0 4px 0 var(--c3)} .mx-c3 .mx-num{color:var(--c3-line)}
+/* 정리 카드: <article class="mx mx-final"> */
+.mx-final{background:var(--ink-2);border-color:var(--ink-2);color:var(--on-ink)}
+.mx-final .mx-num{color:var(--on-ink-muted)}
+.mx-final h3,.mx-final .mx-desc{color:var(--on-ink)}
+.mx-final .code{background:var(--ink);box-shadow:0 0 0 1px var(--ink-line)}
+.mx-final .mx-meta li{background:var(--ink);border-color:var(--ink-line);color:var(--on-ink)}
+.mx-final .mx-meta li span{color:var(--on-ink-muted)}
+/* 사람이 할 일 */
+.mx-human{margin:20px 0 0;max-width:var(--measure);background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:16px 20px 14px}
+.mx-human h4{font-size:15px;margin:0 0 10px}
+.hsteps{list-style:none;counter-reset:hs;margin:0;padding:0;display:grid;gap:8px}
+.hsteps li{counter-increment:hs;display:grid;grid-template-columns:28px minmax(0,1fr);font-size:15px;line-height:1.6}
+.hsteps li::before{content:counter(hs);font-family:var(--display);font-weight:900;font-size:17px;line-height:1.45;color:var(--muted)}
+
+/* 핵심 체크리스트(어두운 장) */
+section.dark{background:var(--ink);color:var(--on-ink);border-radius:18px;padding:56px 36px 48px;border-top:0!important}
+section.dark + section{border-top:0}
+section.dark h2.ch,section.dark .lead{color:var(--on-ink)}
+section.dark .lead .lab{color:var(--on-ink-muted)}
+.checks{list-style:none;margin:8px 0 0;padding:0;display:grid;grid-template-columns:1fr;gap:0 48px}
+@media(min-width:760px){.checks{grid-template-columns:1fr 1fr}}
+.checks li{display:grid;grid-template-columns:44px 1fr;padding:18px 0;border-top:1px solid var(--ink-line)}
+.checks li b{font-family:var(--display);font-weight:900;font-size:22px;color:var(--on-ink-muted);line-height:1.3}
+.checks strong{display:block;font-size:18px;margin-bottom:4px}
+.checks p{margin:0;color:var(--on-ink-dim);font-size:15px}
+
+/* 출처 */
+.refs{margin:0;padding-left:20px;display:grid;gap:8px;font-size:15px;max-width:780px}
+
+footer{border-top:1px solid var(--line);margin-top:80px}
+footer p{max-width:1320px;margin:0 auto;padding:28px 20px 40px;font-size:13px;color:var(--muted)}
+#toast{position:fixed;right:20px;bottom:20px;background:var(--text);color:#FFFFFF;padding:10px 16px;border-radius:999px;font-size:14px;font-weight:500;opacity:0;pointer-events:none;transition:opacity .25s;z-index:60}
+#toast.show{opacity:1}
+
+/* 휴대폰 */
+@media(max-width:640px){
+  h2.ch{font-size:26px}
+  main > section{padding-top:44px}
+  main > section + section{margin-top:44px}
+  .hero-in{display:flex;flex-direction:column;align-items:stretch;padding:28px 16px 40px;gap:0}
+  .hero-text{display:contents}
+  .byline{order:1;margin-bottom:12px}
+  .hero h1{order:2;font-size:2.4rem;margin-bottom:20px}
+  .demo{order:3;margin-bottom:28px}
+  .hero-lead{order:4;font-size:16px;margin-bottom:20px}
+  .legend{order:5}
+  .layout{padding:0 16px}
+  .toolbar-in{padding:8px 16px}
+  .toolbar{position:static}
+  .file small{display:none}
+  .seg button{font-size:14px;padding:9px 4px}
+  .sheet-head,.answer{padding-left:16px;padding-right:16px}
+  .ln{font-size:14px}
+  section.dark{padding:40px 20px 32px;margin-left:-4px;margin-right:-4px}
+  th,td{padding:10px 12px}
+  .mx{padding:20px 16px 18px;border-radius:14px}
+  .mx-head{grid-template-columns:36px minmax(0,1fr);gap:10px;align-items:center}
+  .mx-num{font-size:32px}
+  .mx h3{font-size:21px;margin:0}
+  .mx-head > div{display:contents}
+  .mx-desc{grid-column:1/-1;margin-top:6px}
+  .mx-meta{margin-left:0}
+  .mx-meta li{font-size:13px;flex-wrap:wrap;row-gap:2px;border-radius:12px}
+  .mx-pair pre,.mx-one pre{padding:14px 14px 16px;font-size:13.5px}
+  .mx-human{padding:14px 14px 12px}
+  .hsteps li{grid-template-columns:22px minmax(0,1fr)}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{transition:none!important;animation:none!important;scroll-behavior:auto!important}
+}
+/* 인쇄: 어두운 상자는 모두 흰 바탕·짙은 글자로, 숨은 탭은 모두 펼친다 */
+@media print{
+  .no-print,.rail,.toolbar,.swipe{display:none!important}
+  .fig-wrap::after,.tbl-wrap::after,.folder-wrap::after{display:none!important}
+  body{background:#FFFFFF}
+  .hero{background:#FFFFFF;color:var(--text)} .hero::before{display:none}
+  .hero h1 .h1-sub,.hero-lead,.hero-lead b,.legend span.desc,.demo-cap,.byline{color:var(--text)}
+  .seg{display:none}
+  .layout{display:block}
+  .tab-content,.tab-content.hidden{display:block!important}
+  section.dark,.pair .stop{background:#FFFFFF;color:var(--text);border:1px solid var(--line)}
+  section.dark h2.ch,section.dark .lead,.checks p{color:var(--text)}
+  .code,.mx-final .code{background:#FFFFFF;color:var(--text);border:1px solid var(--line);box-shadow:none}
+  .code-head h4,pre,.mx-final pre{color:var(--text)}
+  .code-head h4 small{color:var(--muted)}
+  .mx-final{background:#FFFFFF;color:var(--text);border-color:var(--line)}
+  .mx-final h3,.mx-final .mx-desc{color:var(--text)}
+  .mx-final .mx-num{color:var(--muted)}
+  .mx-final .mx-meta li{background:#FFFFFF;border-color:var(--line);color:var(--text)}
+  .mx-human{background:#FFFFFF}
+  details{display:block} details > *:not(summary){display:block!important}
+  main > section{break-inside:auto}
+}
+/*INSTRUCTOR-CSS*/
+</style>
+</head>
+<body data-file="{{FILE_NAME}}">
+<!-- 부품: 툴바. 모든 교안 맨 위. 파일 이름(버전 포함)은 data-file·#file-label·title·footer가 모두 같아야 합니다. -->
+<div class="toolbar sticky no-print">
+  <div class="toolbar-in">
+    <div class="file"><span id="file-label">{{FILE_NAME}}</span><small>기준일 {{BASE_DATE}}, {{TOOLBAR_NOTE}}</small></div>
+    <div class="tb-actions">
+      <button type="button" class="btn-tb" onclick="downloadSelfAsHtml()">교안 다운로드</button>
+      <button type="button" class="btn-tb" onclick="window.print()">PDF로 인쇄</button>
     </div>
   </div>
+</div>
 
-  <!-- COMPONENT: cover -->
-  <header class="bg-navy text-white px-6 py-14">
-    <div class="max-w-6xl mx-auto text-center">
-      <div class="text-sm font-bold mb-3" style="color:#93C5FD">{{COURSE_NAME}}</div>
-      <h1 class="text-3xl md:text-4xl font-extrabold leading-tight">{{TITLE}}</h1>
-      <p class="mt-3 text-lg" style="color:#CBD5E1">{{SUBTITLE}}</p>
-      <div class="w-48 h-[3px] mx-auto my-6" style="background:var(--brand)"></div>
-      <p class="text-sm" style="color:#CBD5E1">장동인 · KAIST AI 대학원 책임교수 / AIBB LAB 대표</p>
+<!-- 부품: 첫 화면(hero). 제목·부제·리드·범례(방식 색 최대 3개). 범례 색은 본문 끝까지 같은 뜻으로만 씁니다. -->
+<header class="hero">
+  <div class="hero-in">
+    <div class="hero-text">
+      <p class="byline">{{BYLINE}}</p>
+      <h1 aria-label="{{TITLE}}">{{TITLE_MAIN}}<span class="h1-sub">{{TITLE_SUB}}</span></h1>
+      <p class="hero-lead">{{HERO_LEAD}}</p>
+      <ul class="legend" aria-label="{{LEGEND_LABEL}}">
+        <li><i class="dot d-c1"></i><strong>{{C1_NAME}}</strong><span class="desc">{{C1_DESC}}</span></li>
+        <li><i class="dot d-c2"></i><strong>{{C2_NAME}}</strong><span class="desc">{{C2_DESC}}</span></li>
+        <li><i class="dot d-c3"></i><strong>{{C3_NAME}}</strong><span class="desc">{{C3_DESC}}</span></li>
+      </ul>
     </div>
-  </header>
-
-  <main class="max-w-6xl mx-auto px-6 py-10 space-y-12">
-
-    <!-- COMPONENT: toc (Part 카드 3열, 마지막 정리 카드는 key 색) -->
-    <section class="box p-8">
-      <div class="sec-head"><div class="sec-title">오늘의 순서</div></div>
-      <div class="grid md:grid-cols-3 gap-4">
-        <a href="#part-1" class="box p-5 block" style="border-left:4px solid var(--brand)">
-          <div class="text-sm font-bold c-brand">Part 1</div>
-          <div class="text-lg font-bold c-navy mt-1">{{PART1_TITLE}}</div>
-          <div class="text-sm c-body mt-2">{{PART1_DESC}}</div>
-        </a>
-        <a href="#wrap-up" class="box p-5 block sem-key" style="border-left-width:4px">
-          <div class="text-sm font-bold" style="color:var(--key)">정리</div>
-          <div class="text-lg font-bold c-navy mt-1">다음 행동</div>
-          <div class="text-sm c-body mt-2">핵심 체크리스트와 출처</div>
-        </a>
+    <!-- 부품(선택): 첫 화면 데모. 핵심 장면 하나를 버튼으로 바꿔 보여 줍니다. 필요 없으면 이 div.demo 전체를 지웁니다(스크립트는 없을 때 그냥 넘어갑니다).
+         버튼의 data-mode는 c1·c2·c3, data-answer는 그 방식의 답 문장입니다. 각 줄(.ln)의 class에 그 줄을 읽는 방식(c1·c2·c3)을 적습니다. -->
+    <div class="demo">
+      <div class="seg" role="group" aria-label="{{DEMO_GROUP_LABEL}}">
+        <button type="button" data-mode="c1" aria-pressed="true" data-answer="{{DEMO_ANSWER_C1}}"><span class="t"><i class="dot d-c1"></i>{{DEMO_BTN_C1}}</span><small>{{C1_NAME}}</small></button>
+        <button type="button" data-mode="c2" aria-pressed="false" data-answer="{{DEMO_ANSWER_C2}}"><span class="t"><i class="dot d-c2"></i>{{DEMO_BTN_C2}}</span><small>{{C2_NAME}}</small></button>
+        <button type="button" data-mode="c3" aria-pressed="false" data-answer="{{DEMO_ANSWER_C3}}"><span class="t"><i class="dot d-c3"></i>{{DEMO_BTN_C3}}</span><small>{{C3_NAME}}</small></button>
       </div>
-    </section>
-
-    <!-- COMPONENT: part-divider -->
-    <section id="part-1" class="part box">
-      <div class="no">Part 1</div>
-      <div class="rule"></div>
-      <div class="name">{{PART1_TITLE}}</div>
-      <p class="c-body mt-3">{{PART1_DESC}}</p>
-    </section>
-
-    <!-- COMPONENT: section (머리 → 목표 → 본문 → narrative → 출처) -->
-    <section class="box p-8">
-      <div class="sec-head">
-        <span class="sec-badge">01</span>
-        <div class="sec-title">{{SECTION_TITLE}}</div>
-        <div class="sec-sub">{{SECTION_SUBTITLE}}</div>
+      <div class="sheet" id="demo-sheet" data-mode="c1">
+        <div class="sheet-head">
+          <div class="doc">{{DEMO_DOC_LABEL}}</div>
+          <p class="q">{{DEMO_QUESTION}}</p>
+        </div>
+        <div class="lines">
+          <div class="ln c1"><span class="n">1</span><span>{{DEMO_LINE_1}}</span></div>
+          <div class="ln c1 c2"><span class="n">2</span><span>{{DEMO_LINE_2}}</span></div>
+          <div class="ln c1 c3"><span class="n">3</span><span>{{DEMO_LINE_3}}</span></div>
+          <div class="ln c1 c2 c3"><span class="n">4</span><span>{{DEMO_LINE_4}}</span></div>
+        </div>
+        <div class="answer"><span class="lab">답</span><p id="demo-answer" aria-live="polite">{{DEMO_ANSWER_C1}}</p></div>
       </div>
+      <p class="demo-cap">{{DEMO_CAPTION}}</p>
+    </div>
+  </div>
+</header>
 
-      <!-- COMPONENT: goal (이 장의 목표) -->
-      <div class="sem sem-warn mb-6"><span class="lbl">이 장의 목표</span>{{GOAL}}</div>
+<div class="layout">
+<!-- 부품: 레일 목차. main 밖에 둡니다. 1280px 이상에서만 보입니다. 장마다 한 줄, 번호는 <span>NN</span>. -->
+<nav class="rail no-print" aria-label="장 목차">
+  <ol>
+    <li><a href="#s01"><span>01</span>{{S01_SHORT}}</a></li>
+    <li><a href="#s02"><span>02</span>{{S02_SHORT}}</a></li>
+    <li><a href="#s03"><span>03</span>{{S03_SHORT}}</a></li>
+    <li><a href="#s04"><span>04</span>{{S04_SHORT}}</a></li>
+    <li><a href="#s05"><span>05</span>{{S05_SHORT}}</a></li>
+    <li><a href="#s06"><span>06</span>{{S06_SHORT}}</a></li>
+    <li><a href="#s07"><span>07</span>{{S07_SHORT}}</a></li>
+    <li><a href="#s08"><span>08</span>{{S08_SHORT}}</a></li>
+    <li><a href="#s09"><span>09</span>출처</a></li>
+  </ol>
+</nav>
+<main><!--GUIDE-->
+  <!-- 부품: 장(section). main 바로 아래, id는 s01부터 빈칸 없이. h2.ch 바로 뒤에 NOTE:NN 표식 주석(강사 노트 자리, 빌드가 바꿉니다), 첫 문단은 .lead 「이 장의 목표」. -->
+  <!-- 01 -->
+  <section id="s01">
+    <h2 class="ch">{{S01_TITLE}}</h2><!--NOTE:01-->
+    <p class="lead"><span class="lab">이 장의 목표</span>{{S01_GOAL}}</p>
 
-      <!-- COMPONENT: table -->
-      <h3 class="mid-title mb-3">1. {{SUBHEAD}}</h3>
-      <table class="brand mb-6">
-        <thead><tr><th>구분</th><th>A</th><th>B</th></tr></thead>
+    <!-- 부품: 지도(map). 여러 방식을 가로축(칸)과 칩으로 정리할 때. 칸 수는 map-grid의 style에 있는 cols 값으로 정합니다. 방식 색 칩(m-c1~m-c3)은 그 방식에만 씁니다. -->
+    <h3>{{S01_MAP_HEADING}}</h3>
+    <div class="map">
+      <p class="map-axis">{{MAP_AXIS}}</p>
+      <div class="map-grid" style="--cols:3">
+        <div class="map-col">
+          <h4>{{MAP_COL_1}}<small>{{MAP_COL_1_NOTE}}</small></h4>
+          <article class="m m-c1"><span class="pill">{{C1_NAME}}</span>
+            <dl><dt>{{MAP_DT_1}}</dt><dd>{{MAP_C1_DD_1}}</dd><dt>{{MAP_DT_2}}</dt><dd>{{MAP_C1_DD_2}}</dd></dl></article>
+        </div>
+        <div class="map-col">
+          <h4>{{MAP_COL_2}}<small>{{MAP_COL_2_NOTE}}</small></h4>
+          <article class="m m-c2"><span class="pill">{{C2_NAME}}</span>
+            <dl><dt>{{MAP_DT_1}}</dt><dd>{{MAP_C2_DD_1}}</dd><dt>{{MAP_DT_2}}</dt><dd>{{MAP_C2_DD_2}}</dd></dl></article>
+          <article class="m"><span class="pill">{{MAP_OTHER_NAME}}</span>
+            <dl><dt>{{MAP_DT_1}}</dt><dd>{{MAP_OTHER_DD_1}}</dd><dt>{{MAP_DT_2}}</dt><dd>{{MAP_OTHER_DD_2}}</dd></dl></article>
+        </div>
+        <div class="map-col">
+          <h4>{{MAP_COL_3}}<small>{{MAP_COL_3_NOTE}}</small></h4>
+          <article class="m m-c3"><span class="pill">{{C3_NAME}}</span>
+            <dl><dt>{{MAP_DT_1}}</dt><dd>{{MAP_C3_DD_1}}</dd><dt>{{MAP_DT_2}}</dt><dd>{{MAP_C3_DD_2}}</dd></dl></article>
+        </div>
+      </div>
+    </div>
+
+    <!-- 부품: 비교표(.tbl). 표 머리는 ink. 핵심 행은 tr.key(굵게·왼쪽 막대), 방식 열은 th.c1~c3과 table.sum으로 색 띠. 막대·색을 쓰면 범례 한 줄(.map-legend)을 붙입니다. -->
+    <h3>{{S01_TABLE_HEADING}}</h3>
+    <div class="tbl">
+      <table class="sum">
+        <thead><tr><th style="width:16%">구분</th><th class="c1"><i class="dot d-c1"></i>{{C1_NAME}}</th><th class="c2"><i class="dot d-c2"></i>{{C2_NAME}}</th><th class="c3"><i class="dot d-c3"></i>{{C3_NAME}}</th></tr></thead>
         <tbody>
-          <tr><td class="font-bold">항목</td><td>값</td><td class="hl">강조할 차이</td></tr>
-          <tr><td class="font-bold">항목</td><td>값</td><td>값</td></tr>
+          <tr class="em key"><td>{{ROW_KEY}}</td><td>{{ROW_KEY_C1}}</td><td>{{ROW_KEY_C2}}</td><td>{{ROW_KEY_C3}}</td></tr>
+          <tr><td>{{ROW_2}}</td><td>{{ROW_2_C1}}</td><td>{{ROW_2_C2}}</td><td>{{ROW_2_C3}}</td></tr>
+          <tr><td>{{ROW_3}}</td><td>{{ROW_3_C1}}</td><td>{{ROW_3_C2}}</td><td>{{ROW_3_C3}}</td></tr>
         </tbody>
       </table>
+    </div>
+    <p class="map-legend"><i class="bar" aria-hidden="true"></i>{{TABLE_LEGEND}}</p>
+    <!-- 부품: 주의 상자(.caution). 주의·보안·저작권. -->
+    <p class="caution">{{S01_CAUTION}}</p>
+    <!-- 부품: 장 끝 출처 줄. 「출처: 짧은 이름 (YYYY-MM-DD 확인)」 -->
+    <p class="src">출처: {{S01_SOURCES}} <span class="nw">({{BASE_DATE}} 확인)</span></p>
+  </section>
 
-      <!-- COMPONENT: semantic-boxes (의미색은 문서 전체에서 같은 뜻으로만) -->
-      <div class="grid md:grid-cols-2 gap-4 mb-6">
-        <div class="sem sem-key"><span class="lbl">핵심 결론</span>{{KEY}}</div>
-        <div class="sem sem-good"><span class="lbl">권고안</span>{{GOOD}}</div>
-        <div class="sem sem-warn"><span class="lbl">확인 필요</span>{{WARN}}</div>
-        <div class="sem sem-risk"><span class="lbl">중단 조건</span>{{RISK}}</div>
+  <!-- 02 -->
+  <section id="s02">
+    <h2 class="ch">{{S02_TITLE}}</h2><!--NOTE:02-->
+    <p class="lead"><span class="lab">이 장의 목표</span>{{S02_GOAL}}</p>
+    <!-- 부품: SVG 그림(fig-wrap > fig). 흐름·구조를 보일 때. 화살표에 의미 라벨, 색은 :root 토큰 값만. 휴대폰에서는 옆으로 밀리므로 바로 뒤에 .swipe 안내 문구를 둡니다. -->
+    <div class="fig-wrap"><div class="fig">
+      <svg viewBox="0 0 900 220" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="{{FIG_LABEL}}">
+        <defs>
+          <marker id="fg-1" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 1L10 5L0 9z" fill="#14B8A6"/></marker>
+          <marker id="fg-2" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 1L10 5L0 9z" fill="#6C5CFF"/></marker>
+          <marker id="fg-3" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 1L10 5L0 9z" fill="#E0A800"/></marker>
+        </defs>
+        <rect x="20" y="70" width="180" height="80" rx="10" fill="#FFFFFF" stroke="#D9DEEA" stroke-width="1.5"/>
+        <text x="110" y="115" fill="#172036" font-size="15" font-weight="700" text-anchor="middle">{{FIG_NODE_1}}</text>
+        <rect x="280" y="70" width="180" height="80" rx="10" fill="#14B8A6" fill-opacity=".08" stroke="#14B8A6" stroke-width="2"/>
+        <text x="370" y="104" fill="#172036" font-size="15" font-weight="700" text-anchor="middle">{{FIG_NODE_2}}</text>
+        <text x="370" y="128" fill="#5A6480" font-size="13" text-anchor="middle">{{FIG_NODE_2_NOTE}}</text>
+        <rect x="540" y="70" width="180" height="80" rx="10" fill="#6C5CFF" fill-opacity=".07" stroke="#6C5CFF" stroke-width="2"/>
+        <text x="630" y="104" fill="#172036" font-size="15" font-weight="700" text-anchor="middle">{{FIG_NODE_3}}</text>
+        <text x="630" y="128" fill="#5A6480" font-size="13" text-anchor="middle">{{FIG_NODE_3_NOTE}}</text>
+        <rect x="780" y="70" width="100" height="80" rx="10" fill="#0E1A3B"/>
+        <text x="830" y="115" fill="#F5F6FA" font-size="15" font-weight="700" text-anchor="middle">{{FIG_NODE_4}}</text>
+        <line x1="202" y1="110" x2="272" y2="110" stroke="#14B8A6" stroke-width="2" marker-end="url(#fg-1)"/>
+        <text x="237" y="98" fill="#5A6480" font-size="12" text-anchor="middle">{{FIG_EDGE_1}}</text>
+        <line x1="462" y1="110" x2="532" y2="110" stroke="#6C5CFF" stroke-width="2" marker-end="url(#fg-2)"/>
+        <text x="497" y="98" fill="#5A6480" font-size="12" text-anchor="middle">{{FIG_EDGE_2}}</text>
+        <line x1="722" y1="110" x2="772" y2="110" stroke="#E0A800" stroke-width="2" marker-end="url(#fg-3)"/>
+        <path d="M370 70 C 370 30, 620 30, 630 64" fill="none" stroke="#E0A800" stroke-width="2" stroke-dasharray="5,4"/>
+        <text x="500" y="34" fill="#172036" font-size="13" text-anchor="middle">{{FIG_LOOP_LABEL}}</text>
+      </svg>
+    </div></div>
+    <p class="swipe">그림을 옆으로 밀어 끝까지 볼 수 있습니다.</p>
+    <p class="src">출처: {{S02_SOURCES}} <span class="nw">({{BASE_DATE}} 확인)</span></p>
+  </section>
+
+  <!-- 03 -->
+  <section id="s03">
+    <h2 class="ch">{{S03_TITLE}}</h2><!--NOTE:03-->
+    <p class="lead"><span class="lab">이 장의 목표</span>{{S03_GOAL}}</p>
+    <!-- 부품: 판단 기준(.criteria) + 권고/중단 조건(.pair). 중단 조건은 어두운 상자(.stop). -->
+    <ol class="criteria">
+      <li><b>1</b><span>{{CRITERION_1}}</span></li>
+      <li><b>2</b><span>{{CRITERION_2}}</span></li>
+      <li><b>3</b><span>{{CRITERION_3}}</span></li>
+    </ol>
+    <div class="pair">
+      <div class="rec"><strong>권고</strong>{{RECOMMENDATION}}</div>
+      <div class="stop"><strong>중단 조건</strong>{{STOP_CONDITION}}</div>
+    </div>
+  </section>
+
+  <!-- 04 -->
+  <section id="s04">
+    <h2 class="ch">{{S04_TITLE}}</h2><!--NOTE:04-->
+    <p class="lead"><span class="lab">이 장의 목표</span>{{S04_GOAL}}</p>
+    <!-- 부품: 준비 목록(.prep). 실습 전 확인 항목. 번호는 자동으로 붙습니다. -->
+    <ul class="prep">
+      <li><strong>{{PREP_1}}</strong>{{PREP_1_DESC}}</li>
+      <li><strong>{{PREP_2}}</strong>{{PREP_2_DESC}}</li>
+      <li><strong>{{PREP_3}}</strong>{{PREP_3_DESC}}</li>
+      <li><strong>{{PREP_4}}</strong>{{PREP_4_DESC}}</li>
+    </ul>
+  </section>
+
+  <!-- 05 -->
+  <section id="s05">
+    <h2 class="ch">{{S05_TITLE}}</h2><!--NOTE:05-->
+    <p class="lead"><span class="lab">이 장의 목표</span>{{S05_GOAL}}</p>
+    <!-- 부품: 폴더 구조(folder-wrap > code.folder). 결과 폴더를 보일 때. 줄바꿈 없이 D2Coding으로 열을 맞추고(한글은 2칸), 휴대폰에서는 옆으로 밀리므로 .swipe 안내를 둡니다. -->
+    <h3>{{S05_FOLDER_HEADING}}</h3>
+    <div class="folder-wrap"><div class="code folder">
+      <pre>{{PROJECT_DIR}}/
+├── {{FOLDER_ITEM_1}}
+├── {{FOLDER_ITEM_2}}
+└── {{FOLDER_ITEM_3}}</pre>
+    </div></div>
+    <p class="swipe">폴더 구조를 옆으로 밀어 끝까지 볼 수 있습니다.</p>
+
+    <!-- 부품: 복사 프롬프트 한 개(.code). pre의 id와 복사 버튼 copyPrompt 인자가 같아야 하고, id는 문서 안에서 유일합니다. 끝에 [완료 조건]을 둡니다. -->
+    <h3>{{S05_PROMPT_HEADING}}</h3>
+    <div class="code">
+      <div class="code-head"><h4><small>{{PROMPT_TAG}}</small>{{PROMPT_TITLE}}</h4><button type="button" class="copy no-print" onclick="copyPrompt('tpl-1')" aria-label="{{PROMPT_TITLE}} 프롬프트 복사">복사</button></div>
+      <pre id="tpl-1">{{PROMPT_BODY}}
+
+[완료 조건]
+- {{DONE_CONDITION}}</pre>
+    </div>
+  </section>
+
+  <!-- 06 -->
+  <section id="s06">
+    <h2 class="ch">{{S06_TITLE}}</h2><!--NOTE:06-->
+    <p class="lead"><span class="lab">이 장의 목표</span>{{S06_GOAL}}</p>
+    <!-- 부품: 실습 단계 탭(.steps). 순서 있는 실습 묶음. 버튼 id는 btn-tabN, 내용 id는 tabN, onclick는 switchTab에 tabN을 넘깁니다. 인쇄 때는 모두 펼쳐집니다. 방식 색은 data-m="c1"~"c3". -->
+    <div class="steps no-print" role="tablist" aria-label="실습 단계">
+      <button type="button" role="tab" onclick="switchTab('tab0')" id="btn-tab0" class="tab-btn is-active" aria-selected="true" aria-controls="tab0"><span class="num">0</span><span class="lbl">{{TAB_0_LABEL}}</span></button>
+      <button type="button" role="tab" onclick="switchTab('tab1')" id="btn-tab1" class="tab-btn" data-m="c1" aria-selected="false" aria-controls="tab1"><span class="num">1</span><span class="lbl"><i class="dot d-c1"></i>{{C1_NAME}}</span></button>
+      <button type="button" role="tab" onclick="switchTab('tab2')" id="btn-tab2" class="tab-btn" data-m="c2" aria-selected="false" aria-controls="tab2"><span class="num">2</span><span class="lbl"><i class="dot d-c2"></i>{{C2_NAME}}</span></button>
+    </div>
+
+    <div id="tab0" class="tab-content" role="tabpanel" aria-labelledby="btn-tab0">
+      <div class="goal"><b>{{TAB_0_GOAL_LABEL}}</b><p>{{TAB_0_GOAL}}</p></div>
+      <div class="code">
+        <div class="code-head"><h4><small>Step 1</small>{{TAB_0_PROMPT_TITLE}}</h4><button type="button" class="copy no-print" onclick="copyPrompt('tpl-2')" aria-label="{{TAB_0_PROMPT_TITLE}} 프롬프트 복사">복사</button></div>
+        <pre id="tpl-2">{{TAB_0_PROMPT_BODY}}
+
+[완료 조건]
+- {{TAB_0_DONE}}</pre>
       </div>
+    </div>
 
-      <!-- COMPONENT: flow (단계 전개: 번호 + 직각 상자 + 화살표) -->
-      <div class="flex flex-wrap items-stretch gap-2 mb-6">
-        <div class="box p-4 flex-1 min-w-[150px] text-center"><div class="font-bold c-brand">1</div><div class="font-bold c-navy">{{STEP1}}</div><div class="text-sm mt-1">{{STEP1_DESC}}</div></div>
-        <div class="self-center c-sub font-bold">→</div>
-        <div class="box p-4 flex-1 min-w-[150px] text-center"><div class="font-bold c-brand">2</div><div class="font-bold c-navy">{{STEP2}}</div><div class="text-sm mt-1">{{STEP2_DESC}}</div></div>
+    <div id="tab1" class="tab-content hidden" role="tabpanel" aria-labelledby="btn-tab1">
+      <div class="goal g-c1"><b>{{TAB_1_GOAL_LABEL}}</b><p>{{TAB_1_GOAL}}</p></div>
+      <div class="code">
+        <div class="code-head"><h4><small>Step 1</small>{{TAB_1_PROMPT_TITLE}}</h4><button type="button" class="copy no-print" onclick="copyPrompt('tpl-3')" aria-label="{{TAB_1_PROMPT_TITLE}} 프롬프트 복사">복사</button></div>
+        <pre id="tpl-3">{{TAB_1_PROMPT_BODY}}
+
+[완료 조건]
+- {{TAB_1_DONE}}</pre>
       </div>
+    </div>
 
-      <!-- COMPONENT: copy-prompt (id는 문서 안에서 유일, 버튼과 같은 id) -->
-      <div class="mb-6">
-        <div class="flex items-center justify-between mb-2">
-          <span class="text-sm font-bold c-navy">{{PROMPT_LABEL}}</span>
-          <button onclick="copyPrompt('p-01-1')" class="btn btn-good no-print">프롬프트 복사</button>
+    <div id="tab2" class="tab-content hidden" role="tabpanel" aria-labelledby="btn-tab2">
+      <div class="goal g-c2"><b>{{TAB_2_GOAL_LABEL}}</b><p>{{TAB_2_GOAL}}</p></div>
+      <div class="code">
+        <div class="code-head"><h4><small>Step 1</small>{{TAB_2_PROMPT_TITLE}}</h4><button type="button" class="copy no-print" onclick="copyPrompt('tpl-4')" aria-label="{{TAB_2_PROMPT_TITLE}} 프롬프트 복사">복사</button></div>
+        <pre id="tpl-4">{{TAB_2_PROMPT_BODY}}
+
+[완료 조건]
+- {{TAB_2_DONE}}</pre>
+      </div>
+      <p class="caution">{{TAB_2_CAUTION}}</p>
+    </div>
+    <p class="src">출처: {{S06_SOURCES}} <span class="nw">({{BASE_DATE}} 확인)</span></p>
+  </section>
+
+  <!-- 07 -->
+  <section id="s07">
+    <h2 class="ch">{{S07_TITLE}}</h2><!--NOTE:07-->
+    <p class="lead"><span class="lab">이 장의 목표</span>{{S07_GOAL}}</p>
+    <!-- 부품: 방식 카드(.mx). 방식 하나를 만들고 묻는 실습. 머리(큰 번호·이름·한 줄 설명) + 메타 알약 + 「만드는 프롬프트」「질문 스크립트」 쌍(.mx-pair, 1024px 이상 두 열).
+         프롬프트가 하나뿐이면 .mx-one, 방식 색은 mx-c1~mx-c3, 마지막 정리 카드는 mx-final. 다른 장에서 링크하려면 id를 붙입니다. -->
+    <div class="mxs">
+    <article class="mx mx-c1" id="x07-1">
+      <header class="mx-head">
+        <b class="mx-num">1</b>
+        <div>
+          <h3>{{METHOD_NAME}}</h3>
+          <p class="mx-desc">{{METHOD_DESC}}</p>
         </div>
-<pre id="p-01-1" class="prompt">{{PROMPT_TEXT}}
-
-완료 조건
-1. {{DONE_1}}</pre>
-      </div>
-
-      <!-- COMPONENT: code -->
-      <div class="mb-6">
-        <div class="flex items-center justify-between mb-2">
-          <span class="text-sm font-bold c-navy">{{CODE_LABEL}}</span>
-          <button onclick="copyPrompt('c-01-1')" class="btn no-print">명령 복사</button>
-        </div>
-<pre id="c-01-1" class="code"># 설명 줄은 주석으로
-{{COMMAND}}</pre>
-      </div>
-
-      <!-- COMPONENT: diagram (인라인 SVG: 직각 노드, 화살표에 의미 라벨, 색은 팔레트만) -->
-      <div class="box p-4 mb-6 overflow-x-auto">
-        <svg viewBox="0 0 760 180" class="w-full min-w-[640px]" font-family="Pretendard, sans-serif">
-          <defs><marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#7F8FA9"/></marker></defs>
-          <rect x="20" y="50" width="200" height="80" fill="#EDF3FF" stroke="#2563EB" stroke-width="1.5"/>
-          <text x="120" y="88" text-anchor="middle" font-size="16" font-weight="700" fill="#1B2A4A">{{NODE_A}}</text>
-          <text x="120" y="110" text-anchor="middle" font-size="13" fill="#2C3E5A">{{NODE_A_DESC}}</text>
-          <line x1="222" y1="90" x2="536" y2="90" stroke="#7F8FA9" stroke-width="2" marker-end="url(#arr)"/>
-          <text x="380" y="80" text-anchor="middle" font-size="12" fill="#7F8FA9">{{EDGE_LABEL}}</text>
-          <rect x="540" y="50" width="200" height="80" fill="#EAF6F3" stroke="#0F766E" stroke-width="1.5"/>
-          <text x="640" y="88" text-anchor="middle" font-size="16" font-weight="700" fill="#1B2A4A">{{NODE_B}}</text>
-          <text x="640" y="110" text-anchor="middle" font-size="13" fill="#2C3E5A">{{NODE_B_DESC}}</text>
-        </svg>
-      </div>
-
-      <!-- COMPONENT: tabs (실습 Lab 묶음) -->
-      <div class="mb-6">
-        <div class="flex flex-wrap border-b no-print" style="border-color:var(--sub)">
-          <button onclick="switchTab('tab1')" id="btn-tab1" class="tab-btn on">Lab 1</button>
-          <button onclick="switchTab('tab2')" id="btn-tab2" class="tab-btn">Lab 2</button>
-        </div>
-        <div id="tab1" class="tab-content p-5 box border-t-0">{{LAB1}}</div>
-        <div id="tab2" class="tab-content p-5 box border-t-0 hidden">{{LAB2}}</div>
-      </div>
-
-      <!-- COMPONENT: screenshot (실제 화면은 base64로 내장, 캡션과 함께) -->
-      <figure class="mb-6">
-        <img src="{{DATA_URI}}" alt="{{ALT}}" class="box w-full max-w-3xl mx-auto">
-        <figcaption class="text-sm c-sub text-center mt-2">{{CAPTION}}</figcaption>
-      </figure>
-
-      <!-- COMPONENT: narrative + source (장마다 끝에) -->
-      <div class="narrative">
-        <div class="head">{{HEADLINE}}</div>
-        <div class="detail">{{DETAIL}}</div>
-      </div>
-      <div class="source">출처: {{SOURCE_SHORT}} ({{AS_OF}} 확인)</div>
-    </section>
-
-    <!-- COMPONENT: troubleshooting -->
-    <section class="box p-8">
-      <div class="sec-head"><span class="sec-badge">02</span><div class="sec-title">현장 문제 해결표</div></div>
-      <table class="brand">
-        <thead><tr><th>증상</th><th>원인</th><th>조치</th></tr></thead>
-        <tbody><tr><td>{{SYMPTOM}}</td><td>{{CAUSE}}</td><td>{{FIX}}</td></tr></tbody>
-      </table>
-    </section>
-
-    <!-- COMPONENT: checklist -->
-    <section id="wrap-up" class="box p-8">
-      <div class="sec-head"><span class="sec-badge">03</span><div class="sec-title">핵심 체크리스트</div></div>
-      <div class="grid md:grid-cols-3 gap-4">
-        <div class="box p-5"><div class="font-bold c-brand">①</div><div class="font-bold c-navy">{{CHECK1}}</div><div class="text-sm mt-1">{{CHECK1_DESC}}</div></div>
-      </div>
-      <div class="narrative">
-        <div class="head">{{CLOSING_HEAD}}</div>
-        <div class="detail">{{CLOSING_DETAIL}}</div>
-      </div>
-    </section>
-
-    <!-- COMPONENT: sources -->
-    <section class="box p-8">
-      <div class="sec-head"><span class="sec-badge">04</span><div class="sec-title">출처와 기준일 ({{AS_OF}} 확인)</div></div>
-      <ul class="text-sm space-y-1 list-disc pl-5">
-        <li><a class="c-brand underline" href="{{URL}}">{{SOURCE_NAME}}</a> · {{WHAT_IT_SUPPORTS}}</li>
+      </header>
+      <ul class="mx-meta">
+        <li><i class="dot d-c1"></i><span>필요한 것</span>{{METHOD_NEEDS}}</li>
+        <li><span>집중 질문</span>{{METHOD_FOCUS}}</li>
+        <li><span>결과 파일</span><code>{{METHOD_OUTPUT}}</code></li>
       </ul>
-    </section>
-  </main>
+      <div class="mx-pair">
+        <div class="code">
+          <div class="code-head"><h4><small>1-1</small>만드는 프롬프트</h4><button type="button" class="copy no-print" onclick="copyPrompt('tpl-5')" aria-label="{{METHOD_NAME}} 만드는 프롬프트 복사">복사</button></div>
+          <pre id="tpl-5">{{BUILD_PROMPT_BODY}}
 
-  <footer class="max-w-6xl mx-auto px-6 py-8 text-center text-xs c-sub" style="border-top:1px solid var(--neut)">
-    <p>{{FILE_NAME}} {{VERSION}} • Prof. Dong-In Chang (KAIST / AIBB LAB / ai4ceo.app)</p>
-  </footer>
+[완료 조건]
+- {{BUILD_DONE}}</pre>
+        </div>
+        <div class="code">
+          <div class="code-head"><h4><small>1-2</small>질문 스크립트</h4><button type="button" class="copy no-print" onclick="copyPrompt('tpl-6')" aria-label="{{METHOD_NAME}} 질문 스크립트 복사">복사</button></div>
+          <pre id="tpl-6">{{ASK_PROMPT_BODY}}
 
-  <div id="toast" class="fixed bottom-6 right-6 bg-navy text-white px-4 py-2 text-xs font-semibold opacity-0 pointer-events-none transition-opacity">복사되었습니다</div>
+[완료 조건]
+- {{ASK_DONE}}</pre>
+        </div>
+      </div>
+      <!-- 부품: 사람이 할 일(.mx-human). AI가 대신할 수 없는 단계를 프롬프트와 나눠 번호로 적습니다. -->
+      <div class="mx-human">
+        <h4>사람이 할 일</h4>
+        <ol class="hsteps"><li>{{HUMAN_STEP_1}}</li><li>{{HUMAN_STEP_2}}</li><li>{{HUMAN_STEP_3}}</li></ol>
+      </div>
+      <div class="caution"><strong>주의</strong><p>{{METHOD_CAUTION}}</p></div>
+    </article>
+    </div>
+  </section>
 
-  <script>
-    function switchTab(id){
-      const scope=document.getElementById(id).parentElement;
-      scope.querySelectorAll('.tab-content').forEach(e=>e.classList.add('hidden'));
-      scope.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('on'));
-      document.getElementById(id).classList.remove('hidden');
-      document.getElementById('btn-'+id).classList.add('on');
-    }
-    function showToast(m){const t=document.getElementById('toast');t.innerText=m;t.classList.remove('opacity-0');setTimeout(()=>t.classList.add('opacity-0'),2000);}
-    function copyPrompt(id){
-      const text=document.getElementById(id).innerText;
-      if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(text).then(()=>showToast('복사되었습니다')).catch(()=>fallbackCopy(text));}else{fallbackCopy(text);}
-    }
-    function fallbackCopy(text){
-      const ta=document.createElement('textarea');ta.value=text;ta.style.position='fixed';ta.style.opacity='0';
-      document.body.appendChild(ta);ta.select();
-      try{document.execCommand('copy');showToast('복사되었습니다');}catch(e){showToast('복사 실패: 직접 선택해 복사하십시오');}
-      document.body.removeChild(ta);
-    }
-    function downloadSelf(){
-      const blob=new Blob(['<!DOCTYPE html>\n'+document.documentElement.outerHTML],{type:'text/html;charset=utf-8'});
-      const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=document.body.dataset.file+'.html';
-      document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(a.href);
-    }
-    /* INSTRUCTOR-JS */
-  </script>
+  <!-- 08 -->
+  <!-- 부품: 핵심 체크리스트(section.dark). ink 바탕 장 하나, 두 열. -->
+  <section id="s08" class="dark">
+    <h2 class="ch">{{S08_TITLE}}</h2><!--NOTE:08-->
+    <p class="lead"><span class="lab">이 장의 목표</span>{{S08_GOAL}}</p>
+    <ol class="checks">
+      <li><b>①</b><div><strong>{{CHECK_1}}</strong><p>{{CHECK_1_DESC}}</p></div></li>
+      <li><b>②</b><div><strong>{{CHECK_2}}</strong><p>{{CHECK_2_DESC}}</p></div></li>
+      <li><b>③</b><div><strong>{{CHECK_3}}</strong><p>{{CHECK_3_DESC}}</p></div></li>
+      <li><b>④</b><div><strong>{{CHECK_4}}</strong><p>{{CHECK_4_DESC}}</p></div></li>
+    </ol>
+  </section>
+
+  <!-- 09 -->
+  <!-- 부품: 출처와 기준일(.refs). 마지막 장. 전체 URL 모음. -->
+  <section id="s09">
+    <h2 class="ch">출처와 기준일 ({{BASE_DATE}} 확인)</h2><!--NOTE:09-->
+    <p class="lead"><span class="lab">이 장의 목표</span>{{S09_GOAL}}</p>
+    <ul class="refs">
+      <li>{{REF_1_TOPIC}}: <a href="{{REF_1_URL}}" target="_blank" rel="noopener">{{REF_1_TITLE}}</a></li>
+      <li>{{REF_2_TOPIC}}: <a href="{{REF_2_URL}}" target="_blank" rel="noopener">{{REF_2_TITLE}}</a></li>
+    </ul>
+    <p class="src">AI 도구는 업데이트가 잦습니다. 실제 적용 전에 위 문서를 다시 확인하십시오.</p>
+  </section>
+</main>
+</div>
+<!-- 부품: footer. 파일 이름이 맨 앞에 와야 강사용 빌드가 「 강사용」을 붙일 수 있습니다. -->
+<footer><p>{{FILE_NAME}}, {{FOOTER_NOTE}}. 장동인 교수(KAIST CAIO, AiBB Lab, ai4ceo.app)</p></footer>
+<!-- 부품: 복사 알림(toast). -->
+<div id="toast" role="status" aria-live="polite">복사했습니다</div>
+<script>
+function switchTab(tabId) {
+  document.querySelectorAll('.tab-content').forEach(function (el) { el.classList.add('hidden'); });
+  document.querySelectorAll('.tab-btn').forEach(function (b) { b.classList.remove('is-active'); b.setAttribute('aria-selected', 'false'); });
+  document.getElementById(tabId).classList.remove('hidden');
+  var btn = document.getElementById('btn-' + tabId);
+  btn.classList.add('is-active'); btn.setAttribute('aria-selected', 'true');
+}
+function showToast(msg) {
+  var t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(showToast._t); showToast._t = setTimeout(function () { t.classList.remove('show'); }, 1800);
+}
+function markCopied(elementId) {
+  var b = document.querySelector('button[onclick="copyPrompt(\'' + elementId + '\')"]');
+  if (!b) return;
+  b.textContent = '복사했습니다'; b.classList.add('done');
+  clearTimeout(b._t); b._t = setTimeout(function () { b.textContent = '복사'; b.classList.remove('done'); }, 1800);
+}
+function copyPrompt(elementId) {
+  var text = document.getElementById(elementId).innerText;
+  var ok = function () { markCopied(elementId); showToast('복사했습니다'); };
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(text).then(ok).catch(function () { fallbackCopy(text, ok); });
+  } else { fallbackCopy(text, ok); }
+}
+function fallbackCopy(text, ok) {
+  var ta = document.createElement('textarea');
+  ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+  document.body.appendChild(ta); ta.select();
+  try { document.execCommand('copy'); ok(); } catch (e) { showToast('복사하지 못했습니다. 직접 선택해 복사하십시오'); }
+  document.body.removeChild(ta);
+}
+function downloadSelfAsHtml() {
+  var html = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+  var blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url; a.download = document.body.dataset.file + '.html';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+/* 첫 화면 데모(선택): 데모가 없으면 아무것도 하지 않는다 */
+(function () {
+  var sheet = document.getElementById('demo-sheet');
+  if (!sheet) return;
+  var ans = document.getElementById('demo-answer');
+  var btns = Array.prototype.slice.call(document.querySelectorAll('.seg button'));
+  function setMode(m) {
+    sheet.setAttribute('data-mode', m);
+    btns.forEach(function (b) {
+      var on = b.getAttribute('data-mode') === m;
+      b.setAttribute('aria-pressed', on ? 'true' : 'false');
+      if (on && ans && b.hasAttribute('data-answer')) ans.textContent = b.getAttribute('data-answer');
+    });
+  }
+  btns.forEach(function (b, i) {
+    b.addEventListener('click', function () { setMode(b.getAttribute('data-mode')); });
+    b.addEventListener('keydown', function (e) {
+      var d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+      if (!d) return;
+      e.preventDefault();
+      var n = btns[(i + d + btns.length) % btns.length];
+      n.focus(); setMode(n.getAttribute('data-mode'));
+    });
+  });
+  window.setDemoMode = setMode;
+})();
+/* 레일: 지금 읽는 장 표시 */
+(function () {
+  var links = {};
+  document.querySelectorAll('.rail a').forEach(function (a) { links[a.getAttribute('href').slice(1)] = a; });
+  if (!('IntersectionObserver' in window)) return;
+  var io = new IntersectionObserver(function (es) {
+    es.forEach(function (e) {
+      if (!e.isIntersecting || !links[e.target.id]) return;
+      Object.keys(links).forEach(function (k) { links[k].removeAttribute('aria-current'); });
+      links[e.target.id].setAttribute('aria-current', 'true');
+    });
+  }, { rootMargin: '-30% 0px -60% 0px' });
+  document.querySelectorAll('main > section[id]').forEach(function (s) { io.observe(s); });
+})();
+/* 옆으로 밀리는 그림·표·폴더: 넘치지 않으면 흐림·안내를 감추고, 끝까지 밀면 흐림을 없앤다 */
+(function () {
+  var pairs = [];
+  document.querySelectorAll('.fig-wrap > .fig, .tbl-wrap > .tbl, .folder-wrap pre').forEach(function (el) {
+    var wrap = el.closest('.fig-wrap, .tbl-wrap, .folder-wrap');
+    var check = function () {
+      wrap.classList.toggle('fits', el.scrollWidth <= el.clientWidth + 1);
+      wrap.classList.toggle('scrolled-end', el.scrollLeft + el.clientWidth >= el.scrollWidth - 4);
+    };
+    el.addEventListener('scroll', check, { passive: true });
+    pairs.push(check); check();
+  });
+  window.addEventListener('resize', function () { pairs.forEach(function (f) { f(); }); });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { pairs.forEach(function (f) { f(); }); });
+})();
+/*INSTRUCTOR-JS*/
+</script>
 </body>
 </html>

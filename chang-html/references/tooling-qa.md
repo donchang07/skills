@@ -20,7 +20,7 @@
 
 **B. 내용 보존** — `compare_prompts.py`로 새 프롬프트는 원고와, 기존 프롬프트는 이전 버전과 글자 단위 일치. 이전 버전 대비 화면 텍스트 차이가 패킷에 적힌 변경뿐인지 Python으로 확인. 표 값·문항·출처 개수 누락 여부. 참가자용에 정답이 없고, 강사용에 노트 수(장 수와 같음)와 정답이 있는지. API 키 문자열(`sk-ant`, `sk-`) 0건.
 
-**C. 렌더링** — `render.mjs` 두 파일: 콘솔 오류 0, `fonts_loaded`, `print_readable`, `anchors_clear`, `tab_switch`, `notes_collapse`(강사용), `mobile_no_hscroll` 모두 true.
+**C. 렌더링** — `render.mjs` 두 파일: 콘솔 오류 0, `fonts`(인터넷이 막혀 글꼴 CDN에 닿지 못하면 not_run), `print_readable`, `anchors_clear`, `tab_switch`, `notes_collapse`(강사용), `mobile_no_hscroll` 모두 true.
 
 **D. 화면 판정** — 캡처를 직접 연다(최소: 첫 화면 1280·390, 바뀐 장 1280·390, 실습 장, 체크리스트, 강사 노트 하나). 확인할 것:
 - 한국어 단어 중간 줄바꿈, 글자 겹침·잘림, 줄 끝에 홀로 남은 괄호
