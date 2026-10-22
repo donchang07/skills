@@ -1,27 +1,38 @@
-# 도구와 QA 절차
+# 도구와 검수 절차
 
-## 도구
+## 도구 (모두 `scripts/`)
 
 | 도구 | 하는 일 | 실행 |
 |---|---|---|
-| `scripts/validate.py` | 태그 짝, 복사 버튼 id, 탭, 금지어, 섹션 번호, 남은 자리표시, 팔레트 밖 색 | `python scripts/validate.py <교안.html> [--baseline <이전 버전>] [--json <보고서>]` |
-| `scripts/renumber.py` | 섹션 배지 번호 재정렬, 상호 참조 후보 출력 | `python scripts/renumber.py <입력> <새 버전 출력>` |
-| `scripts/make_instructor.py` | 강사용 파일 생성 | `python scripts/make_instructor.py <참가자용> <notes.json>` |
-| `scripts/render.mjs` | 브라우저 렌더링, 섹션별 PNG, 콘솔 오류, 탭·노트 버튼, 모바일 가로 넘침 | `node scripts/render.mjs <교안.html> <폴더>` (Playwright 필요, 경로가 다르면 `CHROMIUM_PATH`) |
+| `build.py` | 원본(표식 포함) + 노트 JSON → 참가자용·강사용 | `python build.py "<src_v{N}.html>" "<notes.json>"` |
+| `validate.py` | 태그 짝, 복사 버튼 id, 탭, 금지어, 시간 표기, 장 id·레일 링크, 남은 표식·자리표시, 팔레트 밖 색(경고) | `python validate.py "<결과.html>" [--baseline "<이전 버전>"] [--json <보고서>]` |
+| `compare_prompts.py` | 프롬프트 `<pre id>`를 원고나 이전 버전과 글자 단위로 대조 | `python compare_prompts.py "<결과.html>" --canon <05_content.md>` 또는 `--baseline "<이전 버전>"` |
+| `render.mjs` | 첫 화면·장별·휴대폰 캡처, 콘솔 오류, 글꼴 로드, 인쇄 가독성, 링크 이동 가림, 탭·노트 버튼, 휴대폰 가로 넘침 | `node render.mjs "<결과.html>" <폴더>` |
+| `renumber.py` | 장 id·레일 번호·노트 표식 재정렬, 상호 참조 후보 출력 | `python renumber.py "<입력>" "<새 버전 출력>"` |
 
-- 이전 형식 교안은 원래부터 태그 불일치가 있을 수 있다. `--baseline`으로 이전 버전보다 늘지 않았는지만 본다.
+- Playwright가 필요하다. 전역 설치(`npm root -g`)도 찾는다. 브라우저 경로가 다르면 `CHROMIUM_PATH`.
 - 파일 이름에 공백이 있으므로 경로를 따옴표로 감싼다.
+- 이전 형식 교안은 원래 태그 불일치가 있을 수 있어 `--baseline`으로 늘지 않았는지만 본다.
 
-## 결과 QA 점검표
+## 검수 점검표 (chang-html-reviewer)
 
-1. `validate.py` 전 항목 PASS(colors는 경고만). 실패는 그대로 보고한다.
-2. `render.mjs` 콘솔 오류 0건, 탭 전환·강사 노트 접기 true, 모바일 가로 넘침 없음.
-3. 섹션 PNG를 한 장씩 열어 확인: 제목 가운데·네이비, 직각 상자, 표 머리 네이비, narrative 두 줄 가운데, 출처 줄 위치, 그림 화살표 방향과 라벨, 글자 겹침·잘림, 코드 줄바꿈.
-4. 명세 대조: `02_design.md`의 섹션별 제목·목표·narrative·출처가 화면과 같은지, 명세에 없는 수치·출처가 들어갔는지.
-5. 사실 대조: 본문의 제품 이름·명령·요금제·버전이 `01_research.md`에서 「확인」 상태인지. 「추정」은 본문에 추정이라고 적혔는지.
-6. 문체: style-guide.md 금지어·호칭·과제 이름 통일·강사 3인칭 여부.
-7. 버전: 툴바·제목·footer·data-file이 모두 같은 버전인지, 이전 버전 파일이 남아 있는지.
+**A. 정적 검사** — 두 파일 모두 `validate.py` 전 항목 PASS(colors는 경고). 실패는 🔴.
 
-## 보고서
+**B. 내용 보존** — `compare_prompts.py`로 새 프롬프트는 원고와, 기존 프롬프트는 이전 버전과 글자 단위 일치. 이전 버전 대비 화면 텍스트 차이가 패킷에 적힌 변경뿐인지 Python으로 확인. 표 값·문항·출처 개수 누락 여부. 참가자용에 정답이 없고, 강사용에 노트 수(장 수와 같음)와 정답이 있는지. API 키 문자열(`sk-ant`, `sk-`) 0건.
 
-`{RUN}/04_qa_report_v{N}.md`: 렌더 환경(브라우저·글꼴), 실제로 연 섹션 목록, 표(섹션 | 판정 통과/실패/not_run | 문제 | 근거 | 수정 대상 builder/designer), 🔴 필수 / 🟡 권장 / 🟢 문제없음 요약. 열어 보지 않은 섹션은 not_run이다.
+**C. 렌더링** — `render.mjs` 두 파일: 콘솔 오류 0, `fonts`(인터넷이 막혀 글꼴 CDN에 닿지 못하면 not_run), `print_readable`, `anchors_clear`, `tab_switch`, `notes_collapse`(강사용), `mobile_no_hscroll` 모두 true.
+
+**D. 화면 판정** — 캡처를 직접 연다(최소: 첫 화면 1280·390, 바뀐 장 1280·390, 실습 장, 체크리스트, 강사 노트 하나). 확인할 것:
+- 한국어 단어 중간 줄바꿈, 글자 겹침·잘림, 줄 끝에 홀로 남은 괄호
+- 디자인 브리프 준수: 의미색이 정한 뜻으로만 쓰였는지, 금지 패턴, 위계, 둥글기
+- 표·그림·폴더 구조가 상자 안에서 밀릴 때 안내가 있는지, 폴더 구조 열 정렬
+- 카드·단계 번호가 순서대로 읽히는지, 막대·색에 범례가 있는지
+- 인쇄 화면에서 어두운 상자가 밝게 바뀌는지
+
+**E. 문체** — 금지어·시간 표기·호칭·과제 이름 통일·강사 3인칭. 제작 담당이 쓴 문장(로그 표시)이 사실과 맞는지(예: 「결과 파일 여덟 개」가 실제 개수와 다른 경우).
+
+**F. 판정** — 🔴가 하나라도 있으면 FAIL. 🟡만 있으면 PASS. 열어 보지 않은 항목은 not_run이며 통과가 아니다. 제작 담당의 로그 주장은 검증 대상이지 근거가 아니다.
+
+## 보고서 형식
+
+판정 / r{k-1} 지적 반영 확인 / 🔴 필수 수정(위치·문제·근거·고칠 방향) / 🟡 권장(원고 문제면 「정본 문제」로 표시) / 🟢 문제없음 / 실행한 명령과 결과 / 열어 본 캡처 목록. 캡처와 임시 파일은 `{RUN}/_workspace/review_r{k}/` 아래에만 만든다.

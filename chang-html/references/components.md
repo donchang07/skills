@@ -1,33 +1,34 @@
 # 부품 목록
 
-모든 부품의 정본 코드는 `assets/template.html` 안의 `<!-- COMPONENT: 이름 -->` 주석 아래에 있다. 새 교안은 템플릿을 복사해 `{{자리표시}}`를 채우고, 필요한 부품만 복제해 쓴다. 쓰지 않는 예시 부품은 지운다. 검사기는 남은 `{{...}}`를 실패로 본다.
+`assets/template.html`에서 복제해 쓴다. 템플릿의 각 부품 앞 주석에 쓰임이 적혀 있다. 자리표시 `{{…}}`는 모두 바꾼다(남으면 `validate.py`가 실패).
 
 | 부품 | 쓰는 곳 | 규칙 |
 |---|---|---|
-| toolbar | 맨 위 고정 | `id="file-label"`과 `body data-file`에 `{파일 이름} {버전}`. 다운로드 이름은 data-file에서 만든다 |
-| cover | 표지 | 과정 이름·제목·부제·강사 표기. 날짜는 툴바에만 |
-| toc | 오늘의 순서 | Part 카드는 `href="#part-N"`으로 연결 |
-| part-divider | Part 시작 | `id="part-N"`. 설명 한 줄 |
-| section | 내용 단위 | `.sec-head > .sec-badge + .sec-title (+ .sec-sub)`. 배지 번호는 `scripts/renumber.py`로 관리 |
-| goal | 섹션 첫 상자 | `sem-warn` + 「이 장의 목표」 |
-| table | 비교·설정·요금 | `table.brand`. 강조 셀만 `td.hl` |
-| semantic-boxes | 결론·권고·확인·중단 | `sem-key / sem-good / sem-warn / sem-risk` + 라벨 |
-| flow | 순서가 있는 절차 | 번호 + 직각 상자 + 화살표. 4단계 이하 권장 |
-| copy-prompt | 참가자가 붙여 넣을 지시문 | `<pre id="p-{섹션}-{n}" class="prompt">` + `copyPrompt('같은 id')`. 끝에 「완료 조건」 번호 목록 |
-| code | 명령·설정 파일 | `<pre id="c-{섹션}-{n}" class="code">`. 주석으로 설명, 비밀값 금지 |
-| diagram | 아키텍처·위치 관계 | 인라인 SVG. marker id는 섹션마다 다르게(`arr-01`) |
-| tabs | 실습 Lab 묶음 | `switchTab('tabN')` + `id="btn-tabN"`. 한 문서에 탭 묶음이 둘이면 id 접두어를 달리 |
-| screenshot | 실제 화면 | base64 `data:` URI, `figcaption` 필수 |
-| narrative + source | 섹션 끝 | brand-structure.md 규칙 |
-| troubleshooting | 현장 대응 | 증상·원인·조치 3열 |
-| checklist | 마무리 | 번호 카드 + 마무리 narrative |
-| sources | 마지막 | 실제로 연 페이지만. 「무엇을 뒷받침하는지」 함께 |
+| toolbar | 맨 위 고정 | 파일 이름·버전·기준일, 「교안 다운로드」「PDF로 인쇄」 |
+| hero | 첫 화면 | 큰 제목·리드·의미색 범례. 핵심 장면 데모는 선택(버튼 `aria-pressed`, 키보드 조작, 첫 로딩 때 한 번만 움직임) |
+| rail | 1280px 이상 왼쪽 고정 목차 | `main` 밖. 링크 `href="#sNN"`, 번호 `<span>NN</span>` |
+| section | 장 | `main > section id="sNN"`, `h2.ch` 바로 뒤 `<!--NOTE:NN-->`, 첫 문단 `.lead`(「이 장의 목표」) |
+| map | 여러 방식을 두 축으로 정리 | 가로축 칸 + 칩. 의미색 칩은 해당 방식에만 |
+| tbl | 비교표 | 표 머리 ink. 핵심 행은 `key`로 굵게·왼쪽 막대. 막대·색에는 범례 한 줄 |
+| fig-wrap | SVG 흐름도 | 화살표에 의미 라벨. 휴대폰에서 옆으로 밀림 → 흐림과 안내 문구 |
+| criteria + pair | 판단 기준, 권고/중단 조건 | 중단 조건은 어두운 상자 |
+| prep | 실습 전 준비 | 번호 목록 |
+| folder | 결과 폴더 구조 | D2Coding, 한글 2칸 기준 열 맞춤 |
+| code | 복사 프롬프트 한 개 | `<pre id>` + `copyPrompt('id')` 버튼 + [완료 조건] |
+| steps tabs | 순서 있는 실습 Lab | `switchTab('tabN')`, 버튼 `btn-tabN`, 인쇄 시 모두 펼침 |
+| method card (mx) | 방식 하나를 만들고 묻는 실습 | 머리(큰 번호·이름·한 줄 설명) + 메타 알약(필요한 것·집중 질문·결과 파일) + 「만드는 프롬프트」「질문 스크립트」 쌍(1024px 이상 두 열). 정리 카드는 `mx-final` |
+| human steps | 사람이 직접 할 단계 | 번호 목록, 프롬프트와 분리 |
+| caution | 주의·보안·저작권 | 왼쪽 막대 상자 |
+| src | 장 끝 출처 줄 | 「출처: 짧은 이름 (YYYY-MM-DD 확인)」, 날짜 nowrap |
+| checks (dark) | 핵심 체크리스트 | ink 바탕 장 하나, 두 열 |
+| refs | 출처와 기준일 장 | 전체 URL 모음 |
 
 ## id 규칙
 
-- 프롬프트 `p-{섹션번호}-{순번}`, 코드 `c-{섹션번호}-{순번}`, 탭 `tab{n}`·`btn-tab{n}`, SVG marker `arr-{섹션번호}-{색}`.
-- 섹션 번호가 바뀌어도 id는 바꾸지 않아도 된다. 중복만 없으면 된다(검사기가 확인).
+- 장: `s01`부터 빈칸 없이. 강사 가이드는 `instructor-guide`(빌드가 넣는다).
+- 프롬프트: 짧고 뜻 있는 이름(`p1-1`, `m4-build`, `k0-env`). 원고의 `(id: …)`와 같아야 한다. 한 번 배포한 id는 바꾸지 않는다.
+- 탭: `tab0`~`tabN`, 버튼 `btn-tab0`~`btn-tabN`.
 
 ## 이전 형식 교안
 
-claude-remote-control v2.0 이하 교안은 Tailwind 색과 둥근 상자를 쓰는 이전 형식이다. 이전 형식 교안을 고칠 때는 사용자가 브랜드 전환을 요청하지 않는 한 그 형식을 유지한다. 새 교안은 이 템플릿으로 만든다.
+claude-remote-control v2.0 이하(Tailwind·둥근 상자)와 chang-ppt 템플릿으로 만든 교안은 이전 형식이다. 사용자가 디자인 전환을 요청하지 않으면 그 형식을 유지하고 검사 도구만 쓴다.
