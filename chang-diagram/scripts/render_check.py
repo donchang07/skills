@@ -1,7 +1,7 @@
 """Render a chang-diagram SVG to PNG and run geometric checks.
 
 Usage:
-    python render_check.py diagram.svg --png diagram.png --report check.json [--spec 01_spec.json]
+    python render_check.py diagram.svg --png diagram.png --report check.json [--spec 01_spec.json] [--density normal|dense]
 
 Exit code 0 when no errors, 1 when errors remain, 2 when rendering is unavailable.
 """
@@ -23,6 +23,9 @@ PALETTE = {
 }
 ENDPOINT_TOLERANCE = 12
 MIN_FONT_AT_1600 = 14
+MAX_LINES = {"normal": 4, "dense": 6}
+BREAK_END = re.compile(r"(→|←|↔|\(|약)$")
+BREAK_START = re.compile(r"^(%p?|\)|→|(배|건|명|개|억|만|조)(?![가-힣])|billion|million|trillion|GW|TB|미만|이상|이하|초과)")
 EMOJI = re.compile("[\U0001F000-\U0001FAFF☀-➿⭐⭕️]")
 
 COLLECT_JS = r"""
@@ -42,7 +45,8 @@ COLLECT_JS = r"""
     const cs = getComputedStyle(t);
     return { text: t.textContent.trim().slice(0, 40), rect: box(t), size: parseFloat(cs.fontSize),
       family: cs.fontFamily, fill: cs.fill, node: owner(t, 'data-node'), edge: owner(t, 'data-edge'),
-      lines: Math.max(1, t.querySelectorAll('tspan').length) };
+      segs: (() => { const leaves = [...t.querySelectorAll('tspan')].filter(s => !s.querySelector('tspan') && s.textContent.trim());
+        return (leaves.length ? leaves : [t]).map(s => { const r = box(s); return { left: r[0], top: r[1], bottom: r[3], text: s.textContent }; }); })() };
   });
   const nodes = [...svg.querySelectorAll('[data-node]')].map(g => {
     const b = g.querySelector('[data-box]');
@@ -65,6 +69,7 @@ COLLECT_JS = r"""
   const edges = [...svg.querySelectorAll('[data-edge]')].map(g => {
     const line = g.querySelector('path, line, polyline');
     return { id: g.getAttribute('data-edge'), points: line ? sample(line) : [],
+      undirected: g.getAttribute('data-undirected') === 'true',
       marker: line ? (line.getAttribute('marker-end') || line.getAttribute('marker-start') || '') : '' };
   });
   const colors = new Set();
@@ -120,7 +125,7 @@ def edge_gap(p: list[float], r: list[float]) -> float:
     return min(p[0] - r[0], r[2] - p[0], p[1] - r[1], r[3] - p[1])
 
 
-def check(data: dict, spec: dict | None) -> list[dict]:
+def check(data: dict, spec: dict | None, max_lines: int) -> list[dict]:
     issues: list[dict] = []
 
     def add(severity: str, check_name: str, ids: list[str], detail: str) -> None:
@@ -152,12 +157,31 @@ def check(data: dict, spec: dict | None) -> list[dict]:
             fg, bg = parse_rgb(t["fill"]), parse_rgb(n["fill"])
             if fg and bg and contrast(fg, bg) < 4.5:
                 add("error", "low_contrast", [t["node"]], f"'{t['text']}' contrast {contrast(fg, bg):.1f}:1")
-            if t["lines"] > 4:
-                add("warning", "too_many_lines", [t["node"]], f"{t['lines']} lines in one text")
         if EMOJI.search(t["text"]):
             add("warning", "emoji", [t["node"] or t["edge"] or ""], f"'{t['text']}' contains emoji; use words or a palette shape")
         if "pretendard" not in t["family"].lower() and not re.search(r"consolas|d2coding|mono", t["family"], re.I):
             add("warning", "font_family", [t["node"] or ""], f"'{t['text']}' uses {t['family']}")
+
+    for nid, n in nodes.items():
+        segs = sorted((s for t in data["texts"] if t["node"] == nid for s in t["segs"]), key=lambda s: s["top"])
+        if not segs:
+            continue
+        lines: list[list[dict]] = []
+        for s in segs:
+            if lines and abs(s["top"] - lines[-1][0]["top"]) < 4:
+                lines[-1].append(s)
+            else:
+                lines.append([s])
+        if len(lines) > max_lines:
+            add("warning", "too_many_lines", [nid], f"{len(lines)} rendered lines in node (max {max_lines})")
+        line_texts = ["".join(s["text"] for s in sorted(line, key=lambda s: s["left"])).strip() for line in lines]
+        for a, b in zip(line_texts, line_texts[1:]):
+            if BREAK_END.search(a) or BREAK_START.match(b):
+                add("warning", "number_break", [nid], f"line break splits a figure: '{a[-12:]}' / '{b[:12]}'")
+        box_h = n["rect"][3] - n["rect"][1]
+        text_h = max(s["bottom"] for s in segs) - min(s["top"] for s in segs)
+        if box_h > 0 and text_h / box_h < 0.5:
+            add("warning", "card_whitespace", [nid], f"text fills {text_h / box_h:.0%} of the box height")
 
     for a, b in itertools.combinations(data["texts"], 2):
         if overlap(a["rect"], b["rect"], pad=1) > 4:
@@ -173,8 +197,10 @@ def check(data: dict, spec: dict | None) -> list[dict]:
         if not e["points"]:
             add("error", "edge_no_line", [e["id"]], "edge group has no path/line/polyline")
             continue
-        if "url(" not in e["marker"]:
-            add("warning", "edge_no_arrow", [e["id"]], "edge line has no marker")
+        if e["undirected"] and "url(" in e["marker"]:
+            add("warning", "undirected_has_arrow", [e["id"]], "edge marked data-undirected has an arrowhead")
+        elif not e["undirected"] and "url(" not in e["marker"]:
+            add("warning", "edge_no_arrow", [e["id"]], "edge line has no marker; add data-undirected=\"true\" if intended")
         for end, nid, label in ((e["points"][0], src, "start"), (e["points"][-1], dst, "end")):
             if nid not in nodes:
                 add("error", "edge_unknown_node", [e["id"]], f"{label} node '{nid}' not found")
@@ -225,6 +251,8 @@ def main() -> int:
     parser.add_argument("--report", type=Path, required=True)
     parser.add_argument("--spec", type=Path)
     parser.add_argument("--scale", type=float, default=2)
+    parser.add_argument("--density", choices=MAX_LINES, default="normal",
+                        help="00_packet.md density: normal = label+3 body lines, dense = label+5 body lines")
     args = parser.parse_args()
 
     try:
@@ -248,12 +276,13 @@ def main() -> int:
         version = browser.version
         browser.close()
 
-    issues = check(data, spec)
+    issues = check(data, spec, MAX_LINES[args.density])
     errors = sum(i["severity"] == "error" for i in issues)
     report = {
         "renderer": f"playwright chromium {version}",
         "status": "run",
         "canvas": [data["W"], data["H"]],
+        "density": args.density,
         "pretendard_available": data["pretendard"],
         "counts": {"nodes": len(data["nodes"]), "edges": len(data["edges"]), "texts": len(data["texts"])},
         "summary": {"errors": errors, "warnings": len(issues) - errors},

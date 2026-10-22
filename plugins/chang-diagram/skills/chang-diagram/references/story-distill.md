@@ -57,7 +57,7 @@ distiller가 읽고, story-judge가 대조 기준으로 읽는다. 목표는 대
 
 1. 핵심 질문 / 결론 / 청중과 용도
 2. 원문 추출 표(1절)
-3. 아크와 유형, 고른 이유, 탈락시킨 후보 유형과 이유
+3. 아크와 유형, 고른 이유, 탈락시킨 후보 유형과 이유. comparison을 골랐으면 [diagram-types.md](diagram-types.md)「대비형 쏠림 막기」 세 질문의 답
 4. headline, subtitle, focal point, reading path, takeaway
 5. 포함 목록(요소 id ↔ 발화 번호), 제외 목록(내용 ↔ 이유), 가정 목록
 6. 5초 테스트 문장: 처음 보는 사람이 5초 뒤 말해야 할 한 문장
@@ -87,8 +87,37 @@ distiller가 읽고, story-judge가 대조 기준으로 읽는다. 목표는 대
 }
 ```
 
-- `label`은 12자 안팎, `sub`는 20자 안팎. 길면 줄이는 쪽을 택하고 원문 표현은 `sub`나 주석으로 옮긴다.
+- `label`은 12자 안팎, `sub`는 20자 안팎. 길면 줄이는 쪽을 택하고 원문 표현은 `sub`나 주석으로 옮긴다. `sub`의 `\n`은 줄바꿈 지시다. 수치와 단위, 화살표 앞뒤는 한 줄에 둔다.
+- 줄 수 상한은 `00_packet.md`의 `density`를 따른다: `normal`은 본문 3줄, `dense`는 본문 5줄. 상한을 넘기면 문구를 줄이거나 그림을 나눈다.
 - `role`: `focal`(1개), `normal`, `muted`(맥락용 흐린 요소).
 - `shape`: `box`, `pill`, `decision`, `doc`, `db`, `actor`, `card`, `layer`, `milestone`.
 - `style`: `solid`(주 흐름), `dashed`(되돌림·피드백·선택), `dotted`(참조·영향).
-- 유형별 필수 필드는 [diagram-types.md](diagram-types.md)를 따른다.
+- 방향이 없는 연결(대비·짝)은 `"undirected": true`를 단다. builder는 화살촉 없이 그린다.
+- 유형별 필수 필드는 [diagram-types.md](diagram-types.md)를 따른다. 필드 이름을 새로 만들지 않는다. 그룹은 `groups[].kind`(`lane`, `layer`, `zone`, `column`, `row`), 노드의 소속은 `group` 또는 comparison의 `column`·`row`, 카드 꼬리표는 `tag`, 주석 위치는 `near` 또는 `placement`(`bottom-band`, `top-band`)만 쓴다. 꼭 필요한 새 필드는 `01_story.md`에 뜻을 적는다.
+
+### comparison 예시 (same_time)
+
+```json
+{
+  "type": "comparison", "contrast_mode": "same_time",
+  "canvas": {"width": 1600, "height": 900, "theme": "light"},
+  "groups": [
+    {"id": "bench", "label": "벤치마크", "kind": "column"},
+    {"id": "top", "label": "최고 성과", "kind": "row"},
+    {"id": "low", "label": "아직 약한 곳", "kind": "row"}
+  ],
+  "nodes": [
+    {"id": "bench_top", "column": "bench", "row": "top", "label": "HLE +30%p", "sub": "1년 만에", "source": ["T1"]},
+    {"id": "bench_low", "column": "bench", "row": "low", "label": "점수 자체도 불안", "sub": "문항 오류 최대 42%", "tag": "측정 한계", "source": ["T5"]}
+  ],
+  "edges": [{"from": "bench_top", "to": "bench_low", "label": "하지만", "style": "dotted", "undirected": true, "source": ["T1", "T5"]}]
+}
+```
+
+## 6. 수치와 표기
+
+- 수치는 원문 값 그대로 쓴다. 반올림·추정·기간 환산(예: "12년 누적")은 하지 않는다.
+- 단위만 바꾸는 정확한 환산은 허용한다: "1.2 million people" → "120만 명", "$3.7 billion" → "$3.7B". 값이 바뀌지 않아야 한다. 한국어 문장 안에서는 한국어 수 단위를 우선하고, 통화·모델 규모처럼 원문 표기가 관용인 경우("200 million+ 파라미터", "$285.9 billion")는 원문을 둔다. 한 그림 안에서는 같은 종류의 수치를 한 방식으로 통일한다.
+- 원문의 한정어(several, nearly, as little as, more than)를 빼거나 반대로 옮기지 않는다: "as little as 3%p" → "3%p에 불과"(○), "최소 3%p"(×).
+- 주체(미국, 민간, 25개국 중앙값 등)와 기준 시점을 수치 옆에 붙인다. 빠지면 전체 수치로 읽힌다.
+- 그림에 보이는 문구에 "원문", "명세" 같은 제작 용어를 쓰지 않는다. "보고서", "조사" 등 청중의 말로 쓴다.

@@ -18,10 +18,11 @@ model: opus
 ## 절차
 1. `~/.claude/skills/chang-diagram/references/story-distill.md`와 `diagram-types.md`를 읽는다.
 2. 원문을 끝까지 읽고 추출 표를 만든다. 사용자가 거절·수정한 AI 제안은 결론에서 뺀다.
-3. 아크와 유형을 고른다. 사용자가 유형을 지정했으면 따르되, 결론과 맞지 않으면 그 사실과 대안을 `01_story.md`에 적는다. 후보 두 유형의 근거가 비슷하면 `candidates`에 둘 다 적어 시안 경합을 요청한다.
-4. headline·focal·reading path·5초 테스트 문장을 쓴다.
-5. `01_spec.json`을 쓴다. 모든 노드·연결·주석에 `source` 발화 번호를 단다. 근거 없이 넣은 요소는 `assumed`에 올린다.
-6. 수정 회차에는 지적된 요소만 바꾸고, 바꾼 id와 이유를 `01_story.md` 끝 「변경 기록 v{N}」에 적는다.
+3. 아크와 유형을 고른다. 사용자가 유형을 지정했으면 따르되, 결론과 맞지 않으면 그 사실과 대안을 `01_story.md`에 적는다. 후보 두 유형의 근거가 비슷하면 `candidates`에 둘 다 적어 시안 경합을 요청한다. comparison을 고르면 diagram-types.md 「대비형 쏠림 막기」 세 질문에 답하고 `contrast_mode`를 정한다. 같은 시점의 두 면이면 `same_time`이고 연결은 `undirected`다.
+4. 캔버스를 정한다. `00_packet.md`의 density와 visual-system.md 「열 수별 카드 안쪽 폭」으로 본문 한 줄 길이를 가늠하고, 넘칠 것 같으면 열을 줄이거나 세로 캔버스를 여기서 고른다. builder가 나중에 캔버스를 바꾸지 않게 하기 위해서다.
+5. headline·focal·reading path·5초 테스트 문장을 쓴다. reading path 끝에는 takeaway를 넣는다.
+6. `01_spec.json`을 쓴다. 모든 노드·연결·주석에 `source` 발화 번호를 단다. 근거 없이 넣은 요소와 원문이 직접 짝짓지 않은 대비 쌍은 `assumed`에 올린다. 필드 이름은 story-distill.md 5절에 있는 것만 쓴다. 수치·주체·한정어는 story-distill.md 6절을 지키고, 줄 수가 density 상한을 넘지 않게 `\n`으로 미리 나눈다.
+7. 수정 회차에는 지적된 요소만 바꾸고, 바꾼 id와 이유를 `01_story.md` 끝 「변경 기록 v{N}」에 적는다. headline·유형·캔버스가 바뀌면 `01_story.md`의 3·4절과 5초 테스트 문장도 함께 고친다.
 
 ## 출력
 - `{RUN}/01_story.md`, `{RUN}/01_spec.json` (형식은 story-distill.md 5절)

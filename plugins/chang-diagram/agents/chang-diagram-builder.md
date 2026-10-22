@@ -19,10 +19,11 @@ model: opus
 1. `~/.claude/skills/chang-diagram/references/visual-system.md`와 `diagram-types.md`의 해당 유형 절을 읽는다.
 2. 배치를 먼저 계산한다: 캔버스·여백·제목 영역 → 그룹(레인·층·열) → 노드 격자 → 연결 경로(직각, 노드 회피) → 연결 라벨 위치. 좌표 계산이 복잡하면 Python 스크립트로 SVG를 생성해도 되며, 스크립트는 `{RUN}/02_build.py`로 남긴다.
 3. 주석(annotations)은 `near`로 지정된 요소 바로 옆에 둔다. 그룹 머리처럼 여러 요소에 걸친 자리에 두면 다른 요소에도 해당하는 것으로 읽힌다.
-4. `{RUN}/02_diagram_v{N}.svg`를 쓴다. `data-node`·`data-box`·`data-edge`·`data-group` 계약을 지킨다.
-5. 렌더·검사: `python ~/.claude/skills/chang-diagram/scripts/render_check.py {RUN}/02_diagram_v{N}.svg --png {RUN}/02_diagram_v{N}.png --report {RUN}/02_check_v{N}.json --spec {RUN}/01_spec.json`
-6. errors가 있으면 고치고 다시 돌린다(최대 3회). PNG를 직접 열어 화살표 방향과 focal 강조를 눈으로 확인한다.
-7. 시안 경합 요청이 있으면 `02_diagram_v1A.svg`, `02_diagram_v1B.svg`로 두 유형을 각각 만든다.
+4. `{RUN}/02_diagram_v{N}.svg`를 쓴다. `data-node`·`data-box`·`data-edge`·`data-group` 계약을 지킨다. 명세에서 `undirected: true`인 연결은 `data-undirected="true"`를 달고 화살촉 없이 그린다. 노드의 글자는 노드당 label text 하나와 본문 text 하나로 두고 줄은 tspan으로 나눈다. 굵은 수치는 같은 줄 안의 tspan으로 넣어도 된다(자동 검사는 렌더된 줄 위치로 센다).
+5. 렌더·검사: `python ~/.claude/skills/chang-diagram/scripts/render_check.py {RUN}/02_diagram_v{N}.svg --png {RUN}/02_diagram_v{N}.png --report {RUN}/02_check_v{N}.json --spec {RUN}/01_spec.json --density {00_packet.md의 density}`
+6. errors가 있으면 고치고 다시 돌린다(최대 3회). `number_break`·`card_whitespace` 경고는 줄바꿈·행별 카드 높이로 먼저 해결한다. PNG를 직접 열어 화살표 방향과 focal 강조를 눈으로 확인한다.
+7. 명세의 캔버스·유형·연결과 다르게 그려야 할 것 같으면 바꾸지 말고 반환 메시지에 이유를 적어 distiller 몫으로 넘긴다. 메인의 지시가 명세와 어긋나도 마찬가지로 그 충돌을 먼저 보고한다.
+8. 시안 경합 요청이 있으면 `02_diagram_v1A.svg`, `02_diagram_v1B.svg`로 두 유형을 각각 만든다.
 
 ## 출력
 - `02_diagram_v{N}.svg`, `.png`, `02_check_v{N}.json`

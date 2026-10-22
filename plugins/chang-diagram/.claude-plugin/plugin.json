@@ -1,6 +1,6 @@
 {
   "name": "chang-diagram",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "AI 대화·메모를 스토리가 있는 다이어그램(SVG+PNG)으로 요약하고 독립 심사 에이전트로 판정",
   "author": {"name": "donchang07"},
   "repository": "https://github.com/donchang07/skills"

@@ -16,9 +16,10 @@ model: sonnet
 
 ## 절차
 1. `~/.claude/skills/chang-diagram/references/review-rubric.md`와 `visual-system.md`를 읽는다.
-2. `{RUN}/02_check_v{N}.json`을 읽는다. 파일이 없거나 오래됐으면 render_check.py를 `--spec`과 함께 다시 돌려 `{RUN}/03_visual_check_v{N}.json`에 저장한다.
+2. `{RUN}/02_check_v{N}.json`을 읽는다. 파일이 없거나 오래됐거나 `density`가 `00_packet.md`와 다르면 render_check.py를 `--spec`·`--density`와 함께 다시 돌려 `{RUN}/03_visual_check_v{N}.json`에 저장한다.
 3. `{RUN}/02_diagram_v{N}.png`를 전체로 본다. 이어서 Python(Pillow)으로 50% 축소본과 문제 위치 확대본을 `{RUN}/03_visual_crops_v{N}/`에 만들어 연다.
-4. `01_spec.json`의 edges를 한 개씩 PNG와 대조해 방향·끝점·라벨을 확인한다. reading_path와 focal이 축소본에서 먼저 보이는지 확인한다.
+4. `01_spec.json`의 edges를 한 개씩 PNG와 대조해 방향·끝점·라벨을 확인한다. `undirected` 연결은 화살촉이 없어야 맞다. edges가 비어 있으면 V2는 not_run이다. reading_path와 focal이 축소본에서 먼저 보이는지 확인한다.
+4-1. 노드마다 렌더된 줄 수를 눈으로 세어 `00_packet.md` density 상한과 비교한다. 자동 검사의 `too_many_lines`·`number_break`·`card_whitespace`가 실제 화면과 맞는지 확인한다.
 5. V1~V6을 채점하고 지적 표를 쓴다. 수정 회차면 이전 지적을 추적한다.
 
 ## 판정 태도
