@@ -17,6 +17,7 @@ description: "AI와 나눈 대화·메모·회의 내용이나 보고서·PDF의
 - 렌더링과 자동 검사: `python scripts/render_check.py <svg> --png <png> --report <json> --spec <01_spec.json> --density <normal|dense>`
 - 문서 원문 추출: `python scripts/extract_source.py <pdf> --pages 15-16 --out {RUN}/00_source.md --title "<장 이름>" [--skip "<머리글 정규식>"]` (여러 쪽에 반복되는 머리글은 자동 제거, 한 쪽에만 있는 머리글은 `--skip`)
 - 여러 그림 미리보기: `python scripts/contact_sheet.py <png 폴더> --out <png>`
+- 결과 문서: `python scripts/make_report.py {RUN} --title "<문서 제목>" [--embed png|svg] [--no-review]` → `{RUN}/report.md`(PNG 상대 경로 링크)와 `{RUN}/report.html`(이미지를 넣은 단일 파일, 공유용)
 
 ## 모드
 
@@ -58,7 +59,7 @@ description: "AI와 나눈 대화·메모·회의 내용이나 보고서·PDF의
 4. **심사 (병렬)**: 한 메시지에서 `chang-diagram-story-judge`와 `chang-diagram-visual-judge`를 함께 호출한다. 두 심사자는 서로의 보고서를 읽지 않는다.
 5. **통합 판정 (메인)**: [review-rubric.md](references/review-rubric.md)의 통과 기준으로 두 보고서를 합친다. 내용 지적은 distiller→builder, 화면 지적은 builder로 보낸다. 두 심사가 충돌하면 내용은 story-judge, 형식은 visual-judge를 따르고 판단 근거를 `04_decision_v{N}.md`에 적는다.
 6. **수정 반복**: 수정 후 지적받은 심사자만 다시 부른다. 수정·재심사는 최대 2회. 남은 🔴는 통과로 바꾸지 않고 보고한다.
-7. **완료 (메인)**: 최종 SVG·PNG를 결과 경로에 복사하고 `{RUN}/05_manifest.json`(원문 범위, 버전별 점수, 최종 판정, 렌더러·글꼴, not_run)을 쓴다. 사용자에게 결과 경로, 한 줄 메시지, 최종 점수, 남은 지적을 보고하고 PNG를 보여 준다.
+7. **완료 (메인)**: 최종 SVG·PNG를 결과 경로에 복사하고 `{RUN}/05_manifest.json`(원문 범위, 버전별 점수, 최종 판정, 렌더러·글꼴, not_run)을 쓴다. 이어서 `make_report.py`로 `report.md`와 `report.html`을 만든다. 문서에는 그림마다 headline, 그림, takeaway, 그림 내용을 글로 옮긴 목록(reading_path 순), 원문 범위가 들어가고, 끝에 심사 점수·남은 지적 부록이 붙는다(청중용으로 낼 때는 `--no-review`). 사용자에게 결과 경로(그림·md·html), 한 줄 메시지, 최종 점수, 남은 지적을 보고하고 PNG를 보여 준다.
 
 ### 일괄 모드 (batch)
 
@@ -69,7 +70,7 @@ description: "AI와 나눈 대화·메모·회의 내용이나 보고서·PDF의
 3. **유형 분포 (메인)**: distiller를 병렬로 돌리고, 결과 유형을 표로 모은다. 한 유형이 절반을 넘으면 그 장들의 distiller에게 [diagram-types.md](references/diagram-types.md)「대비형 쏠림 막기」를 근거로 차선 유형 검토를 요청한다. 원문 성격상 한 유형이 맞으면 그 판단을 사용자 보고에 적는다.
 4. **장별 파이프라인**: 각 장은 단일 그림과 같은 흐름(제작 → 병렬 심사 → 수정 최대 2회)을 독립적으로 밟는다. 끝난 장부터 다음 단계로 넘긴다. 수정 회차에는 같은 distiller·builder를 이어서 불러(SendMessage) 맥락을 유지한다.
 5. **진행표 (메인)**: `{RUN}/progress.md`에 장 | 단계 | 버전 | story | visual | 🔴 | 판정을 갱신한다. 통과한 장은 바로 `final/`과 `05_manifest.json`을 쓴다.
-6. **마무리**: 모든 장의 최종 PNG·SVG를 `{RUN}/ALL/`에 모으고 `contact_sheet.py`로 한 장짜리 미리보기를 만든다. 사용자 보고에는 장별 headline·점수·남은 지적과 유형 분포를 넣는다.
+6. **마무리**: 모든 장의 최종 PNG·SVG를 `{RUN}/ALL/`에 모으고 `contact_sheet.py`로 한 장짜리 미리보기를 만든다. `make_report.py {RUN}`으로 전체 그림을 장 순서대로 엮은 `report.md`·`report.html`을 만든다(목차, 장별 그림·시사점·그림 내용, 심사 부록). 사용자 보고에는 장별 headline·점수·남은 지적과 유형 분포를 넣는다.
 
 ### 시안 경합 (선택)
 
