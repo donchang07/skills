@@ -1,6 +1,8 @@
 {
   "name": "donchang-skills",
-  "owner": { "name": "donchang07" },
+  "owner": {
+    "name": "donchang07"
+  },
   "plugins": [
     {
       "name": "chang-ppt",
@@ -14,6 +16,13 @@
       "source": "./plugins/chang-diagram",
       "description": "AI 대화·메모를 스토리가 있는 다이어그램(SVG+PNG)으로 요약하고 독립 심사 에이전트로 판정",
       "version": "1.0.0",
+      "category": "productivity"
+    },
+    {
+      "name": "chang-html",
+      "source": "./plugins/chang-html",
+      "description": "HTML 실습 교안(참가자용·강사용) 제작·개선: 디자인 브리프, 원고 기반 제작·독립 검수, 강사 노트, 배포",
+      "version": "2.0.0",
       "category": "productivity"
     },
     {
