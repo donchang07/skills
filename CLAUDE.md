@@ -13,3 +13,7 @@ HTML 실습 교안 신규 제작, 기존 교안 수정, 강사용 만들기, 스
 스킬 정본은 `chang-html/`이며 `plugins/chang-html/skills/chang-html/`는 배포 사본이다. 에이전트 정본은 `plugins/chang-html/agents/`다.
 배포본 갱신은 `node scripts/build-chang-html-plugin.mjs`, 일치 확인은 같은 명령에 `--check`를 붙인다.
 개인 설치(스킬+에이전트)는 `node scripts/build-chang-html-plugin.mjs --install-claude`로 한다.
+
+# Chang Info
+
+근거 수준을 지키는 검증형 인포그래픽(세로 3장 시리즈, 가로 16:9 프로세스 도식·플랫폼 프로필·데이터 브리핑) 제작과 스킬 개선에는 `chang-info/SKILL.md`를 읽는다. 정본은 `chang-info/`이며 HTML 렌더 기본 자산은 `chang-info/assets/html-base/`다.
