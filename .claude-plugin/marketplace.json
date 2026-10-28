@@ -22,7 +22,7 @@
       "name": "chang-html",
       "source": "./plugins/chang-html",
       "description": "HTML 실습 교안(참가자용·강사용) 제작·개선: 디자인 브리프, 원고 기반 제작·독립 검수, 강사 노트, 배포",
-      "version": "2.0.0",
+      "version": "2.1.0",
       "category": "productivity"
     },
     {
