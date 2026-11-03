@@ -34,11 +34,11 @@ def canon(path):
     lines = open(path, encoding="utf-8").read().replace("\r\n", "\n").split("\n")
     out, i = {}, 0
     while i < len(lines):
-        m = re.search(r"\(id:\s*([^)\s]+)\s*\)", lines[i])
+        m = re.search(r"\(id:\s*([A-Za-z0-9][\w-]*)\s*\)", lines[i])
         if m:
             j = i + 1
             while j < len(lines) and not lines[j].lstrip().startswith("```"):
-                if re.search(r"\(id:\s*[^)\s]+\s*\)", lines[j]): break
+                if re.search(r"\(id:\s*[A-Za-z0-9][\w-]*\s*\)", lines[j]): break
                 j += 1
             if j < len(lines) and lines[j].lstrip().startswith("```"):
                 fence = lines[j].lstrip()[:3]

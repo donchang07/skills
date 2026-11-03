@@ -12,7 +12,7 @@ model: opus
 원고를 화면으로 옮긴다. 원고의 문장·표 값·프롬프트를 바꾸지 않는다. 내용 판단이 필요하면 지어내지 말고 로그에 「메인 확인 필요」로 남긴다.
 
 ## 절차
-1. `{RUN}/_workspace/00_packet.md`(최신 절), `02_design_brief.md`, 해당 `05_content_*.md`, `~/.claude/skills/chang-html/references/design-system.md`·`components.md`·`style-guide.md`를 읽는다. 수정 회차면 검수 보고서도 읽는다.
+1. `{RUN}/_workspace/00_packet.md`(최신 절), `02_design_brief.md`, 해당 `05_content_*.md`, `~/.claude/skills/chang-html/DESIGN.md`(항상 적용하는 디자인 기준)와 `references/components.md`·`style-guide.md`를 읽는다. 템플릿에 없는 v2.5 부품은 DESIGN.md의 CSS를 그대로 옮긴다. 수정 회차면 검수 보고서도 읽는다.
 2. 신규: `assets/template.html`을 `{RUN}/src_v1.0.html`로 복사해 부품을 복제·채우고 쓰지 않는 부품과 주석을 지운다. 수정: 기준 버전의 `src`·노트 JSON을 새 버전으로 복사한 뒤 고친다. 이전 파일을 덮어쓰지 않는다.
 3. 프롬프트·폴더 구조 같은 원고 블록은 원고 파일에서 스크립트로 읽어 넣는다(손으로 옮겨 적지 않는다). 큰 파일은 Python 읽기-고치기-쓰기로 편집하고, 바꿀 구간을 고유한 표지로 찾아 개수를 assert로 확인한다.
 4. 장을 추가·이동했으면 `python ~/.claude/skills/chang-html/scripts/renumber.py`를 실행하고 노트 JSON 키와 상호 참조를 맞춘다.
@@ -25,6 +25,8 @@ model: opus
 - 스스로 PASS라고 말하지 않는다. 판정은 검수 담당만 한다.
 - 금지: 시간·분량 표기, 학생·수강생·구멍·회차, API 키 문자열.
 - 지적받지 않은 부분은 건드리지 않는다.
+- 자체 확인에서 찾은 DESIGN.md 품질 바닥 위반(줄바꿈, 넘침, 그림 글자 13px 미만 등)은 「남은 문제」로 넘기지 않고 고친다. 고칠 수 없으면 시도한 방법과 막힌 이유를 적는다. 알고도 넘긴 문제는 검수에서 그대로 지적되어 한 바퀴를 더 돈다.
+- 로그의 사실(글자 크기, 개수, 파일 상태)은 도구 출력이나 측정값만 적고 어떤 명령으로 얻었는지 함께 적는다. 측정하지 않은 값은 「추정」이라고 쓴다. 검수 담당은 로그를 검증 대상으로 보므로, 짐작한 값은 사실 오류로 지적된다.
 
 ## 반환
 만든 파일 경로와 로그 요약만 반환한다.

@@ -12,7 +12,7 @@ model: opus
 만든 사람이 놓친 것을 찾는다. 판정만 하고 고치지 않는다.
 
 ## 절차
-1. `~/.claude/skills/chang-html/references/tooling-qa.md`의 점검표 A~F와 `style-guide.md`를 읽는다.
+1. `~/.claude/skills/chang-html/references/tooling-qa.md`의 점검표 A~F, `style-guide.md`, 디자인 판정 기준인 `~/.claude/skills/chang-html/DESIGN.md`를 읽는다.
 2. 입력: 검수 대상 두 HTML, `{RUN}/_workspace/00_packet.md`(최신 절), `02_design_brief.md`, 원고 `05_content_*.md`, 기준(이전) 버전 파일, 직전 검수 보고서(있으면).
 3. 점검표를 순서대로 실행한다. 임시 파일·캡처는 Bash로 `{RUN}/_workspace/review_r{k}/` 아래에만 만든다.
 4. 캡처는 반드시 Read로 직접 연다. 열지 않은 항목은 not_run이다.

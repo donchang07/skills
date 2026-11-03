@@ -15,7 +15,7 @@ description: "장동인 교수의 HTML 실습 교안(참가자용·강사용)을
 
 1. 사용자의 명시적 요청과 사용자가 저장한 선호를 우선한다. 자료가 없으면 수치·출처를 만들지 않는다.
 2. 문장·용어·금지 사항·사실성·버전: [style-guide.md](references/style-guide.md)
-3. 디자인: 교안마다 `{RUN}/_workspace/02_design_brief.md`를 쓴다. 기본값은 [design-system.md](references/design-system.md)이고, 사용자가 chang-ppt 브랜드를 요청하면 [chang-ppt-brand.md](references/chang-ppt-brand.md)를 쓴다.
+3. 디자인: 모든 교안에 [DESIGN.md](DESIGN.md)를 항상 적용한다. 사용자가 명시적으로 요청한 경우에만 벗어나고, chang-ppt 브랜드 요청이면 [chang-ppt-brand.md](references/chang-ppt-brand.md)로 색과 구조만 바꾼다. 교안마다 `{RUN}/_workspace/02_design_brief.md`에 DESIGN.md 안에서 정할 것(비교 대상과 의미색, 첫 화면 데모, 장별 표현)만 적는다.
 4. 화면 부품: [components.md](references/components.md), 시작 파일은 `assets/template.html`
 5. 실습 프롬프트: [lab-prompts.md](references/lab-prompts.md)
 6. 강사용: [instructor-mode.md](references/instructor-mode.md)
@@ -30,7 +30,7 @@ description: "장동인 교수의 HTML 실습 교안(참가자용·강사용)을
 - 결과는 `{주제} v{N}.html`과 `{주제} v{N} 강사용.html`. 고칠 때마다 0.1씩 올리고 이전 파일을 남긴다.
 - 장을 추가·이동·삭제하면 `scripts/renumber.py`로 장 id·목차·노트 표식을 다시 매기고 본문 상호 참조를 고친다.
 - 검수 담당이 PASS로 판정한 결과만 배포한다. 렌더링하지 못한 항목은 not_run으로 보고한다.
-- 실습 교안은 배포 전에 메인이 모든 프롬프트를 시험 실행한다. 예상 결과 표와 실제가 다르면 문항을 바꾸고, 정답·노트·「핵심 다시 보기」에 시험 실행 결과를 반영한다. 이미 결과 파일이 있는 비싼 단계(색인·위키 만들기)는 다시 돌리기 전에 사용자에게 묻는다.
+- 실습 교안은 배포 전에 메인이 모든 프롬프트를 시험 실행한다. 예상 결과 표와 실제가 다르면 문항을 바꾸고, 정답·노트·「핵심 다시 보기」에 시험 실행 결과를 반영한다. 시험 실행 결과는 `{RUN}/_workspace/06_testrun/`에 파일로 남기고, 원고의 모든 수치·판정(리드·핵심 다시 보기·상자 제목·표)은 원고 끝 「수치 근거」 표(수치 · 쓰인 곳 · 근거 파일) 한 곳에서 정의한 값을 따른다. 같은 수치가 여러 곳에 흩어지면 한 곳만 고쳐 서로 어긋나기 쉽고, 근거 파일이 없으면 검수가 확인할 수 없기 때문이다. 이미 결과 파일이 있는 비싼 단계(색인·위키 만들기)는 다시 돌리기 전에 사용자에게 묻는다.
 
 ## 함께 쓰는 스킬
 

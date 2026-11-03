@@ -1,6 +1,6 @@
 # chang-ppt 브랜드 모드 (요청 시)
 
-사용자가 「chang-ppt 스타일」「브랜드 색」을 요청할 때만 쓴다. 기본 디자인은 [design-system.md](design-system.md)다. 이 모드에서는 `assets/template.html`의 부품·도구·품질 바닥을 그대로 쓰고, `:root` 색 변수와 아래 구조 규칙만 바꾼다. 색상과 화면 구조는 chang-ppt와 같다. 색의 정의는 chang-ppt `references/color-system.md`가 원본이고, 두 곳이 다르면 chang-ppt를 따른다.
+사용자가 「chang-ppt 스타일」「브랜드 색」을 요청할 때만 쓴다. 기본 디자인은 [DESIGN.md](../DESIGN.md)이고, 이 모드에서도 DESIGN.md의 글꼴·품질 바닥·부품 규칙은 그대로 쓴다. 이 모드에서는 `assets/template.html`의 부품·도구·품질 바닥을 그대로 쓰고, `:root` 색 변수와 아래 구조 규칙만 바꾼다. 색상과 화면 구조는 chang-ppt와 같다. 색의 정의는 chang-ppt `references/color-system.md`가 원본이고, 두 곳이 다르면 chang-ppt를 따른다.
 
 ## 색
 
