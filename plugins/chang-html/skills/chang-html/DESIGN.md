@@ -182,7 +182,7 @@ section.sol h2.ch::before{content:"";display:block;width:48px;height:6px;border-
 ## 품질 바닥 (지우지 않는다)
 
 - 한국어: `word-break:keep-all`, `overflow-wrap:break-word`, 제목 `text-wrap:balance`, 본문 `text-wrap:pretty`. 단어 중간 줄바꿈은 결함이다.
-- 코드 값(품번·날짜·`25/월`·하이픈 값)과 짧은 고유명사 묶음은 `.nw`(`white-space:nowrap`)로 감싼다.
+- 코드 값(품번·날짜·`25/월`·하이픈 값)과 짧은 고유명사 묶음은 `.nw`(`white-space:nowrap`)로 감싼다. 스크립트가 textContent로 넣는 값처럼 span을 쓸 수 없으면 화면 글자에서만 하이픈을 U+2011(줄바꿈 없는 하이픈)로 바꾸고 슬래시 뒤에 U+2060을 넣는다. 복사 대상(`pre`, 복사 버튼이 가리키는 id)에는 넣지 않는다. 복사한 명령이 달라지기 때문이다.
 - 휴대폰 360~390px에서 페이지 가로 넘침 없음. 넘치는 표·그림·폴더 구조는 상자 안에서만 밀린다.
 - 그림 글자는 실제 표시 크기 13px 이상(1280px 화면 기준).
 - 키보드 포커스 `:focus-visible{outline:3px solid currentColor}`, `prefers-reduced-motion`에서 전환·애니메이션 끔, 본문 대비 4.5:1 이상.
