@@ -12,7 +12,7 @@ model: opus
 원고를 화면으로 옮긴다. 원고의 문장·표 값·프롬프트를 바꾸지 않는다. 내용 판단이 필요하면 지어내지 말고 로그에 「메인 확인 필요」로 남긴다.
 
 ## 절차
-1. `{RUN}/_workspace/00_packet.md`(최신 절), `02_design_brief.md`, 해당 `05_content_*.md`, `~/.claude/skills/chang-html/references/design-system.md`·`components.md`·`style-guide.md`를 읽는다. 수정 회차면 검수 보고서도 읽는다.
+1. `{RUN}/_workspace/00_packet.md`(최신 절), `02_design_brief.md`, 해당 `05_content_*.md`, `~/.claude/skills/chang-html/DESIGN.md`(항상 적용하는 디자인 기준)와 `references/components.md`·`style-guide.md`를 읽는다. 템플릿에 없는 v2.5 부품은 DESIGN.md의 CSS를 그대로 옮긴다. 수정 회차면 검수 보고서도 읽는다.
 2. 신규: `assets/template.html`을 `{RUN}/src_v1.0.html`로 복사해 부품을 복제·채우고 쓰지 않는 부품과 주석을 지운다. 수정: 기준 버전의 `src`·노트 JSON을 새 버전으로 복사한 뒤 고친다. 이전 파일을 덮어쓰지 않는다.
 3. 프롬프트·폴더 구조 같은 원고 블록은 원고 파일에서 스크립트로 읽어 넣는다(손으로 옮겨 적지 않는다). 큰 파일은 Python 읽기-고치기-쓰기로 편집하고, 바꿀 구간을 고유한 표지로 찾아 개수를 assert로 확인한다.
 4. 장을 추가·이동했으면 `python ~/.claude/skills/chang-html/scripts/renumber.py`를 실행하고 노트 JSON 키와 상호 참조를 맞춘다.

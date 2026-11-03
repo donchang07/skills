@@ -15,7 +15,7 @@ description: "장동인 교수의 HTML 실습 교안(참가자용·강사용)을
 
 1. 사용자의 명시적 요청과 사용자가 저장한 선호를 우선한다. 자료가 없으면 수치·출처를 만들지 않는다.
 2. 문장·용어·금지 사항·사실성·버전: [style-guide.md](references/style-guide.md)
-3. 디자인: 교안마다 `{RUN}/_workspace/02_design_brief.md`를 쓴다. 기본값은 [design-system.md](references/design-system.md)이고, 사용자가 chang-ppt 브랜드를 요청하면 [chang-ppt-brand.md](references/chang-ppt-brand.md)를 쓴다.
+3. 디자인: 모든 교안에 [DESIGN.md](DESIGN.md)를 항상 적용한다. 사용자가 명시적으로 요청한 경우에만 벗어나고, chang-ppt 브랜드 요청이면 [chang-ppt-brand.md](references/chang-ppt-brand.md)로 색과 구조만 바꾼다. 교안마다 `{RUN}/_workspace/02_design_brief.md`에 DESIGN.md 안에서 정할 것(비교 대상과 의미색, 첫 화면 데모, 장별 표현)만 적는다.
 4. 화면 부품: [components.md](references/components.md), 시작 파일은 `assets/template.html`
 5. 실습 프롬프트: [lab-prompts.md](references/lab-prompts.md)
 6. 강사용: [instructor-mode.md](references/instructor-mode.md)
