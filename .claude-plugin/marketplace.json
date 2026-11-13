@@ -33,6 +33,13 @@
       "category": "productivity"
     },
     {
+      "name": "dns-to-prd",
+      "source": "./plugins/dns-to-prd",
+      "description": "DN솔루션즈 업무를 bkit용 PRD로: to-prd에 DN 도메인 팩과 계산 모델 계약(CM-*)을 더합니다(to-prd 필요).",
+      "version": "1.1.0",
+      "category": "productivity"
+    },
+    {
       "name": "to-prd-equip",
       "source": "./plugins/to-prd-equip",
       "description": "장비 소프트웨어 변경 요청과 기존 소스를 bkit용 변경 영역 PRD로 정리합니다(code-prd-equip 포함, 초안).",
