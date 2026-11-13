@@ -1,6 +1,6 @@
 {
   "name": "dns-to-prd",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "DN솔루션즈 업무 설명을 bkit용 PRD로 만듭니다. to-prd에 DN 역할·통화·거점·기밀 등급과 예측·시뮬레이션·최적화 계산 모델 계약(CM-*)을 더합니다.",
   "author": {
     "name": "donchang07"
