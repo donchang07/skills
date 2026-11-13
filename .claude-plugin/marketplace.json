@@ -36,7 +36,7 @@
       "name": "dns-to-prd",
       "source": "./plugins/dns-to-prd",
       "description": "DN솔루션즈 업무를 bkit용 PRD로: to-prd에 DN 도메인 팩과 계산 모델 계약(CM-*)을 더합니다(to-prd 필요).",
-      "version": "1.1.0",
+      "version": "1.2.0",
       "category": "productivity"
     },
     {
