@@ -43,7 +43,7 @@
       "name": "dns-part-prd",
       "source": "./plugins/dns-part-prd",
       "description": "고객 부품 도면(PDF·STEP)을 DN솔루션즈 가공 PRD로: 요구 추적표, 공정·기계, 시뮬레이션 기준, 검사, 일정, 승인(시연용 NC 검사기 포함).",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "category": "productivity"
     },
     {
