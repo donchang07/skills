@@ -136,7 +136,7 @@ for x, yy in wall:
 o.add("G1 X60. Y30.", "G0 Z50.")
 o.end_tool()
 
-# 센터 드릴(구멍 위 모서리 모따기 겸함): ⌀8 → 지름 9, M6 → 지름 7
+# 센터 드릴(홀 위 모서리 모따기 겸함): ⌀8 → 지름 9, M6 → 지름 7
 o.tool("DRILL", 4, "SPOT DRILL D10 90DEG", 4000, 15, 12, h_z=25)
 o.add("G98 G81 X15. Y12. Z15.5 R21. F400", "X105. Y12.", "X105. Y68.", "X15. Y68.", "X60. Y72. Z16.5", "X60. Y8.", "G80")
 o.end_tool()
@@ -165,7 +165,7 @@ for x, yy in pk:
 o.add("G1 X60. Y30.")
 o.end_tool()
 
-# ⌀8 구멍 아래(A면 쪽) 모서리 C0.5: 백 모따기 공구, 구멍 중심으로 내려가 반지름 1.0 원호
+# ⌀8 홀 아래(A면 쪽) 모서리 C0.5: 백 모따기 공구, 홀 중심으로 내려가 반지름 1.0 원호
 o.tool("CHAMFER", 10, "BACK CHAMFER CUTTER HEAD D7.0 45DEG", 6000, 15, 12, h_z=25)
 for x, yy in HOLES8:
     o.add(f"G0 X{x}. Y{yy}.", "G0 Z21.", "G1 Z-1.2 F1000", f"G1 X{f3(x + 1.0)} F300", f"G3 X{f3(x + 1.0)} Y{yy}. I-1. J0.", f"G1 X{x}.", "G1 Z21. F1000", "G0 Z25.")

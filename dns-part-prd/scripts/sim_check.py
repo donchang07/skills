@@ -175,7 +175,7 @@ def main(op10, op20, step):
                                    ("윗면(5,40)", (5, 40), 0, 20.0)]:
         i, j = int((x - X0) / RES), int((y - Y0) / RES); feats[name] = {"sim": round(float(H[i, j]), 3), "model": want}
     for x, y in [(15, 12), (105, 12), (15, 68), (105, 68)]:
-        i, j = int((x - X0) / RES), int((y - Y0) / RES); feats[f"⌀8 구멍 ({x},{y}) 바닥"] = {"sim": round(float(H[i, j]), 3), "model": "관통(≤0)"}
+        i, j = int((x - X0) / RES), int((y - Y0) / RES); feats[f"⌀8 홀 ({x},{y}) 바닥"] = {"sim": round(float(H[i, j]), 3), "model": "관통(≤0)"}
     for x, y in [(60, 8), (60, 72)]:
         i, j = int((x - X0) / RES), int((y - Y0) / RES); feats[f"M6 하공 ({x},{y}) 바닥"] = {"sim": round(float(H[i, j]), 3), "model": "≤8 (탭 깊이 12)"}
     report["OP20"] = {"fixture_collisions": [f"{n} (T{t}, {l}행)" for (n, t), l in hits.items()],
