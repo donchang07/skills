@@ -1,0 +1,17 @@
+{
+  "note": "시연용 합성 기계 사양입니다. 실제 DN 기종 사양이 아닙니다. 좌표는 G54 공작물 좌표 기준입니다.",
+  "name": "합성 3축 수직형 머시닝센터 (DNM 계열 가정)",
+  "limits_mm_deg": { "X": [-60, 400], "Y": [-60, 300], "Z": [-60, 300] },
+  "rapid_mm_per_min": 36000,
+  "tool_change_sec": 3,
+  "safe_z_mm": 30,
+  "operations": {
+    "FACE":    { "feed_max_mm_per_min": 2500, "spindle_max_rpm": 6000 },
+    "ROUGH":   { "feed_max_mm_per_min": 2000, "spindle_max_rpm": 12000 },
+    "FINISH":  { "feed_max_mm_per_min": 1500, "spindle_max_rpm": 12000 },
+    "DRILL":   { "feed_max_mm_per_min": 1000, "spindle_max_rpm": 8000 },
+    "REAM":    { "feed_max_mm_per_min": 800,  "spindle_max_rpm": 3000 },
+    "TAP":     { "feed_max_mm_per_min": 2000, "spindle_max_rpm": 2000 },
+    "CHAMFER": { "feed_max_mm_per_min": 1200, "spindle_max_rpm": 12000 }
+  }
+}

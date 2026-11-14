@@ -1,0 +1,10 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "dns-part-prd",
+  "version": "1.0.0",
+  "description": "고객 부품 도면(2D PDF·3D STEP)과 주문 조건을 DN솔루션즈 가공 PRD로 만듭니다. 요구 추적표, 공정·기계, 시뮬레이션 합격 기준, 검사, 일정, 승인을 담고, 시연용 NC 검사기를 포함합니다.",
+  "author": {
+    "name": "donchang07"
+  },
+  "repository": "https://github.com/donchang07/skills"
+}
