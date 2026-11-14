@@ -40,6 +40,13 @@
       "category": "productivity"
     },
     {
+      "name": "dns-part-prd",
+      "source": "./plugins/dns-part-prd",
+      "description": "고객 부품 도면(PDF·STEP)을 DN솔루션즈 가공 PRD로: 요구 추적표, 공정·기계, 시뮬레이션 기준, 검사, 일정, 승인(시연용 NC 검사기 포함).",
+      "version": "1.0.0",
+      "category": "productivity"
+    },
+    {
       "name": "to-prd-equip",
       "source": "./plugins/to-prd-equip",
       "description": "장비 소프트웨어 변경 요청과 기존 소스를 bkit용 변경 영역 PRD로 정리합니다(code-prd-equip 포함, 초안).",
