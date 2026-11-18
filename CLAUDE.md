@@ -17,7 +17,3 @@ HTML 실습 교안 신규 제작, 기존 교안 수정, 강사용 만들기, 스
 # Chang Info
 
 근거 수준을 지키는 검증형 인포그래픽(세로 3장 시리즈, 가로 16:9 프로세스 도식·플랫폼 프로필·데이터 브리핑) 제작과 스킬 개선에는 `chang-info/SKILL.md`를 읽는다. 정본은 `chang-info/`이며 HTML 렌더 기본 자산은 `chang-info/assets/html-base/`다.
-
-# Chang Invest
-
-개인 매매 기록(키움 체결알림) 분석, 종목별 수익률·배당 계산, 매매 원칙 백테스트, 보유 종목 투자 근거·매도 조건 점검과 스킬 개선에는 `chang-invest/SKILL.md`를 읽는다. 정본은 `chang-invest/`이며 계산은 `chang-invest/scripts/invest.py`로 한다. 계좌 원본·금액은 저장소에 커밋하지 않는다.
